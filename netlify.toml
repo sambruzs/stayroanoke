@@ -6,13 +6,14 @@
 [functions]
   node_bundler = "esbuild"
 
-# Proxy /api/* to Netlify function in production
+[build.environment]
+  NODE_VERSION = "18"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/guesty/:splat"
   status = 200
 
-# SPA fallback - must be last
 [[redirects]]
   from = "/*"
   to = "/index.html"
