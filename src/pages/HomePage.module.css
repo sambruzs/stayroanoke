@@ -14,7 +14,7 @@
 .heroBg {
   position: absolute;
   inset: 0;
-  background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=85');
+  background-image: url('/hero.jpg');
   background-size: cover;
   background-position: center 40%;
 }
