@@ -9,6 +9,8 @@ import CheckoutPage from './pages/CheckoutPage'
 import ConfirmationPage from './pages/ConfirmationPage'
 import BlogPage from './pages/BlogPage'
 import BlogPostPage from './pages/BlogPostPage'
+import PartnerListingsPage from './pages/PartnerListingsPage'
+import PartnerDetailPage from './pages/PartnerDetailPage'
 
 export default function App() {
   return (
@@ -23,6 +25,8 @@ export default function App() {
           <Route path="/confirmation" element={<ConfirmationPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
+          <Route path="/partners" element={<PartnerListingsPage />} />
+          <Route path="/partners/:slug" element={<PartnerDetailPage />} />
         </Routes>
       </main>
       <Footer />
