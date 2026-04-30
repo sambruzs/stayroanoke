@@ -7,6 +7,8 @@ import SearchPage from './pages/SearchPage'
 import ListingPage from './pages/ListingPage'
 import CheckoutPage from './pages/CheckoutPage'
 import ConfirmationPage from './pages/ConfirmationPage'
+import BlogPage from './pages/BlogPage'
+import BlogPostPage from './pages/BlogPostPage'
 
 export default function App() {
   return (
@@ -19,6 +21,8 @@ export default function App() {
           <Route path="/listing/:id" element={<ListingPage />} />
           <Route path="/checkout/:id" element={<CheckoutPage />} />
           <Route path="/confirmation" element={<ConfirmationPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
         </Routes>
       </main>
       <Footer />
