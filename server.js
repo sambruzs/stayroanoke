@@ -1,6 +1,8 @@
 import express from 'express'
 import fetch from 'node-fetch'
 import dotenv from 'dotenv'
+import fs from 'fs'
+import path from 'path'
 
 dotenv.config()
 
@@ -8,19 +10,39 @@ const app = express()
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-const GUESTY_AUTH_URL = 'https://booking-api.guesty.com/oauth2/token'
-const GUESTY_API_BASE = 'https://booking-api.guesty.com/api'
+// Auth endpoint (different from API base!)
+const GUESTY_AUTH_URL = 'https://booking.guesty.com/oauth2/token'
+// API base URL
+const GUESTY_API_BASE = 'https://booking-api.guesty.com/v1'
 
+const TOKEN_FILE = path.resolve('.guesty-token.json')
 let cachedToken = null
 let tokenExpiry = null
 let tokenPromise = null
 
+function loadTokenFromDisk() {
+  try {
+    if (fs.existsSync(TOKEN_FILE)) {
+      const data = JSON.parse(fs.readFileSync(TOKEN_FILE, 'utf8'))
+      if (data.token && data.expiry && Date.now() < data.expiry - 300000) {
+        cachedToken = data.token
+        tokenExpiry = data.expiry
+        console.log('✓ Loaded cached token from disk, valid for', Math.round((data.expiry - Date.now()) / 60000), 'more minutes')
+        return true
+      }
+    }
+  } catch {}
+  return false
+}
+
+function saveTokenToDisk(token, expiry) {
+  try { fs.writeFileSync(TOKEN_FILE, JSON.stringify({ token, expiry })) } catch {}
+}
+
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-async function getToken(retries = 4, delayMs = 5000) {
-  if (cachedToken && tokenExpiry && Date.now() < tokenExpiry - 300000) {
-    return cachedToken
-  }
+async function getToken(retries = 3, delayMs = 10000) {
+  if (cachedToken && tokenExpiry && Date.now() < tokenExpiry - 300000) return cachedToken
   if (tokenPromise) return tokenPromise
 
   tokenPromise = (async () => {
@@ -30,6 +52,8 @@ async function getToken(retries = 4, delayMs = 5000) {
       params.append('scope', 'booking_engine:api')
       params.append('client_id', process.env.VITE_GUESTY_CLIENT_ID)
       params.append('client_secret', process.env.VITE_GUESTY_CLIENT_SECRET)
+
+      console.log(`Requesting Guesty token (attempt ${attempt}/${retries})...`)
 
       const res = await fetch(GUESTY_AUTH_URL, {
         method: 'POST',
@@ -45,15 +69,16 @@ async function getToken(retries = 4, delayMs = 5000) {
         const data = await res.json()
         cachedToken = data.access_token
         tokenExpiry = Date.now() + data.expires_in * 1000
+        saveTokenToDisk(cachedToken, tokenExpiry)
         tokenPromise = null
-        console.log(`✓ Guesty token acquired (attempt ${attempt}), expires in`, Math.round(data.expires_in / 60), 'minutes')
+        console.log(`✓ Guesty token acquired, valid for ${Math.round(data.expires_in / 3600)} hours`)
         return cachedToken
       }
 
       const errText = await res.text()
       if (res.status === 429 && attempt < retries) {
         const wait = delayMs * attempt
-        console.log(`⏳ Rate limited (429), waiting ${wait / 1000}s before retry ${attempt + 1}/${retries}...`)
+        console.log(`⏳ Rate limited, waiting ${wait / 1000}s before retry ${attempt + 1}/${retries}...`)
         await sleep(wait)
         continue
       }
@@ -68,8 +93,11 @@ async function getToken(retries = 4, delayMs = 5000) {
   return tokenPromise
 }
 
-getToken().catch(err => console.error('Startup auth error:', err.message))
+if (!loadTokenFromDisk()) {
+  getToken().catch(err => console.error('Startup auth error:', err.message))
+}
 
+// Proxy /api/* to Guesty API
 app.all('/api/*', async (req, res) => {
   try {
     const token = await getToken()
@@ -84,7 +112,7 @@ app.all('/api/*', async (req, res) => {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
-        'accept': 'application/json; charset=utf-8',
+        'accept': 'application/json',
       },
       body: ['POST', 'PUT', 'PATCH'].includes(req.method) ? JSON.stringify(req.body) : undefined
     })

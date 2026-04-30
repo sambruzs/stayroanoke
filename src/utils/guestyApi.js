@@ -1,14 +1,13 @@
-// Stay Roanoke - Guesty API Client
-// In development: calls local Express proxy at localhost:3001/api
-// In production: calls Netlify Function at /.netlify/functions/guesty
+// Stay Roanoke - Guesty Booking Engine API Client
+// Auth:  https://booking.guesty.com/oauth2/token
+// API:   https://booking-api.guesty.com/v1
+// Proxy: In dev → local Express server. In prod → Netlify function.
 
 const isProd = import.meta.env.PROD
 const API_BASE = isProd ? '/.netlify/functions/guesty' : '/api'
 
 async function guestyFetch(path, options = {}) {
-  const url = `${API_BASE}${path}`
-
-  const res = await fetch(url, {
+  const res = await fetch(`${API_BASE}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -24,23 +23,27 @@ async function guestyFetch(path, options = {}) {
   return res.json()
 }
 
+// Search listings — uses /v1/search endpoint
 export async function getListings({ checkIn, checkOut, guests } = {}) {
   const params = new URLSearchParams()
-  if (checkIn) params.set('checkInDateLocalized', checkIn)
-  if (checkOut) params.set('checkOutDateLocalized', checkOut)
-  if (guests) params.set('minOccupancy', guests)
+  if (checkIn) params.set('checkIn', checkIn)
+  if (checkOut) params.set('checkOut', checkOut)
+  if (guests) params.set('adults', guests)
   const query = params.toString()
-  return guestyFetch(`/listings${query ? '?' + query : ''}`)
+  return guestyFetch(`/search${query ? '?' + query : ''}`)
 }
 
+// Get single listing
 export async function getListing(listingId) {
   return guestyFetch(`/listings/${listingId}`)
 }
 
+// Get listing calendar
 export async function getListingCalendar(listingId, from, to) {
   return guestyFetch(`/listings/${listingId}/calendar?from=${from}&to=${to}`)
 }
 
+// Get reservation quote
 export async function getReservationQuote({ listingId, checkIn, checkOut, guests }) {
   return guestyFetch('/quotes', {
     method: 'POST',
@@ -53,6 +56,7 @@ export async function getReservationQuote({ listingId, checkIn, checkOut, guests
   })
 }
 
+// Create instant reservation
 export async function createReservation({ quoteId, ratePlanId, ccToken, guest }) {
   return guestyFetch('/reservations/instantly', {
     method: 'POST',
@@ -60,6 +64,7 @@ export async function createReservation({ quoteId, ratePlanId, ccToken, guest })
   })
 }
 
+// Create inquiry
 export async function createInquiry({ listingId, checkIn, checkOut, guestsCount, guest }) {
   return guestyFetch('/reservations/inquiry', {
     method: 'POST',

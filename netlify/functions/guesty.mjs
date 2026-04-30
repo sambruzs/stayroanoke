@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 
-const GUESTY_AUTH_URL = 'https://booking-api.guesty.com/oauth2/token'
-const GUESTY_API_BASE = 'https://booking-api.guesty.com/api'
+const GUESTY_AUTH_URL = 'https://booking.guesty.com/oauth2/token'
+const GUESTY_API_BASE = 'https://booking-api.guesty.com/v1'
 
 let cachedToken = null
 let tokenExpiry = null
@@ -9,10 +9,8 @@ let tokenPromise = null
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
-async function getToken(retries = 4, delayMs = 5000) {
-  if (cachedToken && tokenExpiry && Date.now() < tokenExpiry - 300000) {
-    return cachedToken
-  }
+async function getToken(retries = 3, delayMs = 10000) {
+  if (cachedToken && tokenExpiry && Date.now() < tokenExpiry - 300000) return cachedToken
   if (tokenPromise) return tokenPromise
 
   tokenPromise = (async () => {
@@ -43,8 +41,7 @@ async function getToken(retries = 4, delayMs = 5000) {
 
       const errText = await res.text()
       if (res.status === 429 && attempt < retries) {
-        const wait = delayMs * attempt
-        await sleep(wait)
+        await sleep(delayMs * attempt)
         continue
       }
 
@@ -66,21 +63,21 @@ export const handler = async (event) => {
     'Content-Type': 'application/json',
   }
 
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' }
-  }
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' }
 
   try {
     const token = await getToken()
     const guestyPath = event.path.replace('/.netlify/functions/guesty', '')
     const url = `${GUESTY_API_BASE}${guestyPath}${event.rawQuery ? '?' + event.rawQuery : ''}`
 
+    console.log(`→ ${event.httpMethod} ${url}`)
+
     const response = await fetch(url, {
       method: event.httpMethod,
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
-        'accept': 'application/json; charset=utf-8',
+        'accept': 'application/json',
       },
       body: ['POST', 'PUT', 'PATCH'].includes(event.httpMethod) ? event.body : undefined
     })
