@@ -66,21 +66,24 @@ export default function ListingPage() {
       const to = format(addDays(new Date(), 365), 'yyyy-MM-dd')
       const calData = await getListingCalendar(listingId, from, to)
 
-      // Guesty returns array of day objects with status
-      // status: 'available' | 'unavailable' | 'booked'
       const blocked = []
-      const days = calData?.days || calData?.data || calData || []
+      const days = Array.isArray(calData) ? calData : calData?.days || calData?.data || []
 
       days.forEach(day => {
-        if (day.status === 'unavailable' || day.status === 'booked' || day.available === false) {
+        const blocks = day.blocks || {}
+        // Only block if actually booked or reserved by a guest
+        // b = booked, r = reserved, o = owner block, m = maintenance
+        const isBlocked = blocks.b || blocks.r || blocks.o || blocks.m
+        if (isBlocked) {
           blocked.push(parseISO(day.date))
         }
       })
 
+      console.log(`Blocking ${blocked.length} booked dates out of ${days.length} total`)
       setBlockedDates(blocked)
     } catch (e) {
-      // Calendar unavailable — dates won't be blocked, that's ok
       console.log('Calendar not available:', e.message)
+      setBlockedDates([])
     }
   }
 
@@ -94,8 +97,32 @@ export default function ListingPage() {
         checkOut: format(checkOut, 'yyyy-MM-dd'),
         guests
       })
-      setQuote(data)
-    } catch {
+
+      // Guesty quote response: rates.ratePlans[0].money contains the breakdown
+      const money = data?.rates?.ratePlans?.[0]?.money
+      const nights = differenceInCalendarDays(checkOut, checkIn)
+      const nightly = listing?.prices?.basePrice || listing?.price?.basePrice || 0
+
+      if (money) {
+        setQuote({
+          _id: data._id,
+          ratePlanId: data?.rates?.ratePlans?.[0]?._id,
+          nights,
+          nightly,
+          subtotal: money.fareAccommodation,
+          cleaning: money.fareCleaning,
+          taxes: money.totalTaxes,
+          totalFees: money.totalFees,
+          invoiceItems: money.invoiceItems || [],
+          total: money.subTotalPrice,
+          hostPayout: money.hostPayout,
+        })
+      } else {
+        throw new Error('No rate plan in quote response')
+      }
+    } catch (err) {
+      console.log('Quote failed, using estimate:', err.message)
+      // Fall back to calculated estimate
       const nights = differenceInCalendarDays(checkOut, checkIn)
       const nightly = listing?.prices?.basePrice || listing?.price?.basePrice || 0
       const subtotal = nightly * nights
@@ -239,24 +266,45 @@ export default function ListingPage() {
                 <div className={styles.priceBreakdown}>
                   <div className={styles.priceRow}>
                     <span>${quote.nightly || price} × {quote.nights} nights</span>
-                    <span>${quote.subtotal || quote.money?.subTotalPrice}</span>
+                    <span>${quote.subtotal}</span>
                   </div>
-                  {(quote.cleaning || quote.money?.cleaningFee) > 0 && (
+                  {quote.cleaning > 0 && (
                     <div className={styles.priceRow}>
                       <span>Cleaning fee</span>
-                      <span>${quote.cleaning || quote.money?.cleaningFee}</span>
+                      <span>${quote.cleaning}</span>
                     </div>
                   )}
-                  {(quote.serviceFee || quote.money?.guestyServiceFee) > 0 && (
+                  {/* Show any additional invoice items (fees, taxes etc) */}
+                  {quote.invoiceItems?.filter(i =>
+                    i.normalType !== 'ACCOMMODATION_FARE' &&
+                    i.normalType !== 'CLEANING_FEE' &&
+                    i.amount > 0
+                  ).map((item, idx) => (
+                    <div key={idx} className={styles.priceRow}>
+                      <span>{item.title}</span>
+                      <span>${item.amount}</span>
+                    </div>
+                  ))}
+                  {quote.taxes > 0 && (
                     <div className={styles.priceRow}>
-                      <span>Service fee</span>
-                      <span>${quote.serviceFee || quote.money?.guestyServiceFee}</span>
+                      <span>Taxes</span>
+                      <span>${quote.taxes}</span>
+                    </div>
+                  )}
+                  {/* Fallback for mock quote */}
+                  {quote.mock && quote.serviceFee > 0 && (
+                    <div className={styles.priceRow}>
+                      <span>Service fee (est.)</span>
+                      <span>${quote.serviceFee}</span>
                     </div>
                   )}
                   <div className={`${styles.priceRow} ${styles.priceTotal}`}>
                     <span>Total</span>
-                    <span>${quote.total || quote.money?.totalPrice}</span>
+                    <span>${quote.total}</span>
                   </div>
+                  {quote.mock && (
+                    <p className={styles.mockNote}>* Estimated pricing. Select dates to see exact total.</p>
+                  )}
                 </div>
               )}
 

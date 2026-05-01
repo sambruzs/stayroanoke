@@ -5,6 +5,10 @@
 
 [functions]
   node_bundler = "esbuild"
+  included_files = []
+
+[functions."guesty"]
+  timeout = 26
 
 [build.environment]
   NODE_VERSION = "18"

@@ -46,7 +46,7 @@ export async function getListingCalendar(listingId, from, to) {
 
 // Get reservation quote
 export async function getReservationQuote({ listingId, checkIn, checkOut, guests }) {
-  return guestyFetch('/quotes', {
+  return guestyFetch('/reservations/quotes', {
     method: 'POST',
     body: JSON.stringify({
       listingId,
