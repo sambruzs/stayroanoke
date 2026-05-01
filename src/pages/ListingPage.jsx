@@ -3,15 +3,18 @@ import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom'
 import { getListing, getReservationQuote } from '../utils/guestyApi'
 import { mockListings } from '../data/mockListings'
 import { format, differenceInCalendarDays } from 'date-fns'
+import { getGalleryImage, getThumbImage } from '../utils/imageUtils'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import styles from './ListingPage.module.css'
+import { getGalleryImage, getThumbImage } from '../utils/imageUtils'
 
 const AMENITY_ICONS = {
-  'WiFi': '📶', 'Hot Tub': '🛁', 'Pool': '🏊', 'Kitchen': '🍳',
-  'Parking': '🚗', 'Washer/Dryer': '🧺', 'Fireplace': '🔥',
-  'Fire Pit': '🪵', 'Pet Friendly': '🐾', 'Game Room': '🎮',
-  'Kayaks': '🛶', 'Deck': '🪟', 'Smart TV': '📺', 'EV Charger': '⚡'
+  'Air conditioning': '❄️', 'Wifi': '📶', 'Hot tub': '🛁', 'Pool': '🏊',
+  'Kitchen': '🍳', 'Parking': '🚗', 'Washer': '🧺', 'Dryer': '🧺',
+  'Fireplace': '🔥', 'Fire pit': '🪵', 'Pets allowed': '🐾',
+  'Game room': '🎮', 'Kayaks': '🛶', 'Deck': '🪟', 'TV': '📺',
+  'EV charger': '⚡', 'BBQ grill': '🍖', 'Gym': '🏋️'
 }
 
 export default function ListingPage() {
@@ -24,6 +27,7 @@ export default function ListingPage() {
   const [photoIndex, setPhotoIndex] = useState(0)
   const [quote, setQuote] = useState(null)
   const [quoteLoading, setQuoteLoading] = useState(false)
+  const [quoteError, setQuoteError] = useState('')
 
   const [checkIn, setCheckIn] = useState(
     searchParams.get('checkIn') ? new Date(searchParams.get('checkIn')) : null
@@ -38,7 +42,7 @@ export default function ListingPage() {
       setLoading(true)
       try {
         const data = await getListing(id)
-        if (data) {
+        if (data && (data._id || data.id)) {
           setListing(data)
         } else {
           const mock = mockListings.find(l => l.id === id) || mockListings[0]
@@ -54,23 +58,24 @@ export default function ListingPage() {
     load()
   }, [id])
 
-  async function handleQuote() {
-    if (!checkIn || !checkOut) return
+  async function fetchQuote() {
+    if (!checkIn || !checkOut || !listing) return
     setQuoteLoading(true)
+    setQuoteError('')
     try {
       const data = await getReservationQuote({
-        listingId: id,
+        listingId: listing._id || listing.id,
         checkIn: format(checkIn, 'yyyy-MM-dd'),
         checkOut: format(checkOut, 'yyyy-MM-dd'),
         guests
       })
       setQuote(data)
     } catch {
-      // Mock quote
+      // Fall back to calculated estimate
       const nights = differenceInCalendarDays(checkOut, checkIn)
-      const nightly = listing?.price?.basePrice || listing?.prices?.basePrice || 150
+      const nightly = listing?.prices?.basePrice || listing?.price?.basePrice || 0
       const subtotal = nightly * nights
-      const cleaning = 85
+      const cleaning = listing?.prices?.cleaningFee || 85
       const serviceFee = Math.round(subtotal * 0.12)
       setQuote({
         mock: true,
@@ -87,7 +92,7 @@ export default function ListingPage() {
   }
 
   useEffect(() => {
-    if (checkIn && checkOut && listing) handleQuote()
+    if (checkIn && checkOut && listing) fetchQuote()
   }, [checkIn, checkOut, listing])
 
   function handleBook() {
@@ -96,29 +101,30 @@ export default function ListingPage() {
     if (checkOut) params.set('checkOut', format(checkOut, 'yyyy-MM-dd'))
     params.set('guests', guests)
     if (quote && !quote.mock) params.set('quoteId', quote._id)
-    navigate(`/checkout/${id}?${params.toString()}`)
+    navigate(`/checkout/${listing._id || listing.id}?${params.toString()}`)
   }
 
   if (loading) return (
-    <div className={styles.loadingPage}>
-      <div className={styles.spinner} />
-    </div>
+    <div className={styles.loadingPage}><div className={styles.spinner} /></div>
   )
-
   if (!listing) return <div className={styles.loadingPage}>Property not found.</div>
 
   const photos = listing.pictures?.length ? listing.pictures : [{ thumbnail: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&q=80' }]
-  const mainPhoto = photos[photoIndex]?.thumbnail || photos[photoIndex]?.original
+  const mainPhoto = getGalleryImage(photos[photoIndex]?.thumbnail || photos[photoIndex]?.original)
   const price = listing.prices?.basePrice || listing.price?.basePrice || 0
-  const amenities = listing.amenities || []
+
+  // Build amenities list from Guesty HQ format
+  const amenities = listing.amenities || listing.publicDescription?.amenities || []
+  const amenityList = Array.isArray(amenities)
+    ? amenities
+    : Object.keys(amenities).filter(k => amenities[k])
 
   return (
     <div className={styles.page}>
       <div className={styles.inner}>
-        {/* Back */}
         <Link to={`/search?${searchParams.toString()}`} className={styles.back}>← Back to results</Link>
 
-        {/* Photo gallery */}
+        {/* Gallery */}
         <div className={styles.gallery}>
           <div className={styles.mainPhoto}>
             <img src={mainPhoto} alt={listing.title} />
@@ -131,7 +137,7 @@ export default function ListingPage() {
                   className={`${styles.thumb} ${i === photoIndex ? styles.activeThumb : ''}`}
                   onClick={() => setPhotoIndex(i)}
                 >
-                  <img src={p.thumbnail || p.original} alt={`Photo ${i + 1}`} />
+                  <img src={getThumbImage(p.thumbnail || p.original)} alt={`Photo ${i + 1}`} />
                 </button>
               ))}
             </div>
@@ -141,14 +147,17 @@ export default function ListingPage() {
         <div className={styles.content}>
           {/* Left column */}
           <div className={styles.details}>
-            <p className={styles.location}>{listing.address?.city || 'Roanoke'}, Virginia</p>
+            <p className={styles.location}>
+              {listing.address?.city || 'Roanoke'}, {listing.address?.state || 'Virginia'}
+            </p>
             <h1 className={styles.title}>{listing.title}</h1>
             <p className={styles.meta}>
               {listing.bedrooms} bedrooms · {listing.bathrooms} bathrooms · Up to {listing.accommodates} guests
             </p>
-            {listing.reviewsStats?.avgRating && (
+            {listing.reviewsStats?.avgRating > 0 && (
               <p className={styles.rating}>
-                ★ {listing.reviewsStats.avgRating.toFixed(1)} · <span>{listing.reviewsStats.numberOfReviews} reviews</span>
+                ★ {listing.reviewsStats.avgRating.toFixed(1)}
+                <span> · {listing.reviewsStats.numberOfReviews} reviews</span>
               </p>
             )}
 
@@ -159,13 +168,13 @@ export default function ListingPage() {
               <p>{listing.publicDescription?.summary || listing.publicDescription?.space || 'A wonderful stay in the Blue Ridge Mountains.'}</p>
             </div>
 
-            {amenities.length > 0 && (
+            {amenityList.length > 0 && (
               <>
                 <div className={styles.divider} />
                 <div className={styles.amenities}>
                   <h2>Amenities</h2>
                   <div className={styles.amenityGrid}>
-                    {amenities.map(a => (
+                    {amenityList.slice(0, 12).map(a => (
                       <div key={a} className={styles.amenity}>
                         <span>{AMENITY_ICONS[a] || '✓'}</span>
                         <span>{a}</span>
@@ -180,9 +189,11 @@ export default function ListingPage() {
           {/* Booking panel */}
           <aside className={styles.bookingPanel}>
             <div className={styles.panelInner}>
-              <div className={styles.panelPrice}>
-                <strong>${price}</strong> <span>/ night</span>
-              </div>
+              {price > 0 && (
+                <div className={styles.panelPrice}>
+                  <strong>${price}</strong> <span>/ night</span>
+                </div>
+              )}
 
               <div className={styles.dateFields}>
                 <div className={styles.dateField}>
@@ -222,19 +233,23 @@ export default function ListingPage() {
                 <div className={styles.priceBreakdown}>
                   <div className={styles.priceRow}>
                     <span>${quote.nightly || price} × {quote.nights} nights</span>
-                    <span>${quote.subtotal || (price * quote.nights)}</span>
+                    <span>${quote.subtotal || quote.money?.subTotalPrice}</span>
                   </div>
-                  <div className={styles.priceRow}>
-                    <span>Cleaning fee</span>
-                    <span>${quote.cleaning || quote.cleaningFee || 85}</span>
-                  </div>
-                  <div className={styles.priceRow}>
-                    <span>Service fee</span>
-                    <span>${quote.serviceFee || quote.guestyServiceFee || 0}</span>
-                  </div>
+                  {(quote.cleaning || quote.money?.cleaningFee) > 0 && (
+                    <div className={styles.priceRow}>
+                      <span>Cleaning fee</span>
+                      <span>${quote.cleaning || quote.money?.cleaningFee}</span>
+                    </div>
+                  )}
+                  {(quote.serviceFee || quote.money?.guestyServiceFee) > 0 && (
+                    <div className={styles.priceRow}>
+                      <span>Service fee</span>
+                      <span>${quote.serviceFee || quote.money?.guestyServiceFee}</span>
+                    </div>
+                  )}
                   <div className={`${styles.priceRow} ${styles.priceTotal}`}>
                     <span>Total</span>
-                    <span>${quote.total || quote.totalPrice}</span>
+                    <span>${quote.total || quote.money?.totalPrice}</span>
                   </div>
                 </div>
               )}
@@ -246,12 +261,9 @@ export default function ListingPage() {
               >
                 {checkIn && checkOut ? 'Reserve Now' : 'Select Dates to Book'}
               </button>
-
-              {!checkIn || !checkOut ? (
-                <p className={styles.panelNote}>Select dates to see total price</p>
-              ) : (
-                <p className={styles.panelNote}>You won't be charged yet</p>
-              )}
+              <p className={styles.panelNote}>
+                {checkIn && checkOut ? "You won't be charged yet" : 'Select dates to see total price'}
+              </p>
             </div>
           </aside>
         </div>
