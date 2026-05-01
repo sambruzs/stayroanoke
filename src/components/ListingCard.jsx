@@ -10,8 +10,9 @@ function StarRating({ rating }) {
 }
 
 export default function ListingCard({ listing, searchParams }) {
-  const rawPhoto = listing.pictures?.[0]?.thumbnail ||
-    listing.pictures?.[0]?.original ||
+  const rawPhoto = listing.pictures?.[0]?.original ||
+    listing.pictures?.[0]?.thumbnail ||
+    listing.picture?.original ||
     listing.picture?.thumbnail ||
     'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&q=80'
 

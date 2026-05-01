@@ -151,7 +151,7 @@ export default function ListingPage() {
   if (!listing) return <div className={styles.loadingPage}>Property not found.</div>
 
   const photos = listing.pictures?.length ? listing.pictures : [{ thumbnail: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&q=80' }]
-  const mainPhoto = getGalleryImage(photos[photoIndex]?.thumbnail || photos[photoIndex]?.original)
+  const mainPhoto = getGalleryImage(photos[photoIndex]?.original || photos[photoIndex]?.thumbnail)
   const price = listing.prices?.basePrice || listing.price?.basePrice || 0
   const amenities = listing.amenities || listing.publicDescription?.amenities || []
   const amenityList = Array.isArray(amenities)
@@ -176,7 +176,7 @@ export default function ListingPage() {
                   className={`${styles.thumb} ${i === photoIndex ? styles.activeThumb : ''}`}
                   onClick={() => setPhotoIndex(i)}
                 >
-                  <img src={getThumbImage(p.thumbnail || p.original)} alt={`Photo ${i + 1}`} />
+                  <img src={getThumbImage(p.original || p.thumbnail)} alt={`Photo ${i + 1}`} />
                 </button>
               ))}
             </div>

@@ -1,40 +1,33 @@
-// Upgrade Guesty HQ image URLs to higher resolution
-export function getHighResImage(url, width = 1200) {
+// Guesty HQ images use Cloudinary (assets.guesty.com)
+// We can append Cloudinary URL transformations for optimal quality
+
+function cloudinaryTransform(url, transformation) {
   if (!url) return ''
-
-  // Guesty HQ CDN - uses im_w parameter
-  if (url.includes('im_w=')) {
-    return url.replace(/im_w=\d+/, `im_w=${width}`)
+  // Cloudinary URLs have /upload/ in them — insert transform after /upload/
+  if (url.includes('/upload/')) {
+    return url.replace('/upload/', `/upload/${transformation}/`)
   }
-
-  // Guesty/Airbnb muscache CDN
-  if (url.includes('muscache.com')) {
-    return url.replace(/im_w=\d+/, `im_w=${width}`)
-      .replace(/width=\d+/, `width=${width}`)
-  }
-
-  // Guesty HQ uses aki_policy for sizing
-  if (url.includes('aki_policy=')) {
-    return url.replace(/aki_policy=[^&]+/, 'aki_policy=large')
-  }
-
-  // Try appending im_w if it's a known image CDN
-  if (url.includes('guesty') || url.includes('cloudinary') || url.includes('imgix')) {
-    const separator = url.includes('?') ? '&' : '?'
-    return `${url}${separator}im_w=${width}`
-  }
-
   return url
 }
 
 export function getCardImage(url) {
-  return getHighResImage(url, 1000)
+  if (!url) return ''
+  // w_800 = 800px wide, q_auto = auto quality, f_auto = auto format (WebP if supported)
+  return cloudinaryTransform(url, 'w_800,q_auto,f_auto')
 }
 
 export function getGalleryImage(url) {
-  return getHighResImage(url, 1920)
+  if (!url) return ''
+  // Full quality for main gallery view
+  return cloudinaryTransform(url, 'w_1920,q_auto,f_auto')
 }
 
 export function getThumbImage(url) {
-  return getHighResImage(url, 600)
+  if (!url) return ''
+  return cloudinaryTransform(url, 'w_400,q_auto,f_auto')
+}
+
+export function getHighResImage(url, width = 1200) {
+  if (!url) return ''
+  return cloudinaryTransform(url, `w_${width},q_auto,f_auto`)
 }
