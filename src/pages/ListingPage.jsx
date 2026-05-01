@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom'
-import { getListing, getReservationQuote } from '../utils/guestyApi'
+import { getListing, getReservationQuote, getListingCalendar } from '../utils/guestyApi'
 import { mockListings } from '../data/mockListings'
-import { format, differenceInCalendarDays } from 'date-fns'
-import { getGalleryImage, getThumbImage } from '../utils/imageUtils'
+import { format, differenceInCalendarDays, addDays, parseISO } from 'date-fns'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import styles from './ListingPage.module.css'
+import { getGalleryImage, getThumbImage } from '../utils/imageUtils'
 
 const AMENITY_ICONS = {
   'Air conditioning': '❄️', 'Wifi': '📶', 'Hot tub': '🛁', 'Pool': '🏊',
   'Kitchen': '🍳', 'Parking': '🚗', 'Washer': '🧺', 'Dryer': '🧺',
   'Fireplace': '🔥', 'Fire pit': '🪵', 'Pets allowed': '🐾',
   'Game room': '🎮', 'Kayaks': '🛶', 'Deck': '🪟', 'TV': '📺',
-  'EV charger': '⚡', 'BBQ grill': '🍖', 'Gym': '🏋️'
+  'EV charger': '⚡', 'BBQ grill': '🍖', 'Gym': '🏋️',
+  'Baking sheet': '🍪', 'Bathtub': '🛁', 'Coffee maker': '☕'
 }
 
 export default function ListingPage() {
@@ -26,7 +27,7 @@ export default function ListingPage() {
   const [photoIndex, setPhotoIndex] = useState(0)
   const [quote, setQuote] = useState(null)
   const [quoteLoading, setQuoteLoading] = useState(false)
-  const [quoteError, setQuoteError] = useState('')
+  const [blockedDates, setBlockedDates] = useState([])
 
   const [checkIn, setCheckIn] = useState(
     searchParams.get('checkIn') ? new Date(searchParams.get('checkIn')) : null
@@ -43,6 +44,8 @@ export default function ListingPage() {
         const data = await getListing(id)
         if (data && (data._id || data.id)) {
           setListing(data)
+          // Fetch calendar availability for next 12 months
+          loadCalendar(data._id || data.id)
         } else {
           const mock = mockListings.find(l => l.id === id) || mockListings[0]
           setListing(mock)
@@ -57,10 +60,33 @@ export default function ListingPage() {
     load()
   }, [id])
 
+  async function loadCalendar(listingId) {
+    try {
+      const from = format(new Date(), 'yyyy-MM-dd')
+      const to = format(addDays(new Date(), 365), 'yyyy-MM-dd')
+      const calData = await getListingCalendar(listingId, from, to)
+
+      // Guesty returns array of day objects with status
+      // status: 'available' | 'unavailable' | 'booked'
+      const blocked = []
+      const days = calData?.days || calData?.data || calData || []
+
+      days.forEach(day => {
+        if (day.status === 'unavailable' || day.status === 'booked' || day.available === false) {
+          blocked.push(parseISO(day.date))
+        }
+      })
+
+      setBlockedDates(blocked)
+    } catch (e) {
+      // Calendar unavailable — dates won't be blocked, that's ok
+      console.log('Calendar not available:', e.message)
+    }
+  }
+
   async function fetchQuote() {
     if (!checkIn || !checkOut || !listing) return
     setQuoteLoading(true)
-    setQuoteError('')
     try {
       const data = await getReservationQuote({
         listingId: listing._id || listing.id,
@@ -70,21 +96,12 @@ export default function ListingPage() {
       })
       setQuote(data)
     } catch {
-      // Fall back to calculated estimate
       const nights = differenceInCalendarDays(checkOut, checkIn)
       const nightly = listing?.prices?.basePrice || listing?.price?.basePrice || 0
       const subtotal = nightly * nights
       const cleaning = listing?.prices?.cleaningFee || 85
       const serviceFee = Math.round(subtotal * 0.12)
-      setQuote({
-        mock: true,
-        nights,
-        nightly,
-        subtotal,
-        cleaning,
-        serviceFee,
-        total: subtotal + cleaning + serviceFee
-      })
+      setQuote({ mock: true, nights, nightly, subtotal, cleaning, serviceFee, total: subtotal + cleaning + serviceFee })
     } finally {
       setQuoteLoading(false)
     }
@@ -103,16 +120,12 @@ export default function ListingPage() {
     navigate(`/checkout/${listing._id || listing.id}?${params.toString()}`)
   }
 
-  if (loading) return (
-    <div className={styles.loadingPage}><div className={styles.spinner} /></div>
-  )
+  if (loading) return <div className={styles.loadingPage}><div className={styles.spinner} /></div>
   if (!listing) return <div className={styles.loadingPage}>Property not found.</div>
 
   const photos = listing.pictures?.length ? listing.pictures : [{ thumbnail: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&q=80' }]
   const mainPhoto = getGalleryImage(photos[photoIndex]?.thumbnail || photos[photoIndex]?.original)
   const price = listing.prices?.basePrice || listing.price?.basePrice || 0
-
-  // Build amenities list from Guesty HQ format
   const amenities = listing.amenities || listing.publicDescription?.amenities || []
   const amenityList = Array.isArray(amenities)
     ? amenities
@@ -144,20 +157,12 @@ export default function ListingPage() {
         </div>
 
         <div className={styles.content}>
-          {/* Left column */}
           <div className={styles.details}>
-            <p className={styles.location}>
-              {listing.address?.city || 'Roanoke'}, {listing.address?.state || 'Virginia'}
-            </p>
+            <p className={styles.location}>{listing.address?.city || 'Roanoke'}, {listing.address?.state || 'Virginia'}</p>
             <h1 className={styles.title}>{listing.title}</h1>
-            <p className={styles.meta}>
-              {listing.bedrooms} bedrooms · {listing.bathrooms} bathrooms · Up to {listing.accommodates} guests
-            </p>
+            <p className={styles.meta}>{listing.bedrooms} bedrooms · {listing.bathrooms} bathrooms · Up to {listing.accommodates} guests</p>
             {listing.reviewsStats?.avgRating > 0 && (
-              <p className={styles.rating}>
-                ★ {listing.reviewsStats.avgRating.toFixed(1)}
-                <span> · {listing.reviewsStats.numberOfReviews} reviews</span>
-              </p>
+              <p className={styles.rating}>★ {listing.reviewsStats.avgRating.toFixed(1)}<span> · {listing.reviewsStats.numberOfReviews} reviews</span></p>
             )}
 
             <div className={styles.divider} />
@@ -201,6 +206,7 @@ export default function ListingPage() {
                     selected={checkIn}
                     onChange={d => { setCheckIn(d); if (checkOut && d >= checkOut) setCheckOut(null) }}
                     minDate={new Date()}
+                    excludeDates={blockedDates}
                     placeholderText="Add date"
                     dateFormat="MMM d, yyyy"
                   />
@@ -210,7 +216,8 @@ export default function ListingPage() {
                   <DatePicker
                     selected={checkOut}
                     onChange={d => setCheckOut(d)}
-                    minDate={checkIn || new Date()}
+                    minDate={checkIn ? addDays(checkIn, 1) : new Date()}
+                    excludeDates={blockedDates}
                     placeholderText="Add date"
                     dateFormat="MMM d, yyyy"
                   />
