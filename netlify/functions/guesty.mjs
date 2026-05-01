@@ -1,7 +1,7 @@
 const GUESTY_AUTH_URL = 'https://hq-api.guesty.com/oauth2/token'
 const GUESTY_API_BASE = 'https://hq-api.guesty.com/booking/api'
 
-// Module-level cache — persists across warm invocations
+// Module-level token cache
 let cachedToken = null
 let tokenExpiry = null
 
@@ -19,18 +19,27 @@ const emptyResult = (reason) => ({
 })
 
 async function getToken() {
-  // Return cached token if still valid (5 min buffer)
+  // 1. Use module-level cache if still valid
   if (cachedToken && tokenExpiry && Date.now() < tokenExpiry - 300000) {
     return cachedToken
   }
 
+  // 2. Use pre-stored token from environment variable if available
+  const storedToken = process.env.GUESTY_TOKEN || process.env.VITE_GUESTY_TOKEN
+  if (storedToken) {
+    console.log('Using pre-stored token from env')
+    cachedToken = storedToken
+    tokenExpiry = Date.now() + 23 * 60 * 60 * 1000
+    return cachedToken
+  }
+
+  // 3. Last resort — fetch a new token
   const params = new URLSearchParams()
   params.append('grant_type', 'client_credentials')
   params.append('scope', 'hq:api')
   params.append('client_id', process.env.VITE_GUESTY_CLIENT_ID)
   params.append('client_secret', process.env.VITE_GUESTY_CLIENT_SECRET)
 
-  // Set a tight timeout on auth — fail fast rather than hanging
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), 8000)
 
@@ -45,7 +54,6 @@ async function getToken() {
       body: params.toString(),
       signal: controller.signal
     })
-
     clearTimeout(timeout)
 
     if (!res.ok) {
@@ -56,7 +64,7 @@ async function getToken() {
     const data = await res.json()
     cachedToken = data.access_token
     tokenExpiry = Date.now() + data.expires_in * 1000
-    console.log('✓ Guesty token acquired')
+    console.log('✓ Fresh Guesty token acquired')
     return cachedToken
   } catch (err) {
     clearTimeout(timeout)
@@ -80,7 +88,6 @@ export const handler = async (event) => {
     const url = `${GUESTY_API_BASE}${guestyPath}${event.rawQuery ? '?' + event.rawQuery : ''}`
     console.log(`→ ${event.httpMethod} ${url}`)
 
-    // Set a tight timeout on API calls too
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 15000)
 
@@ -96,8 +103,8 @@ export const handler = async (event) => {
         body: ['POST', 'PUT', 'PATCH'].includes(event.httpMethod) ? event.body : undefined,
         signal: controller.signal
       })
-
       clearTimeout(timeout)
+
       const data = await response.json()
 
       if (!response.ok) {
