@@ -7,7 +7,6 @@ import { getGalleryImage, getThumbImage } from '../utils/imageUtils'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import styles from './ListingPage.module.css'
-import { getGalleryImage, getThumbImage } from '../utils/imageUtils'
 
 const AMENITY_ICONS = {
   'Air conditioning': '❄️', 'Wifi': '📶', 'Hot tub': '🛁', 'Pool': '🏊',
