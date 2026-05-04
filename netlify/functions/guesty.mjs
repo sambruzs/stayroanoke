@@ -90,6 +90,8 @@ export const handler = async (event) => {
 
     const guestyPath = event.path.replace('/.netlify/functions/guesty', '')
     const url = `${GUESTY_API_BASE}${guestyPath}${event.rawQuery ? '?' + event.rawQuery : ''}`
+    console.log('App ID present:', !!process.env.VITE_GUESTY_APP_ID)
+    console.log('App ID value:', process.env.VITE_GUESTY_APP_ID)
     console.log(`→ ${event.httpMethod} ${url}`)
 
     const controller = new AbortController()
