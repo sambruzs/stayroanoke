@@ -1,0 +1,159 @@
+.reviews {
+  margin-top: 0;
+}
+
+.loading {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  padding: 1rem 0;
+}
+
+/* Summary */
+.summary {
+  margin-bottom: 2rem;
+}
+
+.summaryScore {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.bigStar {
+  font-size: 1.5rem;
+  color: var(--brown);
+}
+
+.bigRating {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--brown);
+}
+
+.totalReviews {
+  font-size: 0.95rem;
+  color: var(--text-light);
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem 2rem;
+}
+
+.starRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.starLabel {
+  font-size: 0.88rem;
+  color: var(--text-dark);
+  min-width: 110px;
+}
+
+.starBar {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.starFill {
+  height: 100%;
+  background: var(--brown);
+  border-radius: 2px;
+}
+
+.starScore {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  min-width: 24px;
+}
+
+/* Review grid */
+.reviewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.reviewCard {
+  background: var(--off-white);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.reviewHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--blue-dark);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.reviewMeta {
+  flex: 1;
+}
+
+.reviewerName {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+}
+
+.reviewDate {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.reviewRating {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--brown);
+}
+
+.reviewText {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-mid);
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.reviewChannel {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .categories {
+    grid-template-columns: 1fr;
+  }
+  .reviewGrid {
+    grid-template-columns: 1fr;
+  }
+}

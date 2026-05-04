@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom'
-import { getListing, getReservationQuote, getListingCalendar } from '../utils/guestyApi'
+import { getListing, getReservationQuote, getListingCalendar, getListingReviews } from '../utils/guestyApi'
 import { mockListings } from '../data/mockListings'
 import { format, differenceInCalendarDays, addDays, parseISO } from 'date-fns'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import styles from './ListingPage.module.css'
 import { getGalleryImage, getThumbImage } from '../utils/imageUtils'
+import Reviews from '../components/Reviews'
 
 const AMENITY_ICONS = {
   'Air conditioning': '❄️', 'Wifi': '📶', 'Hot tub': '🛁', 'Pool': '🏊',
@@ -28,6 +29,8 @@ export default function ListingPage() {
   const [quote, setQuote] = useState(null)
   const [quoteLoading, setQuoteLoading] = useState(false)
   const [blockedDates, setBlockedDates] = useState([])
+  const [reviews, setReviews] = useState([])
+  const [reviewsLoading, setReviewsLoading] = useState(false)
 
   const [checkIn, setCheckIn] = useState(
     searchParams.get('checkIn') ? new Date(searchParams.get('checkIn')) : null
@@ -44,8 +47,8 @@ export default function ListingPage() {
         const data = await getListing(id)
         if (data && (data._id || data.id)) {
           setListing(data)
-          // Fetch calendar availability for next 12 months
           loadCalendar(data._id || data.id)
+          loadReviews(data._id || data.id)
         } else {
           const mock = mockListings.find(l => l.id === id) || mockListings[0]
           setListing(mock)
@@ -59,6 +62,21 @@ export default function ListingPage() {
     }
     load()
   }, [id])
+
+  async function loadReviews(listingId) {
+    setReviewsLoading(true)
+    try {
+      const data = await getListingReviews(listingId, 10)
+      const reviewList = data?.data || data?.results || data?.reviews || []
+      console.log(`Loaded ${reviewList.length} reviews`)
+      setReviews(reviewList)
+    } catch (e) {
+      console.log('Reviews not available:', e.message)
+      setReviews([])
+    } finally {
+      setReviewsLoading(false)
+    }
+  }
 
   async function loadCalendar(listingId) {
     try {
@@ -212,6 +230,20 @@ export default function ListingPage() {
                       </div>
                     ))}
                   </div>
+                </div>
+              </>
+            )}
+
+            {(reviews.length > 0 || reviewsLoading) && (
+              <>
+                <div className={styles.divider} />
+                <div className={styles.reviewsSection}>
+                  <h2>Reviews</h2>
+                  <Reviews
+                    reviews={reviews}
+                    stats={listing.reviewsStats}
+                    loading={reviewsLoading}
+                  />
                 </div>
               </>
             )}

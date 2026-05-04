@@ -65,6 +65,11 @@ export async function createReservation({ quoteId, ratePlanId, ccToken, guest })
   })
 }
 
+// Get reviews for a listing
+export async function getListingReviews(listingId, limit = 10) {
+  return guestyFetch(`/reviews?listingId=${listingId}&limit=${limit}`)
+}
+
 // Create inquiry
 export async function createInquiry({ listingId, checkIn, checkOut, guestsCount, guest }) {
   return guestyFetch('/reservations/inquiry', {

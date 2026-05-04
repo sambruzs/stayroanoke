@@ -115,7 +115,8 @@
 }
 
 .description h2,
-.amenities h2 {
+.amenities h2,
+.reviewsSection h2 {
   font-family: var(--font-display);
   font-size: 1.2rem;
   color: var(--brown);
