@@ -21,13 +21,17 @@ const emptyResult = (reason) => ({
 async function getToken() {
   // 1. Use module-level cache if still valid
   if (cachedToken && tokenExpiry && Date.now() < tokenExpiry - 300000) {
+    console.log('Using cached token')
     return cachedToken
   }
 
   // 2. Use pre-stored token from environment variable if available
   const storedToken = process.env.GUESTY_TOKEN || process.env.VITE_GUESTY_TOKEN
+  console.log('GUESTY_TOKEN present:', !!process.env.GUESTY_TOKEN)
+  console.log('VITE_GUESTY_TOKEN present:', !!process.env.VITE_GUESTY_TOKEN)
+  console.log('storedToken present:', !!storedToken)
   if (storedToken) {
-    console.log('Using pre-stored token from env')
+    console.log('Using pre-stored token from env, length:', storedToken.length)
     cachedToken = storedToken
     tokenExpiry = Date.now() + 23 * 60 * 60 * 1000
     return cachedToken
