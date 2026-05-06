@@ -5,6 +5,14 @@ const GUESTY_API_BASE = 'https://hq-api.guesty.com/booking/api'
 let cachedToken = null
 let tokenExpiry = null
 
+// Support both VITE_ prefixed (Vite/build) and plain (server-side/functions) env var names
+const env = {
+  get token() { return process.env.GUESTY_TOKEN || process.env.VITE_GUESTY_TOKEN },
+  get clientId() { return process.env.GUESTY_CLIENT_ID || process.env.VITE_GUESTY_CLIENT_ID },
+  get clientSecret() { return process.env.GUESTY_CLIENT_SECRET || process.env.VITE_GUESTY_CLIENT_SECRET },
+  get appId() { return process.env.GUESTY_APP_ID || process.env.VITE_GUESTY_APP_ID },
+}
+
 const headers = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'Content-Type',
@@ -26,10 +34,8 @@ async function getToken() {
   }
 
   // 2. Use pre-stored token from environment variable if available
-  const storedToken = process.env.GUESTY_TOKEN || process.env.VITE_GUESTY_TOKEN
-  console.log('GUESTY_TOKEN present:', !!process.env.GUESTY_TOKEN)
-  console.log('VITE_GUESTY_TOKEN present:', !!process.env.VITE_GUESTY_TOKEN)
-  console.log('storedToken present:', !!storedToken)
+  console.log('env var presence — GUESTY_TOKEN:', !!process.env.GUESTY_TOKEN, '| VITE_GUESTY_TOKEN:', !!process.env.VITE_GUESTY_TOKEN, '| GUESTY_APP_ID:', !!process.env.GUESTY_APP_ID, '| VITE_GUESTY_APP_ID:', !!process.env.VITE_GUESTY_APP_ID, '| CLIENT_ID:', !!(process.env.GUESTY_CLIENT_ID || process.env.VITE_GUESTY_CLIENT_ID))
+  const storedToken = env.token
   if (storedToken) {
     console.log('Using pre-stored token from env, length:', storedToken.length)
     cachedToken = storedToken
@@ -37,12 +43,15 @@ async function getToken() {
     return cachedToken
   }
 
-  // 3. Last resort — fetch a new token
+  // 3. Last resort — fetch a new token via client credentials
+  if (!env.clientId || !env.clientSecret) {
+    throw new Error('No GUESTY_TOKEN and no client credentials available — check env var scopes in Netlify dashboard')
+  }
   const params = new URLSearchParams()
   params.append('grant_type', 'client_credentials')
   params.append('scope', 'hq:api')
-  params.append('client_id', process.env.VITE_GUESTY_CLIENT_ID)
-  params.append('client_secret', process.env.VITE_GUESTY_CLIENT_SECRET)
+  params.append('client_id', env.clientId)
+  params.append('client_secret', env.clientSecret)
 
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), 8000)
@@ -90,22 +99,24 @@ export const handler = async (event) => {
 
     const guestyPath = event.path.replace('/.netlify/functions/guesty', '')
     const url = `${GUESTY_API_BASE}${guestyPath}${event.rawQuery ? '?' + event.rawQuery : ''}`
-    console.log('App ID present:', !!process.env.VITE_GUESTY_APP_ID)
-    console.log('App ID value:', process.env.VITE_GUESTY_APP_ID)
+    const appId = env.appId
+    console.log('App ID present:', !!appId, '| value:', appId)
     console.log(`→ ${event.httpMethod} ${url}`)
 
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 15000)
 
+    const requestHeaders = {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'accept': 'application/json; charset=utf-8',
+    }
+    if (appId) requestHeaders['x-guesty-applicationId'] = appId
+
     try {
       const response = await fetch(url, {
         method: event.httpMethod,
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'x-guesty-applicationId': process.env.VITE_GUESTY_APP_ID,
-          'Content-Type': 'application/json',
-          'accept': 'application/json; charset=utf-8',
-        },
+        headers: requestHeaders,
         body: ['POST', 'PUT', 'PATCH'].includes(event.httpMethod) ? event.body : undefined,
         signal: controller.signal
       })
