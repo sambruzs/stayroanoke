@@ -135,7 +135,7 @@ export default function ListingPage() {
           taxes: money.totalTaxes,
           totalFees: money.totalFees,
           invoiceItems: money.invoiceItems || [],
-          total: money.subTotalPrice + (money.totalTaxes || 0),
+          total: parseFloat((money.subTotalPrice + (money.totalTaxes || 0)).toFixed(2)),
           hostPayout: money.hostPayout,
         })
       } else {
@@ -333,7 +333,7 @@ export default function ListingPage() {
                   )}
                   <div className={`${styles.priceRow} ${styles.priceTotal}`}>
                     <span>Total</span>
-                    <span>${quote.total}</span>
+                    <span>${Number(quote.total).toFixed(2)}</span>
                   </div>
                   {quote.mock && (
                     <p className={styles.mockNote}>* Estimated pricing. Select dates to see exact total.</p>
