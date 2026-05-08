@@ -116,15 +116,18 @@ export default function ListingPage() {
         guests
       })
 
-      // Guesty quote response: rates.ratePlans[0].money contains the breakdown
-      const money = data?.rates?.ratePlans?.[0]?.money
+      // Guesty quote response: rates.ratePlans[0].ratePlan.money contains the breakdown
+      const ratePlan = data?.rates?.ratePlans?.[0]?.ratePlan
+      const money = ratePlan?.money
       const nights = differenceInCalendarDays(checkOut, checkIn)
-      const nightly = listing?.prices?.basePrice || listing?.price?.basePrice || 0
+      const nightly = money?.fareAccommodation
+        ? Math.round(money.fareAccommodation / nights)
+        : (listing?.prices?.basePrice || listing?.price?.basePrice || 0)
 
       if (money) {
         setQuote({
           _id: data._id,
-          ratePlanId: data?.rates?.ratePlans?.[0]?._id,
+          ratePlanId: ratePlan?._id,
           nights,
           nightly,
           subtotal: money.fareAccommodation,
@@ -132,7 +135,7 @@ export default function ListingPage() {
           taxes: money.totalTaxes,
           totalFees: money.totalFees,
           invoiceItems: money.invoiceItems || [],
-          total: money.subTotalPrice,
+          total: money.subTotalPrice + (money.totalTaxes || 0),
           hostPayout: money.hostPayout,
         })
       } else {
@@ -306,23 +309,21 @@ export default function ListingPage() {
                       <span>${quote.cleaning}</span>
                     </div>
                   )}
-                  {/* Show any additional invoice items (fees, taxes etc) */}
-                  {quote.invoiceItems?.filter(i =>
-                    i.normalType !== 'ACCOMMODATION_FARE' &&
-                    i.normalType !== 'CLEANING_FEE' &&
-                    i.amount > 0
-                  ).map((item, idx) => (
-                    <div key={idx} className={styles.priceRow}>
-                      <span>{item.title}</span>
-                      <span>${item.amount}</span>
-                    </div>
-                  ))}
-                  {quote.taxes > 0 && (
-                    <div className={styles.priceRow}>
-                      <span>Taxes</span>
-                      <span>${quote.taxes}</span>
-                    </div>
-                  )}
+                  {/* Show taxes from invoice items (normalType TAX), or fall back to totalTaxes */}
+                  {quote.invoiceItems?.filter(i => i.type === 'TAX' && i.amount > 0).length > 0
+                    ? quote.invoiceItems.filter(i => i.type === 'TAX' && i.amount > 0).map((item, idx) => (
+                        <div key={idx} className={styles.priceRow}>
+                          <span>{item.title}</span>
+                          <span>${item.amount.toFixed(2)}</span>
+                        </div>
+                      ))
+                    : quote.taxes > 0 && (
+                        <div className={styles.priceRow}>
+                          <span>Taxes</span>
+                          <span>${quote.taxes.toFixed(2)}</span>
+                        </div>
+                      )
+                  }
                   {/* Fallback for mock quote */}
                   {quote.mock && quote.serviceFee > 0 && (
                     <div className={styles.priceRow}>
