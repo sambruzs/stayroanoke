@@ -31,24 +31,24 @@ function invalidateToken() {
   tokenExpiry = null
 }
 
-async function getToken() {
+async function getToken({ forceOAuth = false } = {}) {
   // 1. Use module-level cache if still valid
-  if (cachedToken && tokenExpiry && Date.now() < tokenExpiry - 300000) {
+  if (!forceOAuth && cachedToken && tokenExpiry && Date.now() < tokenExpiry - 300000) {
     console.log('Using cached token')
     return cachedToken
   }
 
-  // 2. Use pre-stored token from environment variable if available
+  // 2. Use pre-stored token from environment variable if available (skip on forceOAuth)
   console.log('env var presence — GUESTY_TOKEN:', !!process.env.GUESTY_TOKEN, '| VITE_GUESTY_TOKEN:', !!process.env.VITE_GUESTY_TOKEN, '| GUESTY_APP_ID:', !!process.env.GUESTY_APP_ID, '| VITE_GUESTY_APP_ID:', !!process.env.VITE_GUESTY_APP_ID, '| CLIENT_ID:', !!(process.env.GUESTY_CLIENT_ID || process.env.VITE_GUESTY_CLIENT_ID))
   const storedToken = env.token
-  if (storedToken) {
+  if (!forceOAuth && storedToken) {
     console.log('Using pre-stored token from env, length:', storedToken.length)
     cachedToken = storedToken
     tokenExpiry = Date.now() + 23 * 60 * 60 * 1000
     return cachedToken
   }
 
-  // 3. Last resort — fetch a new token via client credentials
+  // 3. Fetch a fresh token via client credentials OAuth
   if (!env.clientId || !env.clientSecret) {
     throw new Error('No GUESTY_TOKEN and no client credentials available — check env var scopes in Netlify dashboard')
   }
@@ -129,11 +129,11 @@ export const handler = async (event) => {
     try {
       let response = await doRequest(token)
 
-      // On 403, the stored token may be expired — invalidate and retry with a fresh one
+      // On 403, the stored token may be expired — force OAuth and retry
       if (response.status === 403) {
         console.warn('Got 403, invalidating token and retrying with fresh credentials')
         invalidateToken()
-        const freshToken = await getToken()
+        const freshToken = await getToken({ forceOAuth: true })
         clearTimeout(timeout)
         response = await doRequest(freshToken)
       } else {
