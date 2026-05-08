@@ -26,6 +26,11 @@ const emptyResult = (reason) => ({
   body: JSON.stringify({ results: [], total: 0, _reason: reason })
 })
 
+function invalidateToken() {
+  cachedToken = null
+  tokenExpiry = null
+}
+
 async function getToken() {
   // 1. Use module-level cache if still valid
   if (cachedToken && tokenExpiry && Date.now() < tokenExpiry - 300000) {
@@ -106,21 +111,34 @@ export const handler = async (event) => {
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 15000)
 
-    const requestHeaders = {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      'accept': 'application/json; charset=utf-8',
-    }
-    if (appId) requestHeaders['x-guesty-applicationId'] = appId
-
-    try {
-      const response = await fetch(url, {
+    const doRequest = async (tok) => {
+      const reqHeaders = {
+        'Authorization': `Bearer ${tok}`,
+        'Content-Type': 'application/json',
+        'accept': 'application/json; charset=utf-8',
+      }
+      if (appId) reqHeaders['x-guesty-applicationId'] = appId
+      return fetch(url, {
         method: event.httpMethod,
-        headers: requestHeaders,
+        headers: reqHeaders,
         body: ['POST', 'PUT', 'PATCH'].includes(event.httpMethod) ? event.body : undefined,
         signal: controller.signal
       })
-      clearTimeout(timeout)
+    }
+
+    try {
+      let response = await doRequest(token)
+
+      // On 403, the stored token may be expired — invalidate and retry with a fresh one
+      if (response.status === 403) {
+        console.warn('Got 403, invalidating token and retrying with fresh credentials')
+        invalidateToken()
+        const freshToken = await getToken()
+        clearTimeout(timeout)
+        response = await doRequest(freshToken)
+      } else {
+        clearTimeout(timeout)
+      }
 
       const data = await response.json()
 
