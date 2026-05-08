@@ -1,13 +1,13 @@
+import { getStore } from '@netlify/blobs'
+
 const GUESTY_AUTH_URL = 'https://hq-api.guesty.com/oauth2/token'
 const GUESTY_API_BASE = 'https://hq-api.guesty.com/booking/api'
 
-// Module-level token cache
+// Module-level cache — survives within a warm container only
 let cachedToken = null
 let tokenExpiry = null
 
-// Support both VITE_ prefixed (Vite/build) and plain (server-side/functions) env var names
 const env = {
-  get token() { return process.env.GUESTY_TOKEN || process.env.VITE_GUESTY_TOKEN },
   get clientId() { return process.env.GUESTY_CLIENT_ID || process.env.VITE_GUESTY_CLIENT_ID },
   get clientSecret() { return process.env.GUESTY_CLIENT_SECRET || process.env.VITE_GUESTY_CLIENT_SECRET },
   get appId() { return process.env.GUESTY_APP_ID || process.env.VITE_GUESTY_APP_ID },
@@ -26,32 +26,34 @@ const emptyResult = (reason) => ({
   body: JSON.stringify({ results: [], total: 0, _reason: reason })
 })
 
-function invalidateToken() {
-  cachedToken = null
-  tokenExpiry = null
+async function readBlobsToken() {
+  try {
+    const store = getStore('guesty-auth')
+    const stored = await store.get('token', { type: 'json' })
+    if (stored?.token && stored?.expiry && Date.now() < stored.expiry - 300000) {
+      return stored
+    }
+  } catch (e) {
+    console.log('Blobs read failed:', e.message)
+  }
+  return null
 }
 
-async function getToken({ forceOAuth = false } = {}) {
-  // 1. Use module-level cache if still valid
-  if (!forceOAuth && cachedToken && tokenExpiry && Date.now() < tokenExpiry - 300000) {
-    console.log('Using cached token')
-    return cachedToken
+async function saveBlobsToken(token, expiry) {
+  try {
+    const store = getStore('guesty-auth')
+    await store.set('token', JSON.stringify({ token, expiry }))
+    console.log('✓ Token saved to Blobs')
+  } catch (e) {
+    console.log('Blobs write failed:', e.message)
   }
+}
 
-  // 2. Use pre-stored token from environment variable if available (skip on forceOAuth)
-  console.log('env var presence — GUESTY_TOKEN:', !!process.env.GUESTY_TOKEN, '| VITE_GUESTY_TOKEN:', !!process.env.VITE_GUESTY_TOKEN, '| GUESTY_APP_ID:', !!process.env.GUESTY_APP_ID, '| VITE_GUESTY_APP_ID:', !!process.env.VITE_GUESTY_APP_ID, '| CLIENT_ID:', !!(process.env.GUESTY_CLIENT_ID || process.env.VITE_GUESTY_CLIENT_ID))
-  const storedToken = env.token
-  if (!forceOAuth && storedToken) {
-    console.log('Using pre-stored token from env, length:', storedToken.length)
-    cachedToken = storedToken
-    tokenExpiry = Date.now() + 23 * 60 * 60 * 1000
-    return cachedToken
-  }
-
-  // 3. Fetch a fresh token via client credentials OAuth
+async function fetchFreshToken() {
   if (!env.clientId || !env.clientSecret) {
-    throw new Error('No GUESTY_TOKEN and no client credentials available — check env var scopes in Netlify dashboard')
+    throw new Error('No client credentials available — check VITE_GUESTY_CLIENT_ID / VITE_GUESTY_CLIENT_SECRET in Netlify')
   }
+
   const params = new URLSearchParams()
   params.append('grant_type', 'client_credentials')
   params.append('scope', 'hq:api')
@@ -67,7 +69,7 @@ async function getToken({ forceOAuth = false } = {}) {
       headers: {
         'accept': 'application/json',
         'content-type': 'application/x-www-form-urlencoded',
-        'cache-control': 'no-cache,no-cache',
+        'cache-control': 'no-cache',
       },
       body: params.toString(),
       signal: controller.signal
@@ -80,14 +82,53 @@ async function getToken({ forceOAuth = false } = {}) {
     }
 
     const data = await res.json()
-    cachedToken = data.access_token
-    tokenExpiry = Date.now() + data.expires_in * 1000
-    console.log('✓ Fresh Guesty token acquired')
-    return cachedToken
+    const token = data.access_token
+    const expiry = Date.now() + data.expires_in * 1000
+
+    // Persist across all containers via Blobs
+    await saveBlobsToken(token, expiry)
+
+    cachedToken = token
+    tokenExpiry = expiry
+    console.log('✓ Fresh Guesty token acquired via OAuth')
+    return token
   } catch (err) {
     clearTimeout(timeout)
     throw err
   }
+}
+
+async function getToken({ forceOAuth = false } = {}) {
+  // 1. Warm container cache
+  if (!forceOAuth && cachedToken && tokenExpiry && Date.now() < tokenExpiry - 300000) {
+    console.log('Using module-cached token')
+    return cachedToken
+  }
+
+  // 2. Netlify Blobs — shared across all containers (prevents redundant OAuth calls)
+  if (!forceOAuth) {
+    const blob = await readBlobsToken()
+    if (blob) {
+      console.log('Using Blobs-cached token, expires:', new Date(blob.expiry).toISOString())
+      cachedToken = blob.token
+      tokenExpiry = blob.expiry
+      return cachedToken
+    }
+  }
+
+  // 3. On forceOAuth (after 403): check if another container already refreshed the token
+  if (forceOAuth) {
+    const blob = await readBlobsToken()
+    if (blob && blob.token !== cachedToken) {
+      console.log('Another container already refreshed the token, using that')
+      cachedToken = blob.token
+      tokenExpiry = blob.expiry
+      return cachedToken
+    }
+  }
+
+  // 4. OAuth — rate limited to 5/day, only reached when token is truly expired
+  return fetchFreshToken()
 }
 
 export const handler = async (event) => {
@@ -105,7 +146,6 @@ export const handler = async (event) => {
     const guestyPath = event.path.replace('/.netlify/functions/guesty', '')
     const url = `${GUESTY_API_BASE}${guestyPath}${event.rawQuery ? '?' + event.rawQuery : ''}`
     const appId = env.appId
-    console.log('App ID present:', !!appId, '| value:', appId)
     console.log(`→ ${event.httpMethod} ${url}`)
 
     const controller = new AbortController()
@@ -129,10 +169,11 @@ export const handler = async (event) => {
     try {
       let response = await doRequest(token)
 
-      // On 403, the stored token may be expired — force OAuth and retry
+      // On 403, token may be expired — check Blobs for a fresher one, then OAuth if needed
       if (response.status === 403) {
-        console.warn('Got 403, invalidating token and retrying with fresh credentials')
-        invalidateToken()
+        console.warn('Got 403 — refreshing token')
+        cachedToken = null
+        tokenExpiry = null
         const freshToken = await getToken({ forceOAuth: true })
         clearTimeout(timeout)
         response = await doRequest(freshToken)
@@ -144,7 +185,6 @@ export const handler = async (event) => {
 
       if (!response.ok) {
         console.error('Guesty API error:', response.status, JSON.stringify(data))
-        // Pass 400s through so the client can surface booking restriction errors
         if (response.status === 400) {
           return { statusCode: 400, headers, body: JSON.stringify(data) }
         }
