@@ -144,6 +144,10 @@ export const handler = async (event) => {
 
       if (!response.ok) {
         console.error('Guesty API error:', response.status, JSON.stringify(data))
+        // Pass 400s through so the client can surface booking restriction errors
+        if (response.status === 400) {
+          return { statusCode: 400, headers, body: JSON.stringify(data) }
+        }
         return emptyResult('guesty_error_' + response.status)
       }
 

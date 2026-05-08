@@ -16,8 +16,12 @@ async function guestyFetch(path, options = {}) {
   })
 
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}))
-    throw new Error(err.message || err.error || `API error: ${res.status}`)
+    const body = await res.json().catch(() => ({}))
+    const code = body?.error?.code
+    const msg = body?.error?.message || body?.message || `API error: ${res.status}`
+    const error = new Error(msg)
+    if (code) error.code = code
+    throw error
   }
 
   return res.json()

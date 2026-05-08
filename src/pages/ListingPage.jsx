@@ -28,6 +28,7 @@ export default function ListingPage() {
   const [photoIndex, setPhotoIndex] = useState(0)
   const [quote, setQuote] = useState(null)
   const [quoteLoading, setQuoteLoading] = useState(false)
+  const [quoteError, setQuoteError] = useState(null)
   const [blockedDates, setBlockedDates] = useState([])
   const [reviews, setReviews] = useState([])
   const [reviewsLoading, setReviewsLoading] = useState(false)
@@ -108,6 +109,8 @@ export default function ListingPage() {
   async function fetchQuote() {
     if (!checkIn || !checkOut || !listing) return
     setQuoteLoading(true)
+    setQuoteError(null)
+    setQuote(null)
     try {
       const data = await getReservationQuote({
         listingId: listing._id || listing.id,
@@ -142,14 +145,18 @@ export default function ListingPage() {
         throw new Error('No rate plan in quote response')
       }
     } catch (err) {
-      console.log('Quote failed, using estimate:', err.message)
-      // Fall back to calculated estimate
-      const nights = differenceInCalendarDays(checkOut, checkIn)
-      const nightly = listing?.prices?.basePrice || listing?.price?.basePrice || 0
-      const subtotal = nightly * nights
-      const cleaning = listing?.prices?.cleaningFee || 85
-      const serviceFee = Math.round(subtotal * 0.12)
-      setQuote({ mock: true, nights, nightly, subtotal, cleaning, serviceFee, total: subtotal + cleaning + serviceFee })
+      console.log('Quote failed:', err.code, err.message)
+      if (err.code === 'LISTING_IS_NOT_AVAILABLE') {
+        setQuoteError('These dates aren\'t available for booking — try adjusting your check-in or check-out day.')
+      } else {
+        // Fall back to calculated estimate for unexpected errors
+        const nights = differenceInCalendarDays(checkOut, checkIn)
+        const nightly = listing?.prices?.basePrice || listing?.price?.basePrice || 0
+        const subtotal = nightly * nights
+        const cleaning = listing?.prices?.cleaningFee || 85
+        const serviceFee = Math.round(subtotal * 0.12)
+        setQuote({ mock: true, nights, nightly, subtotal, cleaning, serviceFee, total: subtotal + cleaning + serviceFee })
+      }
     } finally {
       setQuoteLoading(false)
     }
@@ -296,6 +303,9 @@ export default function ListingPage() {
               </div>
 
               {quoteLoading && <div className={styles.quoteLoading}>Calculating price...</div>}
+              {quoteError && !quoteLoading && (
+                <div className={styles.quoteError}>{quoteError}</div>
+              )}
 
               {quote && !quoteLoading && (
                 <div className={styles.priceBreakdown}>
