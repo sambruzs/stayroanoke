@@ -30,6 +30,8 @@ export default function ListingPage() {
   const [quoteLoading, setQuoteLoading] = useState(false)
   const [quoteError, setQuoteError] = useState(null)
   const [blockedDates, setBlockedDates] = useState([])
+  const [ctaDates, setCtaDates] = useState([])   // closed to arrival (no check-in)
+  const [ctdDates, setCtdDates] = useState([])   // closed to departure (no check-out)
   const [reviews, setReviews] = useState([])
   const [reviewsLoading, setReviewsLoading] = useState(false)
 
@@ -86,20 +88,27 @@ export default function ListingPage() {
       const calData = await getListingCalendar(listingId, from, to)
 
       const blocked = []
+      const cta = []
+      const ctd = []
       const days = Array.isArray(calData) ? calData : calData?.days || calData?.data || []
 
       days.forEach(day => {
         const blocks = day.blocks || {}
-        // Only block if actually booked or reserved by a guest
+        const date = parseISO(day.date)
         // b = booked, r = reserved, o = owner block, m = maintenance
-        const isBlocked = blocks.b || blocks.r || blocks.o || blocks.m
-        if (isBlocked) {
-          blocked.push(parseISO(day.date))
+        if (blocks.b || blocks.r || blocks.o || blocks.m) {
+          blocked.push(date)
         }
+        // cta = closed to arrival (check-in not allowed on this day)
+        if (blocks.cta || day.cta) cta.push(date)
+        // ctd = closed to departure (check-out not allowed on this day)
+        if (blocks.ctd || day.ctd) ctd.push(date)
       })
 
-      console.log(`Blocking ${blocked.length} booked dates out of ${days.length} total`)
+      console.log(`Blocked: ${blocked.length}, CTA restricted: ${cta.length}, CTD restricted: ${ctd.length} out of ${days.length} days`)
       setBlockedDates(blocked)
+      setCtaDates(cta)
+      setCtdDates(ctd)
     } catch (e) {
       console.log('Calendar not available:', e.message)
       setBlockedDates([])
@@ -275,7 +284,7 @@ export default function ListingPage() {
                     selected={checkIn}
                     onChange={d => { setCheckIn(d); if (checkOut && d >= checkOut) setCheckOut(null) }}
                     minDate={new Date()}
-                    excludeDates={blockedDates}
+                    excludeDates={[...blockedDates, ...ctaDates]}
                     placeholderText="Add date"
                     dateFormat="MMM d, yyyy"
                   />
@@ -286,7 +295,7 @@ export default function ListingPage() {
                     selected={checkOut}
                     onChange={d => setCheckOut(d)}
                     minDate={checkIn ? addDays(checkIn, 1) : new Date()}
-                    excludeDates={blockedDates}
+                    excludeDates={[...blockedDates, ...ctdDates]}
                     placeholderText="Add date"
                     dateFormat="MMM d, yyyy"
                   />
