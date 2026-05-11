@@ -10,10 +10,11 @@ const PLATFORMS = [
 function PlatformIcon({ platform }) {
   if (platform === 'airbnb') {
     return (
-      <div className={styles.logoBox} style={{ background: '#fff', border: '1px solid #eee' }}>
-        <svg viewBox="0 0 24 24" fill="#FF5A5F" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2.5c-1.5 0-2.7 1.4-2.7 3.1 0 1.1.5 2.1 1.4 2.8L12 9.6l1.3-1.2c.9-.7 1.4-1.7 1.4-2.8C14.7 3.9 13.5 2.5 12 2.5z"/>
-          <path d="M17.4 13.4c-.5-1-1.4-1.7-2.5-2l-.5.5L12 13.8l-2.4-1.9-.5-.5c-1.1.3-2 1-2.5 2C5.4 15.8 6.3 18.5 8.3 19.8c.8.5 1.7.5 2.5.2l1.2-.6 1.2.6c.4.2.8.2 1.2.2.5 0 1-.1 1.4-.4 2-1.3 2.9-4 1.6-6.4z"/>
+      <div className={styles.logoBox} style={{ background: '#FF385C' }}>
+        {/* Airbnb bélo mark */}
+        <svg viewBox="0 0 24 24" fill="white" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+          <path fillRule="evenodd" clipRule="evenodd" d="M12 1.5c-2.76 0-5 2.35-5 5.25 0 1.8.9 3.47 2.38 4.5L12 13l2.62-1.75C16.1 10.22 17 8.55 17 6.75c0-2.9-2.24-5.25-5-5.25zm0 3c1.1 0 2 .95 2 2.12s-.9 2.13-2 2.13-2-.96-2-2.13.9-2.12 2-2.12z"/>
+          <path d="M18.46 14.06c-.74-1.47-2-2.48-3.46-2.8L12 13.8l-3 -2.54c-1.46.32-2.72 1.33-3.46 2.8-1.42 2.74-.28 6.14 2.42 7.74 1.22.72 2.58.64 3.66.18l.38-.17.38.17c.42.18.85.26 1.28.26.64 0 1.28-.18 1.86-.44 2.7-1.6 3.84-5 2.42-7.74z"/>
         </svg>
       </div>
     )
