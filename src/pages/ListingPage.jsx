@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom'
 import { getListing, getReservationQuote, getListingCalendar, getListingReviews } from '../utils/guestyApi'
 import { mockListings } from '../data/mockListings'
-import { format, differenceInCalendarDays, addDays, parseISO } from 'date-fns'
+import { format, differenceInCalendarDays, addDays, parseISO, isWithinInterval, startOfDay } from 'date-fns'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import styles from './ListingPage.module.css'
@@ -36,10 +36,10 @@ export default function ListingPage() {
   const [reviewsLoading, setReviewsLoading] = useState(false)
 
   const [checkIn, setCheckIn] = useState(
-    searchParams.get('checkIn') ? new Date(searchParams.get('checkIn')) : null
+    searchParams.get('checkIn') ? parseISO(searchParams.get('checkIn')) : null
   )
   const [checkOut, setCheckOut] = useState(
-    searchParams.get('checkOut') ? new Date(searchParams.get('checkOut')) : null
+    searchParams.get('checkOut') ? parseISO(searchParams.get('checkOut')) : null
   )
   const [guests, setGuests] = useState(parseInt(searchParams.get('guests') || '2'))
 
@@ -117,6 +117,18 @@ export default function ListingPage() {
 
   async function fetchQuote() {
     if (!checkIn || !checkOut || !listing) return
+
+    // Validate that no blocked date falls inside the selected range
+    const rangeStart = startOfDay(checkIn)
+    const rangeEnd = startOfDay(checkOut)
+    const hasBlockedInRange = blockedDates.some(d =>
+      isWithinInterval(startOfDay(d), { start: rangeStart, end: addDays(rangeEnd, -1) })
+    )
+    if (hasBlockedInRange) {
+      setQuoteError('These dates aren\'t available for booking — try adjusting your check-in or check-out day.')
+      return
+    }
+
     setQuoteLoading(true)
     setQuoteError(null)
     setQuote(null)
