@@ -9,12 +9,12 @@ const PLATFORMS = [
 
 function PlatformIcon({ platform }) {
   if (platform === 'airbnb') {
+    // Airbnb bélo: arch with circular cutout (top) + spreading wings (bottom)
     return (
       <div className={styles.logoBox} style={{ background: '#FF385C' }}>
-        {/* Airbnb bélo mark */}
-        <svg viewBox="0 0 24 24" fill="white" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-          <path fillRule="evenodd" clipRule="evenodd" d="M12 1.5c-2.76 0-5 2.35-5 5.25 0 1.8.9 3.47 2.38 4.5L12 13l2.62-1.75C16.1 10.22 17 8.55 17 6.75c0-2.9-2.24-5.25-5-5.25zm0 3c1.1 0 2 .95 2 2.12s-.9 2.13-2 2.13-2-.96-2-2.13.9-2.12 2-2.12z"/>
-          <path d="M18.46 14.06c-.74-1.47-2-2.48-3.46-2.8L12 13.8l-3 -2.54c-1.46.32-2.72 1.33-3.46 2.8-1.42 2.74-.28 6.14 2.42 7.74 1.22.72 2.58.64 3.66.18l.38-.17.38.17c.42.18.85.26 1.28.26.64 0 1.28-.18 1.86-.44 2.7-1.6 3.84-5 2.42-7.74z"/>
+        <svg viewBox="0 0 24 24" fill="white" width="21" height="21" xmlns="http://www.w3.org/2000/svg">
+          <path fillRule="evenodd" d="M12 2C9.24 2 7 4.24 7 7s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+          <path d="M17.66 13.28A6.02 6.02 0 0015 12.28L12 15l-3-2.72a6.02 6.02 0 00-2.66 1 5.97 5.97 0 00-2.23 7.44A5.99 5.99 0 0010.28 24h.03l1.69-.97 1.69.97h.03a5.99 5.99 0 006.17-3.28 5.97 5.97 0 00-2.23-7.44z"/>
         </svg>
       </div>
     )
