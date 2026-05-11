@@ -99,6 +99,8 @@ export default function ListingPage() {
         if (blocks.b || blocks.r || blocks.o || blocks.m) {
           blocked.push(date)
         }
+        // pt = preparation time (cleaning buffer) — blocks check-in but not checkout
+        if (blocks.pt) cta.push(date)
         // cta = closed to arrival (check-in not allowed on this day)
         if (blocks.cta || day.cta) cta.push(date)
         // ctd = closed to departure (check-out not allowed on this day)
@@ -307,7 +309,7 @@ export default function ListingPage() {
                     selected={checkOut}
                     onChange={d => setCheckOut(d)}
                     minDate={checkIn ? addDays(checkIn, 1) : new Date()}
-                    excludeDates={[...blockedDates, ...ctdDates]}
+                    excludeDates={ctdDates}
                     placeholderText="Add date"
                     dateFormat="MMM d, yyyy"
                   />
