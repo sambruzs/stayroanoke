@@ -49,6 +49,29 @@ async function saveBlobsToken(token, expiry) {
   }
 }
 
+async function readBlobsLock() {
+  try {
+    const store = getStore('guesty-auth')
+    const lock = await store.get('refresh-lock', { type: 'json' })
+    if (lock?.at && Date.now() - lock.at < 20000) return lock
+  } catch {}
+  return null
+}
+
+async function acquireBlobsLock() {
+  try {
+    const store = getStore('guesty-auth')
+    await store.set('refresh-lock', JSON.stringify({ at: Date.now() }))
+  } catch {}
+}
+
+async function releaseBlobsLock() {
+  try {
+    const store = getStore('guesty-auth')
+    await store.delete('refresh-lock')
+  } catch {}
+}
+
 async function fetchFreshToken() {
   if (!env.clientId || !env.clientSecret) {
     throw new Error('No client credentials available — check VITE_GUESTY_CLIENT_ID / VITE_GUESTY_CLIENT_SECRET in Netlify')
@@ -76,6 +99,18 @@ async function fetchFreshToken() {
     })
     clearTimeout(timeout)
 
+    if (res.status === 429) {
+      // Rate limited — another container may have just succeeded; check Blobs before giving up
+      const blob = await readBlobsToken()
+      if (blob) {
+        console.warn('OAuth 429 rate-limited, using Blobs token written by another container')
+        cachedToken = blob.token
+        tokenExpiry = blob.expiry
+        return cachedToken
+      }
+      throw new Error('OAuth 429: rate limit hit and no cached token available')
+    }
+
     if (!res.ok) {
       const text = await res.text()
       throw new Error(`Auth ${res.status}: ${text}`)
@@ -95,6 +130,8 @@ async function fetchFreshToken() {
   } catch (err) {
     clearTimeout(timeout)
     throw err
+  } finally {
+    await releaseBlobsLock()
   }
 }
 
@@ -127,7 +164,34 @@ async function getToken({ forceOAuth = false } = {}) {
     }
   }
 
-  // 4. OAuth — rate limited to 5/day, only reached when token is truly expired
+  // 4. Soft lock — if another container is mid-refresh, wait up to 15s for it to finish
+  const lock = await readBlobsLock()
+  if (lock) {
+    console.log('Refresh lock held by another container — polling Blobs for new token')
+    for (let i = 0; i < 5; i++) {
+      await new Promise(r => setTimeout(r, 3000))
+      const blob = await readBlobsToken()
+      if (blob) {
+        console.log('Got token from Blobs after waiting on lock')
+        cachedToken = blob.token
+        tokenExpiry = blob.expiry
+        return cachedToken
+      }
+    }
+    console.warn('Lock wait timed out — proceeding with OAuth anyway')
+  }
+
+  // 5. OAuth — rate limited to 5/day, only reached when token is truly expired
+  await acquireBlobsLock()
+  // Final Blobs check after acquiring lock (another container may have just finished)
+  const blobAfterLock = await readBlobsToken()
+  if (blobAfterLock) {
+    await releaseBlobsLock()
+    console.log('Token written by another container just before our lock — using it')
+    cachedToken = blobAfterLock.token
+    tokenExpiry = blobAfterLock.expiry
+    return cachedToken
+  }
   return fetchFreshToken()
 }
 
