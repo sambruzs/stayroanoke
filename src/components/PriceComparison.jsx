@@ -7,24 +7,21 @@ const PLATFORMS = [
     name: 'Airbnb',
     fee: 0.10,
     feeLabel: '+10% service fee',
-    color: '#FF5A5F',
-    iconText: 'A',
+    logo: 'https://logo.clearbit.com/airbnb.com',
   },
   {
     key: 'vrbo',
     name: 'VRBO',
     fee: 0.08,
     feeLabel: '+8% service fee',
-    color: '#1C69D4',
-    iconText: 'V',
+    logo: 'https://logo.clearbit.com/vrbo.com',
   },
   {
     key: 'booking',
     name: 'Booking.com',
     fee: 0.15,
     feeLabel: '+15% service fee',
-    color: '#003580',
-    iconText: 'B.',
+    logo: 'https://logo.clearbit.com/booking.com',
   },
 ]
 
@@ -62,7 +59,9 @@ export default function PriceComparison({ quote, onBookDirect }) {
         return (
           <div key={p.key} className={styles.row}>
             <div className={styles.iconWrap}>
-              <div className={styles.icon} style={{ background: p.color }}>{p.iconText}</div>
+              <div className={styles.logoBox}>
+                <img src={p.logo} alt={p.name} className={styles.logoImg} />
+              </div>
             </div>
             <div className={styles.info}>
               <span className={styles.platformName}>{p.name}</span>
