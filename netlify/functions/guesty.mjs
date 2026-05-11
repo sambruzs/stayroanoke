@@ -28,9 +28,20 @@ const emptyResult = (reason) => ({
 
 // ─── Blobs helpers ────────────────────────────────────────────────────────────
 
+function blobsStore() {
+  // NETLIFY_BLOBS_CONTEXT is auto-injected by the Netlify runtime.
+  // If it's missing (esbuild quirk or cold env), fall back to explicit siteID + token.
+  const siteID = process.env.SITE_ID || process.env.NETLIFY_SITE_ID
+  const token  = process.env.NETLIFY_TOKEN
+  if (!process.env.NETLIFY_BLOBS_CONTEXT && siteID && token) {
+    return getStore({ name: 'guesty-auth', siteID, token })
+  }
+  return blobsStore()
+}
+
 async function readBlobsToken() {
   try {
-    const store = getStore('guesty-auth')
+    const store = blobsStore()
     const stored = await store.get('token', { type: 'json' })
     // 5-min buffer so we never serve a token that's about to expire mid-request
     if (stored?.token && stored?.expiry && Date.now() < stored.expiry - 300_000) {
@@ -44,7 +55,7 @@ async function readBlobsToken() {
 
 export async function saveBlobsToken(token, expiry) {
   try {
-    const store = getStore('guesty-auth')
+    const store = blobsStore()
     await store.set('token', JSON.stringify({ token, expiry }))
   } catch (e) {
     console.warn('Blobs write failed:', e.message)
@@ -58,7 +69,7 @@ function todayKey() {
 
 async function getEmergencyCount() {
   try {
-    const store = getStore('guesty-auth')
+    const store = blobsStore()
     const v = await store.get(todayKey(), { type: 'json' })
     return v?.count ?? 0
   } catch { return 0 }
@@ -66,7 +77,7 @@ async function getEmergencyCount() {
 
 async function incrementEmergencyCount() {
   try {
-    const store = getStore('guesty-auth')
+    const store = blobsStore()
     const current = await getEmergencyCount()
     await store.set(todayKey(), JSON.stringify({ count: current + 1 }))
   } catch {}
@@ -75,17 +86,17 @@ async function incrementEmergencyCount() {
 // Soft lock — prevents concurrent containers from each firing an OAuth call
 async function readLock() {
   try {
-    const store = getStore('guesty-auth')
+    const store = blobsStore()
     const lock = await store.get('refresh-lock', { type: 'json' })
     if (lock?.at && Date.now() - lock.at < 20_000) return lock
   } catch {}
   return null
 }
 async function acquireLock() {
-  try { await getStore('guesty-auth').set('refresh-lock', JSON.stringify({ at: Date.now() })) } catch {}
+  try { await blobsStore().set('refresh-lock', JSON.stringify({ at: Date.now() })) } catch {}
 }
 async function releaseLock() {
-  try { await getStore('guesty-auth').delete('refresh-lock') } catch {}
+  try { await blobsStore().delete('refresh-lock') } catch {}
 }
 
 // ─── OAuth call ───────────────────────────────────────────────────────────────
