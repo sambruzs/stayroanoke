@@ -8,6 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import styles from './ListingPage.module.css'
 import { getGalleryImage, getThumbImage } from '../utils/imageUtils'
 import Reviews from '../components/Reviews'
+import PriceComparison from '../components/PriceComparison'
 
 const AMENITY_ICONS = {
   'Air conditioning': '❄️', 'Wifi': '📶', 'Hot tub': '🛁', 'Pool': '🏊',
@@ -385,6 +386,7 @@ export default function ListingPage() {
                 {checkIn && checkOut ? "You won't be charged yet" : 'Select dates to see total price'}
               </p>
             </div>
+            <PriceComparison quote={quote} />
           </aside>
         </div>
       </div>
