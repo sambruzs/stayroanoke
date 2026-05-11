@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
+import { useParams, useSearchParams, useNavigate, useLocation } from 'react-router-dom'
 import { getListing, createReservation, createInquiry } from '../utils/guestyApi'
 import { mockListings } from '../data/mockListings'
 import { differenceInCalendarDays } from 'date-fns'
@@ -14,6 +14,9 @@ export default function CheckoutPage() {
   const checkOut = searchParams.get('checkOut')
   const guests = searchParams.get('guests')
   const quoteId = searchParams.get('quoteId')
+
+  const { state } = useLocation()
+  const quote = state?.quote || null
 
   const [listing, setListing] = useState(null)
   const [submitting, setSubmitting] = useState(false)
@@ -81,12 +84,15 @@ export default function CheckoutPage() {
 
   if (!listing) return <div className={styles.loading}><div className={styles.spinner} /></div>
 
-  const price = listing.prices?.basePrice || listing.price?.basePrice || 0
   const nights = checkIn && checkOut ? differenceInCalendarDays(new Date(checkOut), new Date(checkIn)) : 0
-  const subtotal = price * nights
-  const cleaning = 85
-  const serviceFee = Math.round(subtotal * 0.12)
-  const total = subtotal + cleaning + serviceFee
+  const price = quote?.nightly || listing.prices?.basePrice || listing.price?.basePrice || 0
+  const subtotal = quote?.subtotal ?? price * nights
+  const cleaning = quote?.cleaning ?? listing.prices?.cleaningFee ?? 85
+  const taxes = quote?.taxes || 0
+  const totalFees = quote?.totalFees || 0
+  const total = quote
+    ? quote.total
+    : subtotal + cleaning + Math.round(subtotal * 0.12)
 
   return (
     <div className={styles.page}>
@@ -172,14 +178,24 @@ export default function CheckoutPage() {
                 <span>${price} × {nights} nights</span>
                 <span>${subtotal}</span>
               </div>
-              <div className={styles.summaryRow}>
-                <span>Cleaning fee</span>
-                <span>${cleaning}</span>
-              </div>
-              <div className={styles.summaryRow}>
-                <span>Service fee</span>
-                <span>${serviceFee}</span>
-              </div>
+              {cleaning > 0 && (
+                <div className={styles.summaryRow}>
+                  <span>Cleaning fee</span>
+                  <span>${cleaning}</span>
+                </div>
+              )}
+              {taxes > 0 && (
+                <div className={styles.summaryRow}>
+                  <span>Taxes</span>
+                  <span>${taxes}</span>
+                </div>
+              )}
+              {!quote && (
+                <div className={styles.summaryRow}>
+                  <span>Service fee (est.)</span>
+                  <span>${Math.round(subtotal * 0.12)}</span>
+                </div>
+              )}
               <div className={`${styles.summaryRow} ${styles.summaryTotal}`}>
                 <span>Total</span>
                 <span>${total}</span>

@@ -195,7 +195,7 @@ export default function ListingPage() {
     if (checkOut) params.set('checkOut', format(checkOut, 'yyyy-MM-dd'))
     params.set('guests', guests)
     if (quote && !quote.mock) params.set('quoteId', quote._id)
-    navigate(`/checkout/${listing._id || listing.id}?${params.toString()}`)
+    navigate(`/checkout/${listing._id || listing.id}?${params.toString()}`, { state: { quote } })
   }
 
   if (loading) return <div className={styles.loadingPage}><div className={styles.spinner} /></div>
