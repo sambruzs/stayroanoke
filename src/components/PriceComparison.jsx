@@ -2,28 +2,42 @@ import React from 'react'
 import styles from './PriceComparison.module.css'
 
 const PLATFORMS = [
-  {
-    key: 'airbnb',
-    name: 'Airbnb',
-    fee: 0.10,
-    feeLabel: '+10% service fee',
-    logo: 'https://logo.clearbit.com/airbnb.com',
-  },
-  {
-    key: 'vrbo',
-    name: 'VRBO',
-    fee: 0.08,
-    feeLabel: '+8% service fee',
-    logo: 'https://logo.clearbit.com/vrbo.com',
-  },
-  {
-    key: 'booking',
-    name: 'Booking.com',
-    fee: 0.15,
-    feeLabel: '+15% service fee',
-    logo: 'https://logo.clearbit.com/booking.com',
-  },
+  { key: 'airbnb',  name: 'Airbnb',       fee: 0.10, feeLabel: '+10% service fee' },
+  { key: 'vrbo',    name: 'VRBO',          fee: 0.08, feeLabel: '+8% service fee'  },
+  { key: 'booking', name: 'Booking.com',   fee: 0.15, feeLabel: '+15% service fee' },
 ]
+
+function PlatformIcon({ platform }) {
+  if (platform === 'airbnb') {
+    return (
+      <div className={styles.logoBox} style={{ background: '#FF5A5F' }}>
+        <svg viewBox="0 0 24 24" fill="white" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2.5c-1.5 0-2.7 1.4-2.7 3.1 0 1.1.5 2.1 1.4 2.8L12 9.6l1.3-1.2c.9-.7 1.4-1.7 1.4-2.8C14.7 3.9 13.5 2.5 12 2.5z"/>
+          <path d="M17.4 13.4c-.5-1-1.4-1.7-2.5-2l-.5.5L12 13.8l-2.4-1.9-.5-.5c-1.1.3-2 1-2.5 2C5.4 15.8 6.3 18.5 8.3 19.8c.8.5 1.7.5 2.5.2l1.2-.6 1.2.6c.4.2.8.2 1.2.2.5 0 1-.1 1.4-.4 2-1.3 2.9-4 1.6-6.4z"/>
+        </svg>
+      </div>
+    )
+  }
+  if (platform === 'vrbo') {
+    return (
+      <div className={styles.logoBox} style={{ background: '#1C69D4' }}>
+        <svg viewBox="0 0 40 18" fill="white" width="28" height="13" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="14" fontFamily="Arial, sans-serif" fontWeight="900" fontSize="14" letterSpacing="0.5">vrbo</text>
+        </svg>
+      </div>
+    )
+  }
+  if (platform === 'booking') {
+    return (
+      <div className={styles.logoBox} style={{ background: '#003580' }}>
+        <svg viewBox="0 0 24 24" fill="white" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+          <text x="2" y="18" fontFamily="Arial, sans-serif" fontWeight="900" fontSize="16">B.</text>
+        </svg>
+      </div>
+    )
+  }
+  return null
+}
 
 export default function PriceComparison({ quote, onBookDirect }) {
   if (!quote || quote.mock) return null
@@ -59,9 +73,7 @@ export default function PriceComparison({ quote, onBookDirect }) {
         return (
           <div key={p.key} className={styles.row}>
             <div className={styles.iconWrap}>
-              <div className={styles.logoBox}>
-                <img src={p.logo} alt={p.name} className={styles.logoImg} />
-              </div>
+              <PlatformIcon platform={p.key} />
             </div>
             <div className={styles.info}>
               <span className={styles.platformName}>{p.name}</span>

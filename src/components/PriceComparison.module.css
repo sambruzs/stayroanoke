@@ -58,19 +58,11 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-}
-
-.logoImg {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  display: block;
+  flex-shrink: 0;
 }
 
 /* Info */
