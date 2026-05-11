@@ -63,10 +63,15 @@ export async function getReservationQuote({ listingId, checkIn, checkOut, guests
 
 // Create instant reservation
 export async function createReservation({ quoteId, ratePlanId, ccToken, guest }) {
-  return guestyFetch('/reservations/instantly', {
+  return guestyFetch(`/reservations/quotes/${quoteId}/instant`, {
     method: 'POST',
-    body: JSON.stringify({ quoteId, ratePlanId, ccToken, guest })
+    body: JSON.stringify({ ratePlanId, ccToken, guest })
   })
+}
+
+// Get payment provider for a listing (returns { providerType, providerAccountId })
+export async function getListingPaymentProvider(listingId) {
+  return guestyFetch(`/listings/${listingId}/payment-provider`)
 }
 
 // Get reviews for a listing

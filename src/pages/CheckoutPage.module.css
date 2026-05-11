@@ -110,16 +110,23 @@
   border-color: var(--blue-mid);
 }
 
-.paymentNote {
-  display: flex;
-  gap: 0.75rem;
-  align-items: flex-start;
-  background: var(--beige);
+.cardElementWrap {
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 1rem;
-  font-size: 0.9rem;
-  color: var(--text-mid);
-  line-height: 1.6;
+  background: var(--white);
+  transition: border-color 0.15s;
+}
+
+.cardElementWrap:focus-within {
+  border-color: var(--blue-mid);
+}
+
+.paymentNote {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  margin-top: 0.75rem;
+  line-height: 1.5;
 }
 
 .error {

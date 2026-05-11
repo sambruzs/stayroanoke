@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@netlify/blobs": "^10.7.4",
+    "@stripe/react-stripe-js": "^6.3.0",
+    "@stripe/stripe-js": "^9.4.0",
     "date-fns": "^3.3.1",
     "react": "^18.2.0",
     "react-datepicker": "^6.6.0",
