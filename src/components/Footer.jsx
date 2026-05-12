@@ -32,8 +32,8 @@ export default function Footer() {
           </div>
           <div className={styles.col}>
             <h4>Contact</h4>
-            <a href="mailto:hello@stayroanoke.com">hello@stayroanoke.com</a>
-            <a href="tel:+15401234567">(540) 123-4567</a>
+            <a href="mailto:info@stayroanoke.com">info@stayroanoke.com</a>
+            <a href="tel:+15407327151">(540) 732-7151</a>
           </div>
         </div>
       </div>

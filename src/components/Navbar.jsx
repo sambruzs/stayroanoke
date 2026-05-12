@@ -43,7 +43,7 @@ export default function Navbar() {
         <Link to="/search" className={styles.link}>Properties</Link>
         <Link to="/partners" className={styles.link}>Partner Listings</Link>
         <Link to="/blog" className={styles.link}>Guide</Link>
-        <a href="mailto:hello@stayroanoke.com" className={styles.link}>Contact</a>
+        <a href="mailto:info@stayroanoke.com" className={styles.link}>Contact</a>
         <Link to="/search" className={styles.cta}>Book Now</Link>
       </div>
     </nav>

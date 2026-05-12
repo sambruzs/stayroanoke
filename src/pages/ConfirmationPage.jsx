@@ -46,7 +46,7 @@ export default function ConfirmationPage() {
         </div>
 
         <p className={styles.contact}>
-          Questions? Email us at <a href="mailto:hello@stayroanoke.com">hello@stayroanoke.com</a> or call <a href="tel:+15401234567">(540) 123-4567</a>
+          Questions? Email us at <a href="mailto:info@stayroanoke.com">info@stayroanoke.com</a> or call <a href="tel:+15407327151">(540) 732-7151</a>
         </p>
       </div>
     </div>
