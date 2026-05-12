@@ -28,15 +28,17 @@ const emptyResult = (reason) => ({
 
 // ─── Blobs helpers ────────────────────────────────────────────────────────────
 
+const NETLIFY_SITE_ID = 'cd1a5128-46de-48e0-a716-d4257f0d1b91'
+
 function blobsStore() {
-  // NETLIFY_BLOBS_CONTEXT is auto-injected by the Netlify runtime.
-  // If it's missing (esbuild quirk or cold env), fall back to explicit siteID + token.
-  const siteID = process.env.SITE_ID || process.env.NETLIFY_SITE_ID
-  const token  = process.env.NETLIFY_TOKEN
-  if (!process.env.NETLIFY_BLOBS_CONTEXT && siteID && token) {
-    return getStore({ name: 'guesty-auth', siteID, token })
+  // esbuild strips NETLIFY_BLOBS_CONTEXT, so use explicit credentials when available.
+  // NETLIFY_TOKEN = Netlify personal access token set in site env vars.
+  const token = process.env.NETLIFY_TOKEN
+  if (token) {
+    return getStore({ name: 'guesty-auth', siteID: NETLIFY_SITE_ID, token })
   }
-  return blobsStore()
+  // Fallback: rely on auto-injected context (non-esbuild environments)
+  return getStore('guesty-auth')
 }
 
 async function readBlobsToken() {
