@@ -75,7 +75,7 @@ Staying in one of our vacation rentals means you'll have a full kitchen for nigh
     date: 'April 25, 2026',
     author: 'Stay Roanoke',
     category: 'Travel Guide',
-    coverImage: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=85',
+    coverImage: 'https://upload.wikimedia.org/wikipedia/commons/b/bc/The_Roanoke_Star_on_a_Foggy_Night.jpg',
     excerpt: 'Summer in Roanoke is spectacular. The Blue Ridge is at its greenest, the trails are in peak condition, and the city comes alive with outdoor events. Here\'s how to make the most of a summer weekend.',
     content: `
 Summer in Roanoke is one of Virginia's best-kept secrets. While the rest of the East Coast swelters, the Blue Ridge Mountains keep temperatures mild and the scenery impossibly green. Add in world-class hiking, a lively downtown, Virginia wine country, and a growing craft brewery scene, and you have a weekend destination that rewards every kind of traveler.
