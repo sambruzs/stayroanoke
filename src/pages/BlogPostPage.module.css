@@ -226,6 +226,43 @@
 
 .relatedPost:hover p { color: var(--blue-mid); }
 
+.inlineImage {
+  width: 100%;
+  border-radius: var(--radius-md);
+  margin: 1.5rem 0;
+  display: block;
+  object-fit: cover;
+  max-height: 480px;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+.list {
+  padding-left: 1.5rem;
+  margin: 0.75rem 0 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.list li {
+  font-size: 1rem;
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+
+.content a {
+  color: var(--blue-mid);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.content a:hover { color: var(--blue-dark); }
+
 @media (max-width: 860px) {
   .layout { flex-direction: column; }
   .sidebar { width: 100%; position: static; }

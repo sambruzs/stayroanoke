@@ -129,12 +129,35 @@ The best way to experience Roanoke is to stay like a local. Our vacation rentals
     date: 'April 22, 2026',
     author: 'Stay Roanoke',
     category: 'Travel Guide',
-    coverImage: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&q=85',
+    coverImage: 'https://assets.guesty.com/image/upload/v1777125123/production/689c84159d5bed417055e8f0/qetios5oyqiylvv6qn1f.jpg',
     excerpt: 'Roanoke, Virginia offers some of the best cabin rentals on the East Coast. Tucked into the Blue Ridge Mountains, these properties put you minutes from world-class hiking, Virginia wine country, and a city worth exploring.',
     content: `
 When it comes to cabin rentals on the East Coast, few destinations match what Roanoke, Virginia has to offer. Situated at the heart of the Blue Ridge Mountains, Roanoke and neighboring Salem give you direct access to some of the most beautiful landscapes in the Appalachians — without the crowds and prices of more well-known mountain destinations.
 
 Whether you're planning a romantic weekend escape, a family vacation, or a group retreat, here's everything you need to know about finding the best cabin rental in Roanoke, VA.
+
+## The Cabin On The Creek — New Castle, VA
+
+![The Cabin On The Creek](https://assets.guesty.com/image/upload/v1777125123/production/689c84159d5bed417055e8f0/qetios5oyqiylvv6qn1f.jpg)
+
+One of our most beloved properties is **The Cabin On The Creek**, a luxury-appointed retreat nestled alongside Dick's Creek in New Castle, Virginia. Tucked into the quiet countryside of Craig County — just 45 minutes from downtown Roanoke — this cabin offers genuine seclusion without sacrificing comfort.
+
+The cabin sleeps up to 5 guests across two queen bedrooms, with a full bath fully stocked with essentials. The fully equipped kitchen handles everything from morning coffee to full dinners, and the spacious porch is where most guests spend their evenings — listening to the creek, watching the stars, and doing absolutely nothing.
+
+**Highlights:**
+- Fire pit and outdoor seating for evening campfires
+- BBQ grill for cookouts
+- Mountain and rural views from the porch
+- Pets welcome — bring the dog
+- High-speed WiFi for remote work or streaming
+- Washer and dryer on site
+- Sleeps 5 across two queen bedrooms
+
+New Castle itself is one of Virginia's best-kept secrets. The Craig Creek Valley is surrounded by Jefferson National Forest, with hiking, fishing, and cycling opportunities in every direction. It's the kind of place where you genuinely disconnect — but the drive to Roanoke's restaurants and breweries is easy when you're ready for civilization.
+
+[Book The Cabin On The Creek →](/listing/69ecc77ca8080b0012ad4278)
+
+---
 
 ## Why Rent a Cabin Near Roanoke?
 
@@ -146,35 +169,37 @@ Beyond the outdoors, Roanoke has a thriving food scene, Virginia wine country wi
 
 **Trail access.** The best Roanoke cabins are within 15-30 minutes of the McAfee Knob trailhead (one of the most photographed spots on the entire Appalachian Trail), the Roanoke Valley Greenway, and the Blue Ridge Parkway. Look for properties in Salem or the western parts of Roanoke County for the closest trail access.
 
-**Hot tubs and fire pits.** After a long day of hiking, nothing beats soaking in a hot tub with mountain views or gathering around a fire pit under the stars. These amenities consistently rank as the most-requested features among Roanoke cabin guests.
+**Fire pits and outdoor space.** After a long day of hiking, nothing beats gathering around a fire pit under the stars. This is consistently the most-requested amenity among Roanoke cabin guests — and The Cabin On The Creek delivers.
 
-**Pet-friendly options.** The Roanoke area is extremely dog-friendly — most trails allow leashed dogs, and many of the best cabins welcome four-legged guests.
+**Pet-friendly options.** The Roanoke area is extremely dog-friendly — most trails allow leashed dogs, and many of the best cabins welcome four-legged guests. The Cabin On The Creek is fully pet-friendly.
 
 **Group capacity.** The Roanoke area has an excellent selection of larger properties for group retreats, family reunions, and bachelorette weekends. Several of our properties accommodate 10-12 guests.
 
 ## Best Areas for Cabin Rentals Near Roanoke
 
+**New Castle / Craig County.** For true seclusion, nothing in the Roanoke region compares to the Craig Creek Valley. Surrounded by Jefferson National Forest, this area is perfect for guests who want to genuinely disconnect. The Cabin On The Creek sits right here.
+
 **Salem, VA.** The closest base for hiking McAfee Knob and the Appalachian Trail. Salem has a charming small-city feel, great restaurants, and easy access to both the mountains and downtown Roanoke. Properties here tend to book fast in spring and fall.
 
-**Roanoke County / Bradshaw Road area.** Tucked further into the mountains west of Salem, this area offers more seclusion and dramatic ridgeline views. Perfect for guests who want to truly unplug. The trade-off is a slightly longer drive to downtown Roanoke.
+**Roanoke County / Bradshaw Road area.** Tucked further into the mountains west of Salem, this area offers more seclusion and dramatic ridgeline views. Perfect for guests who want to truly unplug with a shorter drive to the city.
 
 **South Roanoke / Mill Mountain area.** If you want to be close to the city while still feeling like you're in the mountains, the neighborhoods around Mill Mountain offer the best of both. Walk to restaurants, drive to trailheads.
 
 ## When to Visit
 
-**Spring (April-May)** is peak season for good reason — the wildflowers are blooming, the temperatures are perfect for hiking, and the trails are in excellent shape. Book 2-3 months in advance.
+**Spring (April-May)** is peak season for good reason — the wildflowers are blooming along the creek, the temperatures are perfect for hiking, and the trails are in excellent shape. Book 2-3 months in advance.
 
-**Summer (June-August)** brings lush green mountains, full foliage, and warm evenings perfect for campfires. The Blue Ridge Parkway is at its most beautiful. Popular weekends fill up fast.
+**Summer (June-August)** brings lush green mountains, full foliage, and warm evenings perfect for campfires by the creek. The Blue Ridge Parkway is at its most beautiful. Popular weekends fill up fast.
 
-**Fall (September-October)** rivals spring as the best time to visit. The fall foliage along the Blue Ridge Parkway is world-class, and the hiking weather is ideal. This is the most competitive booking window of the year — reserve as early as possible.
+**Fall (September-October)** rivals spring as the best time to visit. The fall foliage in Craig County and along the Blue Ridge Parkway is world-class, and the hiking weather is ideal. This is the most competitive booking window of the year — reserve as early as possible.
 
-**Winter (November-March)** is the hidden gem season. Rates drop, the trails are quiet, and a cabin with a fireplace and hot tub feels especially magical with snow on the ridgelines.
+**Winter (November-March)** is the hidden gem season. Rates drop, the trails are quiet, and a cabin with a fire pit and cozy living room feels especially magical with snow on the ridgelines.
 
 ## Book Your Roanoke Cabin Today
 
-Stay Roanoke manages over 45 vacation rental properties in the Roanoke and Salem area, ranging from cozy studio cabins for couples to large farmsteads for group retreats. All of our properties are handpicked, professionally managed, and designed to give you the best possible Blue Ridge Mountain experience.
+Stay Roanoke manages vacation rental properties across the Roanoke and Salem area, from cozy creekside cabins to stylish downtown lofts. All of our properties are handpicked and professionally managed.
 
-Browse our full collection and find your perfect Roanoke cabin rental. Whether you're planning a weekend hike, a wine country escape, or a family summer vacation, we have the right property for your trip.
+Browse our full collection and find your perfect Roanoke cabin rental — or [book The Cabin On The Creek](/listing/69ecc77ca8080b0012ad4278) directly and wake up to the sound of the creek tomorrow morning.
     `
   }
 ]

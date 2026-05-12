@@ -3,27 +3,51 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import { blogPosts } from '../data/blogPosts'
 import styles from './BlogPostPage.module.css'
 
+function renderInline(text) {
+  return text
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\[([^\]]+)\]\((\/[^)]+)\)/g, '<a href="$2">$1</a>')
+    .replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+}
+
 function renderContent(content) {
   const lines = content.trim().split('\n')
   const elements = []
   let key = 0
+  let listItems = []
+
+  function flushList() {
+    if (listItems.length) {
+      elements.push(<ul key={key++} className={styles.list}>{listItems}</ul>)
+      listItems = []
+    }
+  }
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim()
-    if (!line) continue
+
+    if (!line) { flushList(); continue }
 
     if (line.startsWith('## ')) {
-      elements.push(<h2 key={key++}>{line.replace('## ', '')}</h2>)
-    } else if (line.startsWith('**') && line.endsWith('**')) {
-      elements.push(<p key={key++} className={styles.boldLine}><strong>{line.replace(/\*\*/g, '')}</strong></p>)
-    } else if (line.startsWith('**')) {
-      // Bold label lines like **Location:** Downtown
-      const rendered = line.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-      elements.push(<p key={key++} className={styles.meta} dangerouslySetInnerHTML={{ __html: rendered }} />)
+      flushList()
+      elements.push(<h2 key={key++}>{line.slice(3)}</h2>)
+    } else if (line === '---') {
+      flushList()
+      elements.push(<hr key={key++} className={styles.divider} />)
+    } else if (/^!\[([^\]]*)\]\(([^)]+)\)$/.test(line)) {
+      flushList()
+      const [, alt, src] = line.match(/^!\[([^\]]*)\]\(([^)]+)\)$/)
+      elements.push(<img key={key++} src={src} alt={alt} className={styles.inlineImage} />)
+    } else if (line.startsWith('- ')) {
+      const html = renderInline(line.slice(2))
+      listItems.push(<li key={key++} dangerouslySetInnerHTML={{ __html: html }} />)
     } else {
-      elements.push(<p key={key++}>{line}</p>)
+      flushList()
+      const html = renderInline(line)
+      elements.push(<p key={key++} dangerouslySetInnerHTML={{ __html: html }} />)
     }
   }
+  flushList()
   return elements
 }
 
