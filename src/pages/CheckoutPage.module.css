@@ -190,6 +190,18 @@
   text-decoration: underline;
 }
 
+.depositNote {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+.depositNote a {
+  color: var(--blue-dark);
+  text-decoration: underline;
+}
+
 /* Summary */
 .summary {
   width: 320px;
