@@ -423,6 +423,7 @@ async function sendConfirmationEmail({ reservation, emailContext, guest }) {
       to: [email],
       subject: `Booking Confirmed – ${listingTitle}`,
       html,
+      scheduled_at: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
     }),
   })
 
