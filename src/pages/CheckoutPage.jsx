@@ -15,6 +15,7 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests }) {
 
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [form, setForm] = useState({
     firstName: '', lastName: '', email: '', phone: '', notes: ''
   })
@@ -41,6 +42,11 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests }) {
 
     if (!form.firstName || !form.lastName || !form.email) {
       setError('Please fill in all required fields.')
+      return
+    }
+
+    if (!agreedToTerms) {
+      setError('Please agree to the Terms & Conditions to continue.')
       return
     }
 
@@ -174,9 +180,21 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests }) {
           </p>
         </section>
 
+        <div className={styles.termsCheck}>
+          <input
+            type="checkbox"
+            id="agreeTerms"
+            checked={agreedToTerms}
+            onChange={e => setAgreedToTerms(e.target.checked)}
+          />
+          <label htmlFor="agreeTerms">
+            I have read and agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>, including the cancellation and payment policy.
+          </label>
+        </div>
+
         {error && <p className={styles.error}>{error}</p>}
 
-        <button type="submit" className={styles.submitBtn} disabled={submitting || !stripe}>
+        <button type="submit" className={styles.submitBtn} disabled={submitting || !stripe || !agreedToTerms}>
           {submitting ? 'Processing...' : `Reserve Now · $${Number(total).toFixed(2)}`}
         </button>
         <p className={styles.submitNote}>Your card will be charged immediately upon confirmation.</p>

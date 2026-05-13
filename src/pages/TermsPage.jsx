@@ -52,7 +52,7 @@ export default function TermsPage() {
           {/* ── Cancellations ───────────────────────────────────── */}
           <section id="cancellations" className={styles.section}>
             <h2>Reservations, Cancellations &amp; Refunds</h2>
-            <p>We want to be transparent about how cancellations work. The following is our standard policy for all direct bookings and Booking.com reservations:</p>
+            <p>We want to be transparent about how cancellations work. The following is our standard policy for all direct bookings:</p>
 
             <div className={styles.policyCard}>
               <h3>Standard Cancellation Policy</h3>
