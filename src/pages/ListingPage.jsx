@@ -193,6 +193,10 @@ export default function ListingPage() {
     if (checkIn && checkOut && listing) fetchQuote()
   }, [checkIn, checkOut, listing, pets])
 
+  const photos = listing?.pictures?.length
+    ? listing.pictures
+    : [{ thumbnail: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&q=80' }]
+
   useEffect(() => {
     if (!lightboxOpen) return
     function onKey(e) {
@@ -206,7 +210,7 @@ export default function ListingPage() {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', onKey)
     }
-  }, [lightboxOpen, photos?.length])
+  }, [lightboxOpen, photos.length])
 
   function handleBook() {
     const params = new URLSearchParams()
@@ -221,7 +225,6 @@ export default function ListingPage() {
   if (loading) return <div className={styles.loadingPage}><div className={styles.spinner} /></div>
   if (!listing) return <div className={styles.loadingPage}>Property not found.</div>
 
-  const photos = listing.pictures?.length ? listing.pictures : [{ thumbnail: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&q=80' }]
   const price = listing.prices?.basePrice || listing.price?.basePrice || 0
   const amenities = listing.amenities || listing.publicDescription?.amenities || []
   const amenityList = Array.isArray(amenities)
