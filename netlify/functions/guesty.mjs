@@ -312,6 +312,10 @@ export const handler = async (event) => {
       return { statusCode: response.status, headers, body: JSON.stringify(data) }
     }
 
+    if (event.httpMethod === 'POST') {
+      console.log(`POST response ${response.status}:`, JSON.stringify(data).slice(0, 500))
+    }
+
     return { statusCode: 200, headers, body: JSON.stringify(data) }
   } catch (err) {
     clearTimeout(timeout)
