@@ -236,7 +236,7 @@ async function getToken({ forceRefresh = false } = {}) {
 
 // ─── Confirmation email ───────────────────────────────────────────────────────
 
-function buildEmailHtml({ firstName, listingTitle, listingCity, listingState, photoUrl, checkInFormatted, checkOutFormatted, guests, pets, confirmationCode, paymentMessage, year }) {
+function buildEmailHtml({ firstName, listingTitle, listingCity, listingState, photoUrl, checkInFormatted, checkOutFormatted, guests, pets, confirmationCode, paymentMessage, guestPortalUrl, year }) {
   const petsLine = pets > 0 ? ` &middot; ${pets} pet${pets > 1 ? 's' : ''}` : ''
 
   // Hero: photo with dark gradient overlay and property name on top
@@ -286,7 +286,15 @@ function buildEmailHtml({ firstName, listingTitle, listingCity, listingState, ph
 
         <h1 style="margin:0 0 10px;font-size:27px;color:#2c1810;font-weight:700;font-family:Georgia,serif;">Pack your bags, ${firstName}!</h1>
         <p style="margin:0 0 6px;font-size:16px;color:#1B4F72;font-weight:600;line-height:1.5;">You just booked one of the best stays in Roanoke.</p>
-        <p style="margin:0 0 30px;font-size:15px;color:#6b7280;line-height:1.7;">Seriously though — we handpick every property and hold it to a standard most short-term rentals don't bother with. Clean. Comfortable. No surprises. We think you're going to love it.</p>
+        <p style="margin:0 0 24px;font-size:15px;color:#6b7280;line-height:1.7;">Seriously though — we handpick every property and hold it to a standard most short-term rentals don't bother with. Clean. Comfortable. No surprises. We think you're going to love it.</p>
+
+        <!-- Guest portal CTA -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:30px;">
+          <tr><td align="center">
+            <a href="${guestPortalUrl}" style="display:inline-block;background-color:#1B4F72;color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;padding:14px 32px;border-radius:8px;letter-spacing:0.04em;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">View Your Stay &rarr;</a>
+            <div style="font-size:12px;color:#9ca3af;margin-top:8px;">Check-in details, house info, and more</div>
+          </td></tr>
+        </table>
 
         <!-- Booking details card -->
         <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f8f5f0;border:1px solid #e8e0d8;border-radius:10px;margin-bottom:22px;">
@@ -392,10 +400,15 @@ async function sendConfirmationEmail({ reservation, emailContext, guest }) {
     ? `Your card has been charged $${Number(total).toFixed(2)} in full — your arrival is within 10 days.`
     : `Your card will be charged $${Number(total).toFixed(2)} in full 10 days before your arrival on ${checkInFormatted}.`
 
+  const stayNights = Math.round((new Date(checkOut + 'T12:00:00') - new Date(checkIn + 'T12:00:00')) / 86400000)
+  const portalTemplate = stayNights >= 30 ? '{{guest_app::direct_over_30}}' : '{{guest_app::direct_under_30}}'
+  const portalToken = Buffer.from(portalTemplate).toString('base64')
+  const guestPortalUrl = `https://guest-app.guesty.com/r/${reservation._id}/${portalToken}`
+
   const html = buildEmailHtml({
     firstName, listingTitle, listingCity, listingState, photoUrl,
     checkInFormatted, checkOutFormatted,
-    guests, pets, confirmationCode, paymentMessage,
+    guests, pets, confirmationCode, paymentMessage, guestPortalUrl,
     year: new Date().getFullYear(),
   })
 
