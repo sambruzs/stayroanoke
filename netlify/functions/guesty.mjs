@@ -522,7 +522,7 @@ export const handler = async (event) => {
 
     if (event.httpMethod === 'POST') {
       console.log(`POST${isInstant ? ' [INSTANT]' : ''} body sent:`, (bodyToForward || '').slice(0, 300))
-      console.log(`POST${isInstant ? ' [INSTANT]' : ''} response ${response.status}:`, JSON.stringify(data).slice(0, 800))
+      console.log(`POST${isInstant ? ' [INSTANT]' : ''} response ${response.status}:`, JSON.stringify(data).slice(0, 3000))
     }
 
     // Send branded confirmation email after successful instant booking
