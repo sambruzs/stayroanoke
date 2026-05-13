@@ -167,7 +167,10 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests }) {
             </div>
           </div>
           <p className={styles.paymentNote}>
-            🔒 Your card is charged at time of booking. Payments are processed securely through Stripe.
+            🔒 {checkIn && differenceInCalendarDays(new Date(checkIn), new Date()) <= 10
+              ? 'Your card will be charged in full today, as your arrival is within 10 days.'
+              : `Your card will be charged in full 10 days before arrival.`
+            } Payments are processed securely through Stripe.
           </p>
         </section>
 
