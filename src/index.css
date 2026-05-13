@@ -10,7 +10,7 @@
   --off-white: #FAF8F4;
   --text-dark: #2C1F14;
   --text-mid: #5C4A3A;
-  --text-light: #8A7A6A;
+  --text-light: #6B5B4E;
   --border: #DDD5C4;
 
   --font-display: 'Playfair Display', Georgia, serif;
@@ -53,6 +53,32 @@ button {
   border: none;
   background: none;
   font-family: var(--font-body);
+}
+
+/* Skip to main content — visible only on keyboard focus */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  background: var(--blue-dark);
+  color: var(--white);
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: top 0.1s;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+/* Global keyboard focus indicator */
+:focus-visible {
+  outline: 3px solid var(--blue-mid);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
 }
 
 img {

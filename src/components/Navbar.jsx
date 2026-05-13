@@ -37,8 +37,8 @@ export default function Navbar() {
   const transparent = isHome && !scrolled
 
   return (
-    <nav className={`${styles.nav} ${transparent ? styles.transparent : styles.solid}`}>
-      <Link to="/" className={styles.logo}><StayRoanokeLogo /></Link>
+    <nav aria-label="Main navigation" className={`${styles.nav} ${transparent ? styles.transparent : styles.solid}`}>
+      <Link to="/" className={styles.logo} aria-label="Stay Roanoke — home"><StayRoanokeLogo /></Link>
       <div className={styles.links}>
         <Link to="/search" className={styles.link}>Properties</Link>
         <Link to="/partners" className={styles.link}>Partner Listings</Link>

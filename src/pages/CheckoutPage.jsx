@@ -113,33 +113,33 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests }) {
           <h2>Guest Information</h2>
           <div className={styles.fieldRow}>
             <div className={styles.field}>
-              <label>First Name *</label>
-              <input name="firstName" value={form.firstName} onChange={handleChange} required placeholder="Jane" />
+              <label htmlFor="firstName">First Name *</label>
+              <input id="firstName" name="firstName" value={form.firstName} onChange={handleChange} required placeholder="Jane" />
             </div>
             <div className={styles.field}>
-              <label>Last Name *</label>
-              <input name="lastName" value={form.lastName} onChange={handleChange} required placeholder="Smith" />
+              <label htmlFor="lastName">Last Name *</label>
+              <input id="lastName" name="lastName" value={form.lastName} onChange={handleChange} required placeholder="Smith" />
             </div>
           </div>
           <div className={styles.field}>
-            <label>Email Address *</label>
-            <input type="email" name="email" value={form.email} onChange={handleChange} required placeholder="jane@example.com" />
+            <label htmlFor="email">Email Address *</label>
+            <input id="email" type="email" name="email" value={form.email} onChange={handleChange} required placeholder="jane@example.com" />
           </div>
           <div className={styles.field}>
-            <label>Phone Number</label>
-            <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="(540) 555-0100" />
+            <label htmlFor="phone">Phone Number</label>
+            <input id="phone" type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="(540) 555-0100" />
           </div>
           <div className={styles.field}>
-            <label>Special Requests or Notes</label>
-            <textarea name="notes" value={form.notes} onChange={handleChange} rows={3} placeholder="Anything we should know about your stay?" />
+            <label htmlFor="notes">Special Requests or Notes</label>
+            <textarea id="notes" name="notes" value={form.notes} onChange={handleChange} rows={3} placeholder="Anything we should know about your stay?" />
           </div>
         </section>
 
         <section className={styles.section}>
           <h2>Payment</h2>
           <div className={styles.field}>
-            <label>Card Details</label>
-            <div className={styles.cardElementWrap}>
+            <label htmlFor="card-element">Card Details</label>
+            <div id="card-element" className={styles.cardElementWrap} role="group" aria-label="Credit card information">
               <CardElement options={{
                 style: {
                   base: {
