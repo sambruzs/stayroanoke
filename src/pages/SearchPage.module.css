@@ -106,6 +106,12 @@
   gap: 1.5rem;
 }
 
+.empty {
+  padding: 5rem 0;
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
 .loading {
   display: flex;
   flex-direction: column;

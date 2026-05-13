@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom'
 import SearchBar from '../components/SearchBar'
 import ListingCard from '../components/ListingCard'
 import { getListings } from '../utils/guestyApi'
-import { mockListings } from '../data/mockListings'
 import styles from './SearchPage.module.css'
 
 export default function SearchPage() {
@@ -21,20 +20,17 @@ export default function SearchPage() {
     async function load() {
       setLoading(true)
       try {
-        const data = await getListings({ checkIn, checkOut, guests })
-        if (data?.results?.length) {
-          setListings(data.results)
-        } else {
-          setListings(mockListings)
-        }
+        const data = await getListings({ guests })
+        const results = data?.results || data?.data || (Array.isArray(data) ? data : [])
+        setListings(results.length ? results : [])
       } catch {
-        setListings(mockListings)
+        setListings([])
       } finally {
         setLoading(false)
       }
     }
     load()
-  }, [checkIn, checkOut, guests])
+  }, [guests])
 
   // Client-side filters
   let filtered = [...listings]
@@ -100,6 +96,10 @@ export default function SearchPage() {
             <div className={styles.loading}>
               <div className={styles.spinner} />
               <p>Finding your perfect stay...</p>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className={styles.empty}>
+              <p>No properties found. Try adjusting your guest count or browse all properties.</p>
             </div>
           ) : (
             <div className={styles.grid}>

@@ -28,14 +28,13 @@ async function guestyFetch(path, options = {}) {
 }
 
 // Get all listings — HQ API uses /listings not /search
-export async function getListings({ checkIn, checkOut, guests } = {}) {
+// Note: date availability is checked per-property on the listing page via the calendar + quote API,
+// not at the listings level (Guesty returns 0 results when dates are passed and nothing is free).
+export async function getListings({ guests } = {}) {
   const params = new URLSearchParams()
-  if (checkIn) params.set('checkInDateLocalized', checkIn)
-  if (checkOut) params.set('checkOutDateLocalized', checkOut)
   if (guests) params.set('minOccupancy', guests)
   params.set('limit', '50')
-  const query = params.toString()
-  return guestyFetch(`/listings${query ? '?' + query : ''}`)
+  return guestyFetch(`/listings?${params.toString()}`)
 }
 
 // Get single listing
