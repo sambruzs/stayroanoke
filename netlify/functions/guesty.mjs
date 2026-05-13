@@ -465,6 +465,7 @@ export const handler = async (event) => {
   let emailContext  = null
   let guestForEmail = null
   if (isInstant && event.body) {
+    console.log('INSTANT raw body keys:', Object.keys(JSON.parse(event.body || '{}')))
     try {
       const parsed = JSON.parse(event.body)
       if (parsed._emailContext) {
@@ -473,7 +474,9 @@ export const handler = async (event) => {
         delete parsed._emailContext
         bodyToForward = JSON.stringify(parsed)
       }
-    } catch {}
+    } catch (e) {
+      console.error('Failed to parse instant body:', e.message)
+    }
   }
 
   const url = `${GUESTY_API_BASE}${guestyPath}${event.rawQuery ? '?' + event.rawQuery : ''}`
