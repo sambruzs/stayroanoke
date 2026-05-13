@@ -237,14 +237,27 @@ async function getToken({ forceRefresh = false } = {}) {
 // ─── Confirmation email ───────────────────────────────────────────────────────
 
 function buildEmailHtml({ firstName, listingTitle, listingCity, listingState, photoUrl, checkInFormatted, checkOutFormatted, guests, pets, confirmationCode, paymentMessage, year }) {
-  const photoSection = photoUrl ? `
-    <tr>
-      <td style="padding:0;line-height:0;">
-        <img src="${photoUrl}" width="600" alt="${listingTitle}" style="display:block;width:100%;max-width:600px;height:240px;object-fit:cover;border:0;" />
-      </td>
-    </tr>` : ''
-
   const petsLine = pets > 0 ? ` &middot; ${pets} pet${pets > 1 ? 's' : ''}` : ''
+
+  // Hero: photo with dark gradient overlay and property name on top
+  const heroSection = photoUrl ? `
+      <tr>
+        <td style="padding:0;position:relative;line-height:0;">
+          <div style="position:relative;display:block;">
+            <img src="${photoUrl}" width="600" alt="${listingTitle}" style="display:block;width:100%;max-width:600px;height:300px;object-fit:cover;border:0;" />
+            <div style="position:absolute;bottom:0;left:0;right:0;padding:32px 32px 24px;background:linear-gradient(to top,rgba(0,0,0,0.72) 0%,rgba(0,0,0,0) 100%);">
+              <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:rgba(255,255,255,0.75);text-transform:uppercase;margin-bottom:6px;">${listingCity}, ${listingState}</div>
+              <div style="font-size:20px;font-weight:700;color:#ffffff;font-family:Georgia,serif;line-height:1.3;">${listingTitle}</div>
+            </div>
+          </div>
+        </td>
+      </tr>` : `
+      <tr>
+        <td style="background-color:#1a3a52;padding:20px 40px 24px;text-align:center;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:rgba(255,255,255,0.6);text-transform:uppercase;margin-bottom:6px;">${listingCity}, ${listingState}</div>
+          <div style="font-size:20px;font-weight:700;color:#ffffff;font-family:Georgia,serif;">${listingTitle}</div>
+        </td>
+      </tr>`
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -252,77 +265,84 @@ function buildEmailHtml({ firstName, listingTitle, listingCity, listingState, ph
 <body style="margin:0;padding:0;background-color:#f0ece6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0ece6;padding:32px 16px;">
   <tr><td align="center">
-    <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.10);">
+    <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;border-radius:12px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,0.12);">
 
       <!-- Header -->
-      <tr><td style="background-color:#1B4F72;padding:28px 40px;text-align:center;">
-        <div style="font-size:22px;font-weight:800;color:#ffffff;letter-spacing:0.12em;font-family:Georgia,serif;">STAY ROANOKE</div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.2em;margin-top:5px;">BLUE RIDGE MOUNTAIN GETAWAYS</div>
+      <tr><td style="background-color:#1B4F72;padding:22px 40px;text-align:center;">
+        <div style="font-size:20px;font-weight:800;color:#ffffff;letter-spacing:0.14em;font-family:Georgia,serif;">STAY ROANOKE</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.55);letter-spacing:0.22em;margin-top:4px;text-transform:uppercase;">Trusted Local Stays in Virginia's Blue Ridge</div>
       </td></tr>
 
-      ${photoSection}
+      <!-- Hero photo with property name overlay -->
+      ${heroSection}
+
+      <!-- Confirmed banner -->
+      <tr><td style="background-color:#1a5c38;padding:14px 40px;text-align:center;">
+        <div style="font-size:12px;font-weight:700;color:#ffffff;letter-spacing:0.12em;text-transform:uppercase;">&#10003;&nbsp;&nbsp;Booking Confirmed</div>
+      </td></tr>
 
       <!-- Body -->
       <tr><td style="background-color:#ffffff;padding:40px;">
 
-        <!-- Badge -->
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
-          <tr><td align="center">
-            <span style="display:inline-block;background-color:#d1fae5;color:#065f46;font-size:11px;font-weight:700;letter-spacing:0.12em;padding:6px 18px;border-radius:20px;">&#10003; BOOKING CONFIRMED</span>
-          </td></tr>
-        </table>
+        <h1 style="margin:0 0 10px;font-size:27px;color:#2c1810;font-weight:700;font-family:Georgia,serif;">Pack your bags, ${firstName}!</h1>
+        <p style="margin:0 0 6px;font-size:16px;color:#1B4F72;font-weight:600;line-height:1.5;">You just booked one of the best stays in Roanoke.</p>
+        <p style="margin:0 0 30px;font-size:15px;color:#6b7280;line-height:1.7;">Seriously though — we handpick every property and hold it to a standard most short-term rentals don't bother with. Clean. Comfortable. No surprises. We think you're going to love it.</p>
 
-        <h1 style="margin:0 0 8px;font-size:26px;color:#2c1810;font-weight:700;font-family:Georgia,serif;">You're all set, ${firstName}!</h1>
-        <p style="margin:0 0 28px;font-size:15px;color:#6b7280;line-height:1.65;">Your reservation at <strong style="color:#1B4F72;">${listingTitle}</strong> in ${listingCity}, ${listingState} has been confirmed. We can't wait to host you in the Blue Ridge Mountains.</p>
-
-        <!-- Booking details -->
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f8f5f0;border:1px solid #e8e0d8;border-radius:10px;margin-bottom:20px;">
+        <!-- Booking details card -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f8f5f0;border:1px solid #e8e0d8;border-radius:10px;margin-bottom:22px;">
           <tr>
             <td width="50%" style="padding:20px;border-right:1px solid #e8e0d8;vertical-align:top;">
-              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:5px;">CHECK-IN</div>
-              <div style="font-size:15px;font-weight:700;color:#2c1810;margin-bottom:2px;">${checkInFormatted}</div>
-              <div style="font-size:13px;color:#9ca3af;">After 4:00 PM</div>
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">Check-in</div>
+              <div style="font-size:15px;font-weight:700;color:#2c1810;margin-bottom:3px;">${checkInFormatted}</div>
+              <div style="font-size:12px;color:#9ca3af;">After 4:00 PM</div>
             </td>
             <td width="50%" style="padding:20px;vertical-align:top;">
-              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:5px;">CHECK-OUT</div>
-              <div style="font-size:15px;font-weight:700;color:#2c1810;margin-bottom:2px;">${checkOutFormatted}</div>
-              <div style="font-size:13px;color:#9ca3af;">By 10:00 AM</div>
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">Check-out</div>
+              <div style="font-size:15px;font-weight:700;color:#2c1810;margin-bottom:3px;">${checkOutFormatted}</div>
+              <div style="font-size:12px;color:#9ca3af;">By 10:00 AM</div>
             </td>
           </tr>
           <tr>
             <td style="padding:16px 20px;border-top:1px solid #e8e0d8;vertical-align:top;">
-              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:5px;">GUESTS</div>
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">Guests</div>
               <div style="font-size:15px;font-weight:600;color:#2c1810;">${guests} guest${guests > 1 ? 's' : ''}${petsLine}</div>
             </td>
             <td style="padding:16px 20px;border-top:1px solid #e8e0d8;vertical-align:top;">
-              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:5px;">CONFIRMATION</div>
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">Confirmation #</div>
               <div style="font-size:15px;font-weight:700;color:#1B4F72;">${confirmationCode}</div>
             </td>
           </tr>
         </table>
 
         <!-- Payment -->
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;margin-bottom:28px;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;margin-bottom:30px;">
           <tr><td style="padding:16px 20px;">
-            <div style="font-size:11px;font-weight:700;color:#1e40af;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;">&#128274; Payment</div>
-            <div style="font-size:14px;color:#1e3a8a;line-height:1.55;">${paymentMessage}</div>
-            <div style="font-size:13px;color:#3b82f6;margin-top:6px;">A security deposit pre-authorization hold will be placed on your card at check-in and released within 5–7 business days after check-out.</div>
+            <div style="font-size:11px;font-weight:700;color:#1e40af;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;">&#128274;&nbsp; Payment</div>
+            <div style="font-size:14px;color:#1e3a8a;line-height:1.6;">${paymentMessage}</div>
+            <div style="font-size:13px;color:#3b82f6;margin-top:6px;line-height:1.5;">A refundable security deposit hold will be placed on your card at check-in and released within 5–7 business days after check-out.</div>
           </td></tr>
         </table>
 
-        <!-- Getting ready -->
-        <div style="font-size:15px;font-weight:700;color:#2c1810;margin-bottom:14px;font-family:Georgia,serif;">Getting Ready for Your Stay</div>
+        <!-- Before you go -->
+        <div style="font-size:15px;font-weight:700;color:#2c1810;margin-bottom:16px;font-family:Georgia,serif;">A few things before you arrive</div>
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:30px;">
+          <tr><td style="padding:11px 0;border-bottom:1px solid #f3f4f6;font-size:14px;color:#4b5563;line-height:1.6;">&#128273;&nbsp;&nbsp;<strong>Door code incoming.</strong> We'll send check-in instructions and your access code closer to your arrival date.</td></tr>
+          <tr><td style="padding:11px 0;border-bottom:1px solid #f3f4f6;font-size:14px;color:#4b5563;line-height:1.6;">&#129529;&nbsp;&nbsp;<strong>Leave it tidy, not spotless.</strong> Toss your trash, do the dishes, and strip the bedding if you have a minute. Our crew handles everything else.</td></tr>
+          <tr><td style="padding:11px 0;border-bottom:1px solid #f3f4f6;font-size:14px;color:#4b5563;line-height:1.6;">&#128230;&nbsp;&nbsp;<strong>No mail or packages, please.</strong> The property can't accept deliveries. Use an Amazon Locker, USPS PO Box, or FedEx/UPS store nearby.</td></tr>
+          <tr><td style="padding:11px 0;font-size:14px;color:#4b5563;line-height:1.6;">&#128247;&nbsp;&nbsp;<strong>You're on camera.</strong> (Outside only.) Exterior security cameras are on all our properties for your safety and ours.</td></tr>
+        </table>
+
+        <!-- Tagline divider -->
         <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:28px;">
-          <tr><td style="padding:10px 0;border-bottom:1px solid #f3f4f6;font-size:14px;color:#4b5563;line-height:1.55;">&#128273;&nbsp; Check-in details and door code will be sent closer to your arrival date.</td></tr>
-          <tr><td style="padding:10px 0;border-bottom:1px solid #f3f4f6;font-size:14px;color:#4b5563;line-height:1.55;">&#128722;&nbsp; At checkout, please throw away trash and do your dishes. Strip the bedding if you have time — the cleaning crew handles everything else.</td></tr>
-          <tr><td style="padding:10px 0;border-bottom:1px solid #f3f4f6;font-size:14px;color:#4b5563;line-height:1.55;">&#128246;&nbsp; Packages and mail cannot be delivered to the property. Please use Amazon Lockers, USPS PO boxes, or FedEx/UPS stores.</td></tr>
-          <tr><td style="padding:10px 0;font-size:14px;color:#4b5563;line-height:1.55;">&#128247;&nbsp; Exterior security cameras are present on all properties for your safety.</td></tr>
+          <tr><td style="border-top:1px solid #e8e0d8;padding-top:22px;text-align:center;">
+            <div style="font-size:13px;color:#9ca3af;font-style:italic;letter-spacing:0.04em;">Furnished Stays You Can Trust &nbsp;&middot;&nbsp; Feel at Home in the Heart of Roanoke.</div>
+          </td></tr>
         </table>
 
         <!-- Contact -->
         <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f8f5f0;border-radius:8px;">
           <tr><td style="padding:22px 24px;text-align:center;">
-            <div style="font-size:13px;font-weight:700;color:#2c1810;margin-bottom:10px;font-family:Georgia,serif;">Questions about your stay?</div>
+            <div style="font-size:13px;font-weight:700;color:#2c1810;margin-bottom:10px;font-family:Georgia,serif;">Questions? We actually pick up the phone.</div>
             <a href="mailto:info@stayroanoke.com" style="color:#1B4F72;font-size:14px;font-weight:600;text-decoration:none;display:block;margin-bottom:5px;">info@stayroanoke.com</a>
             <a href="tel:+15407327151" style="color:#1B4F72;font-size:14px;font-weight:600;text-decoration:none;">(540) 732-7151</a>
           </td></tr>
@@ -331,12 +351,12 @@ function buildEmailHtml({ firstName, listingTitle, listingCity, listingState, ph
       </td></tr>
 
       <!-- Footer -->
-      <tr><td style="background-color:#152d3f;padding:20px 40px;text-align:center;">
-        <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.7;">
-          &copy; ${year} Stay Roanoke &middot; Roanoke, Virginia<br />
-          <a href="https://www.stayroanoke.com/terms" style="color:rgba(255,255,255,0.4);text-decoration:underline;">Terms &amp; Conditions</a>
+      <tr><td style="background-color:#152d3f;padding:22px 40px;text-align:center;">
+        <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.8;">
+          &copy; ${year} Stay Roanoke &nbsp;&middot;&nbsp; Roanoke, Virginia<br />
+          <a href="https://www.stayroanoke.com/terms" style="color:rgba(255,255,255,0.35);text-decoration:underline;">Terms &amp; Conditions</a>
           &nbsp;&middot;&nbsp;
-          <a href="https://www.stayroanoke.com" style="color:rgba(255,255,255,0.4);text-decoration:underline;">stayroanoke.com</a>
+          <a href="https://www.stayroanoke.com" style="color:rgba(255,255,255,0.35);text-decoration:underline;">stayroanoke.com</a>
         </div>
       </td></tr>
 
