@@ -357,7 +357,7 @@ export default function ListingPage() {
                 <div className={styles.guestControl}>
                   <button onClick={() => setPets(p => Math.max(0, p - 1))}>−</button>
                   <span>{pets} {pets === 1 ? 'Pet' : 'Pets'}</span>
-                  <button onClick={() => setPets(p => Math.min(4, p + 1))}>+</button>
+                  <button onClick={() => setPets(p => Math.min(2, p + 1))}>+</button>
                 </div>
               </div>
 
