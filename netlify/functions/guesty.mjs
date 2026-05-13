@@ -8,9 +8,9 @@ let cachedToken = null
 let tokenExpiry = null
 
 const env = {
-  get clientId()    { return process.env.GUESTY_CLIENT_ID },
-  get clientSecret(){ return process.env.GUESTY_CLIENT_SECRET },
-  get appId()       { return process.env.GUESTY_APP_ID },
+  get clientId()    { return process.env.GUESTY_CLIENT_ID     || process.env.VITE_GUESTY_CLIENT_ID },
+  get clientSecret(){ return process.env.GUESTY_CLIENT_SECRET || process.env.VITE_GUESTY_CLIENT_SECRET },
+  get appId()       { return process.env.GUESTY_APP_ID        || process.env.VITE_GUESTY_APP_ID },
 }
 
 const headers = {
