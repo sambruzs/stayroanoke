@@ -523,9 +523,16 @@ export const handler = async (event) => {
     }
 
     // Send branded confirmation email after successful instant booking
-    if (isInstant && data._id && emailContext && guestForEmail) {
-      sendConfirmationEmail({ reservation: data, emailContext, guest: guestForEmail })
-        .catch(err => console.error('Confirmation email failed (non-fatal):', err.message))
+    if (isInstant && data._id) {
+      if (emailContext && guestForEmail) {
+        try {
+          await sendConfirmationEmail({ reservation: data, emailContext, guest: guestForEmail })
+        } catch (err) {
+          console.error('Confirmation email failed (non-fatal):', err.message)
+        }
+      } else {
+        console.warn('Skipping confirmation email — emailContext missing from request')
+      }
     }
 
     return { statusCode: 200, headers, body: JSON.stringify(data) }
