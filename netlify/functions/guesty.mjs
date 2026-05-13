@@ -234,6 +234,173 @@ async function getToken({ forceRefresh = false } = {}) {
   }
 }
 
+// ─── Confirmation email ───────────────────────────────────────────────────────
+
+function buildEmailHtml({ firstName, listingTitle, listingCity, listingState, photoUrl, checkInFormatted, checkOutFormatted, guests, pets, confirmationCode, paymentMessage, year }) {
+  const photoSection = photoUrl ? `
+    <tr>
+      <td style="padding:0;line-height:0;">
+        <img src="${photoUrl}" width="600" alt="${listingTitle}" style="display:block;width:100%;max-width:600px;height:240px;object-fit:cover;border:0;" />
+      </td>
+    </tr>` : ''
+
+  const petsLine = pets > 0 ? ` &middot; ${pets} pet${pets > 1 ? 's' : ''}` : ''
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>Booking Confirmed – Stay Roanoke</title></head>
+<body style="margin:0;padding:0;background-color:#f0ece6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f0ece6;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.10);">
+
+      <!-- Header -->
+      <tr><td style="background-color:#1B4F72;padding:28px 40px;text-align:center;">
+        <div style="font-size:22px;font-weight:800;color:#ffffff;letter-spacing:0.12em;font-family:Georgia,serif;">STAY ROANOKE</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);letter-spacing:0.2em;margin-top:5px;">BLUE RIDGE MOUNTAIN GETAWAYS</div>
+      </td></tr>
+
+      ${photoSection}
+
+      <!-- Body -->
+      <tr><td style="background-color:#ffffff;padding:40px;">
+
+        <!-- Badge -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:24px;">
+          <tr><td align="center">
+            <span style="display:inline-block;background-color:#d1fae5;color:#065f46;font-size:11px;font-weight:700;letter-spacing:0.12em;padding:6px 18px;border-radius:20px;">&#10003; BOOKING CONFIRMED</span>
+          </td></tr>
+        </table>
+
+        <h1 style="margin:0 0 8px;font-size:26px;color:#2c1810;font-weight:700;font-family:Georgia,serif;">You're all set, ${firstName}!</h1>
+        <p style="margin:0 0 28px;font-size:15px;color:#6b7280;line-height:1.65;">Your reservation at <strong style="color:#1B4F72;">${listingTitle}</strong> in ${listingCity}, ${listingState} has been confirmed. We can't wait to host you in the Blue Ridge Mountains.</p>
+
+        <!-- Booking details -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f8f5f0;border:1px solid #e8e0d8;border-radius:10px;margin-bottom:20px;">
+          <tr>
+            <td width="50%" style="padding:20px;border-right:1px solid #e8e0d8;vertical-align:top;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:5px;">CHECK-IN</div>
+              <div style="font-size:15px;font-weight:700;color:#2c1810;margin-bottom:2px;">${checkInFormatted}</div>
+              <div style="font-size:13px;color:#9ca3af;">After 4:00 PM</div>
+            </td>
+            <td width="50%" style="padding:20px;vertical-align:top;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:5px;">CHECK-OUT</div>
+              <div style="font-size:15px;font-weight:700;color:#2c1810;margin-bottom:2px;">${checkOutFormatted}</div>
+              <div style="font-size:13px;color:#9ca3af;">By 10:00 AM</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 20px;border-top:1px solid #e8e0d8;vertical-align:top;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:5px;">GUESTS</div>
+              <div style="font-size:15px;font-weight:600;color:#2c1810;">${guests} guest${guests > 1 ? 's' : ''}${petsLine}</div>
+            </td>
+            <td style="padding:16px 20px;border-top:1px solid #e8e0d8;vertical-align:top;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:5px;">CONFIRMATION</div>
+              <div style="font-size:15px;font-weight:700;color:#1B4F72;">${confirmationCode}</div>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Payment -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;margin-bottom:28px;">
+          <tr><td style="padding:16px 20px;">
+            <div style="font-size:11px;font-weight:700;color:#1e40af;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;">&#128274; Payment</div>
+            <div style="font-size:14px;color:#1e3a8a;line-height:1.55;">${paymentMessage}</div>
+            <div style="font-size:13px;color:#3b82f6;margin-top:6px;">A security deposit pre-authorization hold will be placed on your card at check-in and released within 5–7 business days after check-out.</div>
+          </td></tr>
+        </table>
+
+        <!-- Getting ready -->
+        <div style="font-size:15px;font-weight:700;color:#2c1810;margin-bottom:14px;font-family:Georgia,serif;">Getting Ready for Your Stay</div>
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:28px;">
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f3f4f6;font-size:14px;color:#4b5563;line-height:1.55;">&#128273;&nbsp; Check-in details and door code will be sent closer to your arrival date.</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f3f4f6;font-size:14px;color:#4b5563;line-height:1.55;">&#128722;&nbsp; At checkout, please throw away trash and do your dishes. Strip the bedding if you have time — the cleaning crew handles everything else.</td></tr>
+          <tr><td style="padding:10px 0;border-bottom:1px solid #f3f4f6;font-size:14px;color:#4b5563;line-height:1.55;">&#128246;&nbsp; Packages and mail cannot be delivered to the property. Please use Amazon Lockers, USPS PO boxes, or FedEx/UPS stores.</td></tr>
+          <tr><td style="padding:10px 0;font-size:14px;color:#4b5563;line-height:1.55;">&#128247;&nbsp; Exterior security cameras are present on all properties for your safety.</td></tr>
+        </table>
+
+        <!-- Contact -->
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:#f8f5f0;border-radius:8px;">
+          <tr><td style="padding:22px 24px;text-align:center;">
+            <div style="font-size:13px;font-weight:700;color:#2c1810;margin-bottom:10px;font-family:Georgia,serif;">Questions about your stay?</div>
+            <a href="mailto:info@stayroanoke.com" style="color:#1B4F72;font-size:14px;font-weight:600;text-decoration:none;display:block;margin-bottom:5px;">info@stayroanoke.com</a>
+            <a href="tel:+15407327151" style="color:#1B4F72;font-size:14px;font-weight:600;text-decoration:none;">(540) 732-7151</a>
+          </td></tr>
+        </table>
+
+      </td></tr>
+
+      <!-- Footer -->
+      <tr><td style="background-color:#152d3f;padding:20px 40px;text-align:center;">
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);line-height:1.7;">
+          &copy; ${year} Stay Roanoke &middot; Roanoke, Virginia<br />
+          <a href="https://www.stayroanoke.com/terms" style="color:rgba(255,255,255,0.4);text-decoration:underline;">Terms &amp; Conditions</a>
+          &nbsp;&middot;&nbsp;
+          <a href="https://www.stayroanoke.com" style="color:rgba(255,255,255,0.4);text-decoration:underline;">stayroanoke.com</a>
+        </div>
+      </td></tr>
+
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`
+}
+
+async function sendConfirmationEmail({ reservation, emailContext, guest }) {
+  const apiKey = process.env.RESEND_API_KEY
+  if (!apiKey) {
+    console.warn('RESEND_API_KEY not set — skipping confirmation email')
+    return
+  }
+
+  const { listingTitle, listingCity, listingState, photoUrl, checkIn, checkOut, guests, pets, total } = emailContext
+  const { firstName, lastName, email } = guest
+
+  const confirmationCode = reservation.confirmationCode || reservation._id
+
+  const formatDate = (str) => {
+    const d = new Date(str + 'T12:00:00')
+    return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })
+  }
+
+  const checkInFormatted  = formatDate(checkIn)
+  const checkOutFormatted = formatDate(checkOut)
+
+  const daysUntil = Math.ceil((new Date(checkIn + 'T12:00:00') - new Date()) / 86400000)
+  const paymentMessage = daysUntil <= 10
+    ? `Your card has been charged $${Number(total).toFixed(2)} in full — your arrival is within 10 days.`
+    : `Your card will be charged $${Number(total).toFixed(2)} in full 10 days before your arrival on ${checkInFormatted}.`
+
+  const html = buildEmailHtml({
+    firstName, listingTitle, listingCity, listingState, photoUrl,
+    checkInFormatted, checkOutFormatted,
+    guests, pets, confirmationCode, paymentMessage,
+    year: new Date().getFullYear(),
+  })
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'Stay Roanoke <bookings@stayroanoke.com>',
+      to: [email],
+      subject: `Booking Confirmed – ${listingTitle}`,
+      html,
+    }),
+  })
+
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`Resend ${res.status}: ${body}`)
+  }
+
+  console.log(`✓ Confirmation email sent to ${email} (${confirmationCode})`)
+}
+
 // ─── Main handler ─────────────────────────────────────────────────────────────
 
 // Allowlist of path prefixes the public booking site is permitted to call.
@@ -271,6 +438,24 @@ export const handler = async (event) => {
     return emptyResult('auth_error')
   }
 
+  const isInstant = guestyPath.includes('/instant')
+
+  // Strip _emailContext from instant booking body — it's for us, not Guesty
+  let bodyToForward = event.body
+  let emailContext  = null
+  let guestForEmail = null
+  if (isInstant && event.body) {
+    try {
+      const parsed = JSON.parse(event.body)
+      if (parsed._emailContext) {
+        emailContext  = parsed._emailContext
+        guestForEmail = parsed.guest
+        delete parsed._emailContext
+        bodyToForward = JSON.stringify(parsed)
+      }
+    } catch {}
+  }
+
   const url = `${GUESTY_API_BASE}${guestyPath}${event.rawQuery ? '?' + event.rawQuery : ''}`
   console.log(`→ ${event.httpMethod} ${url}`)
 
@@ -287,7 +472,7 @@ export const handler = async (event) => {
     return fetch(url, {
       method:  event.httpMethod,
       headers: reqHeaders,
-      body:    ['POST', 'PUT', 'PATCH'].includes(event.httpMethod) ? event.body : undefined,
+      body:    ['POST', 'PUT', 'PATCH'].includes(event.httpMethod) ? bodyToForward : undefined,
       signal:  controller.signal,
     })
   }
@@ -313,9 +498,14 @@ export const handler = async (event) => {
     }
 
     if (event.httpMethod === 'POST') {
-      const isInstant = guestyPath.includes('/instant')
-      console.log(`POST${isInstant ? ' [INSTANT]' : ''} body sent:`, (event.body || '').slice(0, 300))
+      console.log(`POST${isInstant ? ' [INSTANT]' : ''} body sent:`, (bodyToForward || '').slice(0, 300))
       console.log(`POST${isInstant ? ' [INSTANT]' : ''} response ${response.status}:`, JSON.stringify(data).slice(0, 800))
+    }
+
+    // Send branded confirmation email after successful instant booking
+    if (isInstant && data._id && emailContext && guestForEmail) {
+      sendConfirmationEmail({ reservation: data, emailContext, guest: guestForEmail })
+        .catch(err => console.error('Confirmation email failed (non-fatal):', err.message))
     }
 
     return { statusCode: 200, headers, body: JSON.stringify(data) }

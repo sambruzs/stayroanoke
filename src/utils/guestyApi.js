@@ -64,10 +64,12 @@ export async function getReservationQuote({ listingId, checkIn, checkOut, guests
 }
 
 // Create instant reservation
-export async function createReservation({ quoteId, ratePlanId, ccToken, guest }) {
+export async function createReservation({ quoteId, ratePlanId, ccToken, guest, emailContext }) {
+  const body = { ratePlanId, ccToken, guest }
+  if (emailContext) body._emailContext = emailContext
   return guestyFetch(`/reservations/quotes/${quoteId}/instant`, {
     method: 'POST',
-    body: JSON.stringify({ ratePlanId, ccToken, guest })
+    body: JSON.stringify(body)
   })
 }
 

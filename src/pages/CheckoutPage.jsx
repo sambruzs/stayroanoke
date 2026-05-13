@@ -92,6 +92,18 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests, pets }) {
         ratePlanId: quote.ratePlanId,
         ccToken: paymentMethod.id,
         guest,
+        emailContext: {
+          listingTitle: listing?.title || 'Stay Roanoke Property',
+          listingCity: listing?.address?.city || 'Roanoke',
+          listingState: listing?.address?.state || 'Virginia',
+          photoUrl: listing?.pictures?.[0]?.original || listing?.pictures?.[0]?.thumbnail || '',
+          checkIn,
+          checkOut,
+          nights,
+          guests: parseInt(guests),
+          pets: parseInt(pets) || 0,
+          total: quote?.total || 0,
+        },
       })
 
       if (!reservation?._id) {
