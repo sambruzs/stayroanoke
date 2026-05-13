@@ -8,9 +8,9 @@ let cachedToken = null
 let tokenExpiry = null
 
 const env = {
-  get clientId()    { return process.env.GUESTY_CLIENT_ID    || process.env.VITE_GUESTY_CLIENT_ID },
-  get clientSecret(){ return process.env.GUESTY_CLIENT_SECRET || process.env.VITE_GUESTY_CLIENT_SECRET },
-  get appId()       { return process.env.GUESTY_APP_ID       || process.env.VITE_GUESTY_APP_ID },
+  get clientId()    { return process.env.GUESTY_CLIENT_ID },
+  get clientSecret(){ return process.env.GUESTY_CLIENT_SECRET },
+  get appId()       { return process.env.GUESTY_APP_ID },
 }
 
 const headers = {
@@ -236,18 +236,41 @@ async function getToken({ forceRefresh = false } = {}) {
 
 // ─── Main handler ─────────────────────────────────────────────────────────────
 
+// Allowlist of path prefixes the public booking site is permitted to call.
+// Any request outside these prefixes is rejected before it reaches Guesty.
+const ALLOWED_PATH_PREFIXES = [
+  '/listings',
+  '/reservations/quotes',
+  '/reservations/inquiry',
+  '/reviews',
+]
+
+// Only these methods are permitted — no DELETE, no PATCH, no PUT on arbitrary endpoints
+const ALLOWED_METHODS = new Set(['GET', 'POST', 'OPTIONS'])
+
 export const handler = async (event) => {
   if (event.httpMethod === 'OPTIONS') return { statusCode: 200, headers, body: '' }
+
+  // ── Method guard ──────────────────────────────────────────────────────────
+  if (!ALLOWED_METHODS.has(event.httpMethod)) {
+    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method not allowed' }) }
+  }
+
+  // ── Path allowlist ────────────────────────────────────────────────────────
+  const guestyPath = event.path.replace('/.netlify/functions/guesty', '')
+  if (!ALLOWED_PATH_PREFIXES.some(prefix => guestyPath.startsWith(prefix))) {
+    console.warn('Blocked disallowed path:', guestyPath)
+    return { statusCode: 403, headers, body: JSON.stringify({ error: 'Forbidden' }) }
+  }
 
   let token
   try {
     token = await getToken()
   } catch (authErr) {
     console.error('Auth error:', authErr.message)
-    return emptyResult('auth_failed: ' + authErr.message)
+    return emptyResult('auth_error')
   }
 
-  const guestyPath = event.path.replace('/.netlify/functions/guesty', '')
   const url = `${GUESTY_API_BASE}${guestyPath}${event.rawQuery ? '?' + event.rawQuery : ''}`
   console.log(`→ ${event.httpMethod} ${url}`)
 

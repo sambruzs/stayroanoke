@@ -3,11 +3,23 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import { blogPosts } from '../data/blogPosts'
 import styles from './BlogPostPage.module.css'
 
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+}
+
 function renderInline(text) {
-  return text
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/\[([^\]]+)\]\((\/[^)]+)\)/g, '<a href="$2">$1</a>')
-    .replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+  // Escape first, then apply safe markdown transforms so injected HTML in
+  // source text can never reach the DOM as executable markup.
+  const escaped = escapeHtml(text)
+  return escaped
+    .replace(/\*\*([^*]+)\*\*/g, (_, t) => `<strong>${t}</strong>`)
+    .replace(/\[([^\]]+)\]\((\/[^)]+)\)/g, (_, label, path) => `<a href="${escapeHtml(path)}">${label}</a>`)
+    .replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g, (_, label, url) => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${label}</a>`)
 }
 
 function renderContent(content) {
