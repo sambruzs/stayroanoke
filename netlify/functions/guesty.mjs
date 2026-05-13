@@ -313,7 +313,9 @@ export const handler = async (event) => {
     }
 
     if (event.httpMethod === 'POST') {
-      console.log(`POST response ${response.status}:`, JSON.stringify(data).slice(0, 500))
+      const isInstant = guestyPath.includes('/instant')
+      console.log(`POST${isInstant ? ' [INSTANT]' : ''} body sent:`, (event.body || '').slice(0, 300))
+      console.log(`POST${isInstant ? ' [INSTANT]' : ''} response ${response.status}:`, JSON.stringify(data).slice(0, 800))
     }
 
     return { statusCode: 200, headers, body: JSON.stringify(data) }

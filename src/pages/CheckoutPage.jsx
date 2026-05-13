@@ -76,15 +76,22 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests }) {
         phone: form.phone,
       }
 
-      await createReservation({
+      const reservation = await createReservation({
         quoteId: quote._id,
         ratePlanId: quote.ratePlanId,
         ccToken: token.id,
         guest,
       })
 
+      if (!reservation?._id) {
+        console.error('Unexpected /instant response (no _id):', reservation)
+        setError('Booking could not be confirmed. Please contact us at info@stayroanoke.com or call (540) 732-7151.')
+        setSubmitting(false)
+        return
+      }
+
       navigate('/confirmation', {
-        state: { listing, checkIn, checkOut, guests, guest: form }
+        state: { listing, checkIn, checkOut, guests, guest: form, reservationId: reservation._id }
       })
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.')
