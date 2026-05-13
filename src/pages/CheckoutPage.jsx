@@ -57,10 +57,15 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests }) {
     setSubmitting(true)
 
     try {
-      // Tokenize card with Stripe — uses the connected account's Stripe (BNB Sidekick)
       const cardElement = elements.getElement(CardElement)
-      const { token, error: stripeError } = await stripe.createToken(cardElement, {
-        name: `${form.firstName} ${form.lastName}`,
+      const { paymentMethod, error: stripeError } = await stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+        billing_details: {
+          name: `${form.firstName} ${form.lastName}`,
+          email: form.email,
+          phone: form.phone || undefined,
+        },
       })
 
       if (stripeError) {
@@ -79,7 +84,7 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests }) {
       const reservation = await createReservation({
         quoteId: quote._id,
         ratePlanId: quote.ratePlanId,
-        ccToken: token.id,
+        ccToken: paymentMethod.id,
         guest,
       })
 
