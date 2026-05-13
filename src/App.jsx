@@ -11,6 +11,7 @@ import BlogPage from './pages/BlogPage'
 import BlogPostPage from './pages/BlogPostPage'
 import PartnerListingsPage from './pages/PartnerListingsPage'
 import PartnerDetailPage from './pages/PartnerDetailPage'
+import TermsPage from './pages/TermsPage'
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/partners" element={<PartnerListingsPage />} />
           <Route path="/partners/:slug" element={<PartnerDetailPage />} />
+          <Route path="/terms" element={<TermsPage />} />
         </Routes>
       </main>
       <Footer />

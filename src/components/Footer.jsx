@@ -39,7 +39,7 @@ export default function Footer() {
       </div>
       <div className={styles.bottom}>
         <span>© {new Date().getFullYear()} Stay Roanoke. All rights reserved.</span>
-        <span>stayroanoke.com</span>
+        <Link to="/terms" style={{ color: 'inherit', opacity: 0.7, textDecoration: 'none', fontSize: '0.85rem' }}>Terms &amp; Conditions</Link>
       </div>
     </footer>
   )

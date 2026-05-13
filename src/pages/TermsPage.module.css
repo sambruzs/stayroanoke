@@ -1,0 +1,390 @@
+.page {
+  min-height: 100vh;
+  background: #faf9f7;
+}
+
+/* ── Hero ──────────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  background: linear-gradient(135deg, #1B4F72 0%, #2e6f9e 60%, #7BAFD4 100%);
+  padding: 80px 24px 72px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: #faf9f7;
+  clip-path: ellipse(55% 100% at 50% 100%);
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.heroContent {
+  position: relative;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.heroEyebrow {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7BAFD4;
+  margin: 0 0 12px;
+}
+
+.heroContent h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 16px;
+}
+
+.heroSub {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Layout ────────────────────────────────────────────────────── */
+.layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 32px 16px 60px;
+  }
+}
+
+/* ── Sidebar ───────────────────────────────────────────────────── */
+.sidebar {
+  position: sticky;
+  top: 80px;
+  background: #fff;
+  border: 1px solid #e8e0d6;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: static;
+    display: none;
+  }
+}
+
+.sidebarLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin: 0 0 12px;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar nav li {
+  border-bottom: 1px solid #f3ece4;
+}
+
+.sidebar nav li:last-child {
+  border-bottom: none;
+}
+
+.sidebar nav a {
+  display: block;
+  padding: 9px 0;
+  font-size: 0.875rem;
+  color: #5a4a3a;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.sidebar nav a:hover {
+  color: #1B4F72;
+}
+
+.sidebarContact {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e8e0d6;
+}
+
+.sidebarContact p {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin: 0 0 8px;
+}
+
+.sidebarContact a {
+  display: block;
+  font-size: 0.875rem;
+  color: #1B4F72;
+  text-decoration: none;
+  margin-bottom: 4px;
+}
+
+.sidebarContact a:hover {
+  text-decoration: underline;
+}
+
+/* ── Content ───────────────────────────────────────────────────── */
+.content {
+  min-width: 0;
+}
+
+.section {
+  margin-bottom: 56px;
+  scroll-margin-top: 90px;
+}
+
+.section h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1B4F72;
+  margin: 0 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e8e0d6;
+}
+
+.section p {
+  font-size: 0.97rem;
+  line-height: 1.75;
+  color: #3d2e1e;
+  margin: 0 0 16px;
+}
+
+/* ── Policy Card ───────────────────────────────────────────────── */
+.policyCard {
+  background: #fff;
+  border: 1px solid #e8e0d6;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 16px;
+}
+
+.policyCard h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1B4F72;
+  margin: 0 0 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.policyList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.policyList li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid #f3ece4;
+}
+
+.policyList li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.policyList li div {
+  flex: 1;
+}
+
+.policyList li strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #1a1a2e;
+  margin-bottom: 2px;
+}
+
+.policyList li p {
+  font-size: 0.875rem;
+  color: #6b5b4e;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.policyIcon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e8f4e8;
+  color: #2e7d32;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.policyIconWarn {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.policyNote {
+  font-size: 0.82rem !important;
+  color: #9ca3af !important;
+  margin: 16px 0 0 !important;
+  font-style: italic;
+}
+
+/* ── Time Grid ─────────────────────────────────────────────────── */
+.timeGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+  .timeGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.timeCard {
+  background: #fff;
+  border: 1px solid #e8e0d6;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.timeLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin: 0 0 6px;
+}
+
+.timeValue {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1B4F72;
+  margin: 0 0 12px;
+}
+
+.timeNote {
+  font-size: 0.83rem;
+  color: #6b5b4e;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Rules List ────────────────────────────────────────────────── */
+.rulesList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rulesList li {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #3d2e1e;
+  padding: 10px 0 10px 28px;
+  border-bottom: 1px solid #f3ece4;
+  position: relative;
+}
+
+.rulesList li:last-child {
+  border-bottom: none;
+}
+
+.rulesList li::before {
+  content: '–';
+  position: absolute;
+  left: 8px;
+  color: #7BAFD4;
+  font-weight: 700;
+}
+
+/* ── Callout ───────────────────────────────────────────────────── */
+.callout {
+  background: #fff8f0;
+  border-left: 4px solid #C8A97A;
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: #3d2e1e;
+  margin-top: 16px;
+}
+
+/* ── Page Footer ───────────────────────────────────────────────── */
+.footer {
+  margin-top: 40px;
+  padding-top: 32px;
+  border-top: 1px solid #e8e0d6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer p {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.footer a {
+  color: #1B4F72;
+}
+
+.browseBtn {
+  display: inline-block;
+  padding: 10px 24px;
+  background: #1B4F72;
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.browseBtn:hover {
+  background: #154060;
+}
