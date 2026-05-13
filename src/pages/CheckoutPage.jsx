@@ -8,7 +8,7 @@ import { Elements, CardElement, useStripe, useElements } from '@stripe/react-str
 import { STRIPE_KEY_BY_ACCOUNT } from '../config/stripeKeys'
 import styles from './CheckoutPage.module.css'
 
-function CheckoutForm({ listing, quote, checkIn, checkOut, guests }) {
+function CheckoutForm({ listing, quote, checkIn, checkOut, guests, pets }) {
   const navigate = useNavigate()
   const stripe = useStripe()
   const elements = useElements()
@@ -102,7 +102,7 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests }) {
       }
 
       navigate('/confirmation', {
-        state: { listing, checkIn, checkOut, guests, guest: form, reservationId: reservation._id }
+        state: { listing, checkIn, checkOut, guests, pets, guest: form, reservationId: reservation._id }
       })
     } catch (err) {
       setError(err.message || 'Something went wrong. Please try again.')
@@ -124,6 +124,12 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests }) {
               <p className={styles.tripLabel}>Guests</p>
               <p className={styles.tripValue}>{guests} guest{parseInt(guests) > 1 ? 's' : ''}</p>
             </div>
+            {parseInt(pets) > 0 && (
+              <div>
+                <p className={styles.tripLabel}>Pets</p>
+                <p className={styles.tripValue}>{pets} pet{parseInt(pets) > 1 ? 's' : ''} 🐾</p>
+              </div>
+            )}
           </div>
         </section>
 
@@ -229,6 +235,12 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests }) {
               <span>${cleaning}</span>
             </div>
           )}
+          {quote?.invoiceItems?.filter(i => i.type === 'PET_FEE' && i.amount > 0).map((item, idx) => (
+            <div key={`pet-${idx}`} className={styles.summaryRow}>
+              <span>{item.title || 'Pet fee'}</span>
+              <span>${item.amount.toFixed(2)}</span>
+            </div>
+          ))}
           {taxes > 0 && (
             <div className={styles.summaryRow}>
               <span>Taxes</span>
@@ -258,6 +270,7 @@ export default function CheckoutPage() {
   const checkIn = searchParams.get('checkIn')
   const checkOut = searchParams.get('checkOut')
   const guests = searchParams.get('guests')
+  const pets = searchParams.get('pets') || '0'
 
   const { state } = useLocation()
   const quote = state?.quote || null
@@ -299,6 +312,7 @@ export default function CheckoutPage() {
             checkIn={checkIn}
             checkOut={checkOut}
             guests={guests}
+            pets={pets}
           />
         </Elements>
       </div>

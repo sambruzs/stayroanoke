@@ -6,7 +6,7 @@ import { format, differenceInCalendarDays, addDays, parseISO, isWithinInterval, 
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import styles from './ListingPage.module.css'
-import { getGalleryImage, getThumbImage } from '../utils/imageUtils'
+import { getGalleryImage } from '../utils/imageUtils'
 import Reviews from '../components/Reviews'
 import PriceComparison from '../components/PriceComparison'
 
@@ -26,7 +26,8 @@ export default function ListingPage() {
 
   const [listing, setListing] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [photoIndex, setPhotoIndex] = useState(0)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState(0)
   const [quote, setQuote] = useState(null)
   const [quoteLoading, setQuoteLoading] = useState(false)
   const [quoteError, setQuoteError] = useState(null)
@@ -43,6 +44,7 @@ export default function ListingPage() {
     searchParams.get('checkOut') ? parseISO(searchParams.get('checkOut')) : null
   )
   const [guests, setGuests] = useState(parseInt(searchParams.get('guests') || '2'))
+  const [pets, setPets] = useState(parseInt(searchParams.get('pets') || '0'))
 
   useEffect(() => {
     async function load() {
@@ -140,7 +142,8 @@ export default function ListingPage() {
         listingId: listing._id || listing.id,
         checkIn: format(checkIn, 'yyyy-MM-dd'),
         checkOut: format(checkOut, 'yyyy-MM-dd'),
-        guests
+        guests,
+        pets
       })
 
       // Guesty quote response: rates.ratePlans[0].ratePlan.money contains the breakdown
@@ -188,13 +191,29 @@ export default function ListingPage() {
 
   useEffect(() => {
     if (checkIn && checkOut && listing) fetchQuote()
-  }, [checkIn, checkOut, listing])
+  }, [checkIn, checkOut, listing, pets])
+
+  useEffect(() => {
+    if (!lightboxOpen) return
+    function onKey(e) {
+      if (e.key === 'Escape') setLightboxOpen(false)
+      if (e.key === 'ArrowRight') setLightboxIndex(i => (i + 1) % photos.length)
+      if (e.key === 'ArrowLeft') setLightboxIndex(i => (i - 1 + photos.length) % photos.length)
+    }
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [lightboxOpen, photos?.length])
 
   function handleBook() {
     const params = new URLSearchParams()
     if (checkIn) params.set('checkIn', format(checkIn, 'yyyy-MM-dd'))
     if (checkOut) params.set('checkOut', format(checkOut, 'yyyy-MM-dd'))
     params.set('guests', guests)
+    if (pets > 0) params.set('pets', pets)
     if (quote && !quote.mock) params.set('quoteId', quote._id)
     navigate(`/checkout/${listing._id || listing.id}?${params.toString()}`, { state: { quote } })
   }
@@ -203,7 +222,6 @@ export default function ListingPage() {
   if (!listing) return <div className={styles.loadingPage}>Property not found.</div>
 
   const photos = listing.pictures?.length ? listing.pictures : [{ thumbnail: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&q=80' }]
-  const mainPhoto = getGalleryImage(photos[photoIndex]?.original || photos[photoIndex]?.thumbnail)
   const price = listing.prices?.basePrice || listing.price?.basePrice || 0
   const amenities = listing.amenities || listing.publicDescription?.amenities || []
   const amenityList = Array.isArray(amenities)
@@ -216,23 +234,28 @@ export default function ListingPage() {
         <Link to={`/search?${searchParams.toString()}`} className={styles.back}>← Back to results</Link>
 
         {/* Gallery */}
-        <div className={styles.gallery}>
-          <div className={styles.mainPhoto}>
-            <img src={mainPhoto} alt={listing.title} />
+        <div className={styles.galleryWrap}>
+          <div className={styles.galleryGrid} data-single={photos.length === 1 || undefined}>
+            <button className={styles.galleryMain} onClick={() => { setLightboxIndex(0); setLightboxOpen(true) }} aria-label="View photos">
+              <img src={getGalleryImage(photos[0]?.original || photos[0]?.thumbnail)} alt={listing.title} />
+            </button>
+            {photos.length >= 2 && (
+              <div className={styles.galleryRight}>
+                {[1, 2, 3, 4].map(i => (
+                  photos[i] ? (
+                    <button key={i} className={styles.galleryThumb} onClick={() => { setLightboxIndex(i); setLightboxOpen(true) }} aria-label={`View photo ${i + 1}`}>
+                      <img src={getGalleryImage(photos[i].original || photos[i].thumbnail)} alt={`Photo ${i + 1}`} />
+                    </button>
+                  ) : (
+                    <div key={i} className={styles.galleryThumbEmpty} />
+                  )
+                ))}
+              </div>
+            )}
           </div>
-          {photos.length > 1 && (
-            <div className={styles.thumbs}>
-              {photos.slice(0, 5).map((p, i) => (
-                <button
-                  key={i}
-                  className={`${styles.thumb} ${i === photoIndex ? styles.activeThumb : ''}`}
-                  onClick={() => setPhotoIndex(i)}
-                >
-                  <img src={getThumbImage(p.original || p.thumbnail)} alt={`Photo ${i + 1}`} />
-                </button>
-              ))}
-            </div>
-          )}
+          <button className={styles.viewAllBtn} onClick={() => { setLightboxIndex(0); setLightboxOpen(true) }}>
+            View all {photos.length} photo{photos.length !== 1 ? 's' : ''}
+          </button>
         </div>
 
         <div className={styles.content}>
@@ -326,6 +349,15 @@ export default function ListingPage() {
                 </div>
               </div>
 
+              <div className={styles.guestField}>
+                <label>Pets 🐾</label>
+                <div className={styles.guestControl}>
+                  <button onClick={() => setPets(p => Math.max(0, p - 1))}>−</button>
+                  <span>{pets} {pets === 1 ? 'Pet' : 'Pets'}</span>
+                  <button onClick={() => setPets(p => Math.min(4, p + 1))}>+</button>
+                </div>
+              </div>
+
               {quoteLoading && <div className={styles.quoteLoading}>Calculating price...</div>}
               {quoteError && !quoteLoading && (
                 <div className={styles.quoteError}>{quoteError}</div>
@@ -343,6 +375,12 @@ export default function ListingPage() {
                       <span>${quote.cleaning}</span>
                     </div>
                   )}
+                  {quote.invoiceItems?.filter(i => i.type === 'PET_FEE' && i.amount > 0).map((item, idx) => (
+                    <div key={`pet-${idx}`} className={styles.priceRow}>
+                      <span>{item.title || 'Pet fee'}</span>
+                      <span>${item.amount.toFixed(2)}</span>
+                    </div>
+                  ))}
                   {/* Show taxes from invoice items (normalType TAX), or fall back to totalTaxes */}
                   {quote.invoiceItems?.filter(i => i.type === 'TAX' && i.amount > 0).length > 0
                     ? quote.invoiceItems.filter(i => i.type === 'TAX' && i.amount > 0).map((item, idx) => (
@@ -390,6 +428,33 @@ export default function ListingPage() {
           </aside>
         </div>
       </div>
+
+      {lightboxOpen && (
+        <div className={styles.lightbox} onClick={() => setLightboxOpen(false)}>
+          <button className={styles.lbClose} onClick={() => setLightboxOpen(false)} aria-label="Close">✕</button>
+          {photos.length > 1 && (
+            <button
+              className={`${styles.lbArrow} ${styles.lbArrowPrev}`}
+              onClick={e => { e.stopPropagation(); setLightboxIndex(i => (i - 1 + photos.length) % photos.length) }}
+              aria-label="Previous photo"
+            >‹</button>
+          )}
+          <div className={styles.lbImgWrap} onClick={e => e.stopPropagation()}>
+            <img
+              src={getGalleryImage(photos[lightboxIndex]?.original || photos[lightboxIndex]?.thumbnail)}
+              alt={`Photo ${lightboxIndex + 1} of ${photos.length}`}
+            />
+          </div>
+          {photos.length > 1 && (
+            <button
+              className={`${styles.lbArrow} ${styles.lbArrowNext}`}
+              onClick={e => { e.stopPropagation(); setLightboxIndex(i => (i + 1) % photos.length) }}
+              aria-label="Next photo"
+            >›</button>
+          )}
+          <div className={styles.lbCounter}>{lightboxIndex + 1} / {photos.length}</div>
+        </div>
+      )}
     </div>
   )
 }
