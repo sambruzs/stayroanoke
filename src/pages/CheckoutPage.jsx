@@ -179,7 +179,7 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests }) {
             } Payments are processed securely through Stripe.
           </p>
           <p className={styles.depositNote}>
-            A pre-authorization hold (not a charge) will be placed on your card at check-in to cover potential damages. The hold is released within 5–7 business days after check-out. See our <a href="/terms#damage-deposit" target="_blank" rel="noopener noreferrer">damage policy</a> for details.
+            A security deposit pre-authorization hold will be placed on your card at check-in and released within 5–7 business days after check-out. See our <a href="/terms#damage-deposit" target="_blank" rel="noopener noreferrer">damage policy</a> for details.
           </p>
         </section>
 
