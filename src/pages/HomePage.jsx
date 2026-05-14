@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import SearchBar from '../components/SearchBar'
 import ListingCard from '../components/ListingCard'
 import { getListings } from '../utils/guestyApi'
-import { mockListings } from '../data/mockListings'
 import styles from './HomePage.module.css'
 
 const FEATURES = [
@@ -22,13 +21,10 @@ export default function HomePage() {
     async function load() {
       try {
         const data = await getListings()
-        if (data?.results?.length) {
-          setFeatured(data.results.slice(0, 6))
-        } else {
-          setFeatured(mockListings.slice(0, 6))
-        }
+        const results = data?.results || data?.data || (Array.isArray(data) ? data : [])
+        setFeatured(results.slice(0, 6))
       } catch {
-        setFeatured(mockListings.slice(0, 6))
+        setFeatured([])
       }
     }
     load()
