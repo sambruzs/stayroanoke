@@ -439,6 +439,16 @@ async function sendConfirmationEmail({ reservation, emailContext, guest }) {
 // Uses the quote API — same check as the listing page — so min-stay rules,
 // owner blocks, and all other Guesty restrictions are respected.
 
+function guestyHeaders(token) {
+  const h = {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type':  'application/json',
+    'accept':        'application/json; charset=utf-8',
+  }
+  if (env.appId) h['x-guesty-applicationId'] = env.appId
+  return h
+}
+
 async function checkBatchAvailability(token, listingIds, checkIn, checkOut, guests = 2) {
   const results = await Promise.allSettled(
     listingIds.map(async (id) => {
@@ -447,11 +457,7 @@ async function checkBatchAvailability(token, listingIds, checkIn, checkOut, gues
       try {
         const res = await fetch(`${GUESTY_API_BASE}/reservations/quotes`, {
           method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type':  'application/json',
-            'accept':        'application/json; charset=utf-8',
-          },
+          headers: guestyHeaders(token),
           body: JSON.stringify({
             listingId: id,
             checkInDateLocalized:  checkIn,
@@ -464,7 +470,9 @@ async function checkBatchAvailability(token, listingIds, checkIn, checkOut, gues
         if (res.ok) return { id, available: true }
         const data = await res.json().catch(() => ({}))
         const code = data?.error?.code || data?.errors?.[0]?.code
-        const unavailable = code === 'LISTING_IS_NOT_AVAILABLE' || res.status === 422
+        // Any 4xx = Guesty rejected this booking (unavailable, min-stay, etc.)
+        // 5xx = Guesty server error → fail open
+        const unavailable = res.status >= 400 && res.status < 500
         if (unavailable) console.log(`Unavailable: ${id} (${code || res.status})`)
         return { id, available: !unavailable }
       } catch (err) {
