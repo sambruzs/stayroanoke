@@ -436,48 +436,49 @@ async function sendConfirmationEmail({ reservation, emailContext, guest }) {
 }
 
 // ─── Batch availability check ─────────────────────────────────────────────────
+// Uses the quote API — same check as the listing page — so min-stay rules,
+// owner blocks, and all other Guesty restrictions are respected.
 
-async function checkBatchAvailability(token, listingIds, checkIn, checkOut) {
-  let sampledResponse = false
+async function checkBatchAvailability(token, listingIds, checkIn, checkOut, guests = 2) {
   const results = await Promise.allSettled(
     listingIds.map(async (id) => {
-      const url = `${GUESTY_API_BASE}/listings/${id}/calendar?from=${checkIn}&to=${checkOut}`
-      const res = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type':  'application/json',
-          'accept':        'application/json; charset=utf-8',
-        }
-      })
-      if (!res.ok) {
-        console.warn(`Calendar ${res.status} for listing ${id}`)
-        return { id, available: true }
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 8_000)
+      try {
+        const res = await fetch(`${GUESTY_API_BASE}/reservations/quotes`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type':  'application/json',
+            'accept':        'application/json; charset=utf-8',
+          },
+          body: JSON.stringify({
+            listingId: id,
+            checkInDateLocalized:  checkIn,
+            checkOutDateLocalized: checkOut,
+            guestsCount: parseInt(guests) || 2,
+          }),
+          signal: controller.signal,
+        })
+        clearTimeout(timeout)
+        if (res.ok) return { id, available: true }
+        const data = await res.json().catch(() => ({}))
+        const code = data?.error?.code || data?.errors?.[0]?.code
+        const unavailable = code === 'LISTING_IS_NOT_AVAILABLE' || res.status === 422
+        if (unavailable) console.log(`Unavailable: ${id} (${code || res.status})`)
+        return { id, available: !unavailable }
+      } catch (err) {
+        clearTimeout(timeout)
+        console.warn(`Quote check failed for ${id}: ${err.message}`)
+        return { id, available: true } // fail open on network errors
       }
-      const calData = await res.json()
-
-      // Log one raw response so we can see the actual shape
-      if (!sampledResponse) {
-        sampledResponse = true
-        console.log('CALENDAR SAMPLE:', JSON.stringify(calData).slice(0, 800))
-      }
-
-      const days = Array.isArray(calData) ? calData
-        : calData?.days || calData?.data || calData?.results || []
-      const checkInMs  = new Date(checkIn).getTime()
-      const checkOutMs = new Date(checkOut).getTime()
-      const hasBlocked = days.some(day => {
-        const d = new Date(day.date).getTime()
-        if (d < checkInMs || d >= checkOutMs) return false
-        const b = day.blocks || {}
-        return b.b || b.r || b.o || b.m
-      })
-      if (hasBlocked) console.log(`Listing ${id} is UNAVAILABLE for ${checkIn}–${checkOut}`)
-      return { id, available: !hasBlocked }
     })
   )
-  return results
+  const available = results
     .filter(r => r.status === 'fulfilled' && r.value.available)
     .map(r => r.value.id)
+  console.log(`Availability: ${available.length}/${listingIds.length} available for ${checkIn}–${checkOut}`)
+  return available
 }
 
 // ─── Main handler ─────────────────────────────────────────────────────────────
@@ -521,17 +522,15 @@ export const handler = async (event) => {
   // ── Batch availability check (our endpoint, not proxied to Guesty) ───────────
   if (guestyPath === '/availability' && event.httpMethod === 'POST') {
     try {
-      const { listingIds, checkIn, checkOut } = JSON.parse(event.body || '{}')
+      const { listingIds, checkIn, checkOut, guests } = JSON.parse(event.body || '{}')
       if (!listingIds?.length || !checkIn || !checkOut) {
         return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing listingIds, checkIn, or checkOut' }) }
       }
-      console.log(`Checking availability for ${listingIds.length} listings (${checkIn} → ${checkOut})`)
-      const availableIds = await checkBatchAvailability(token, listingIds, checkIn, checkOut)
-      console.log(`Available: ${availableIds.length}/${listingIds.length}`)
+      console.log(`Checking availability for ${listingIds.length} listings (${checkIn} → ${checkOut}, ${guests} guests)`)
+      const availableIds = await checkBatchAvailability(token, listingIds, checkIn, checkOut, guests)
       return { statusCode: 200, headers, body: JSON.stringify({ availableIds }) }
     } catch (err) {
       console.error('Availability check error:', err.message)
-      // Fail open — return all IDs so the user still sees listings
       const { listingIds = [] } = JSON.parse(event.body || '{}')
       return { statusCode: 200, headers, body: JSON.stringify({ availableIds: listingIds }) }
     }

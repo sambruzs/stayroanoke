@@ -48,10 +48,10 @@ export async function getListingCalendar(listingId, from, to) {
 }
 
 // Batch availability check — returns { availableIds: [...] }
-export async function checkListingsAvailability({ listingIds, checkIn, checkOut }) {
+export async function checkListingsAvailability({ listingIds, checkIn, checkOut, guests }) {
   return guestyFetch('/availability', {
     method: 'POST',
-    body: JSON.stringify({ listingIds, checkIn, checkOut })
+    body: JSON.stringify({ listingIds, checkIn, checkOut, guests })
   })
 }
 

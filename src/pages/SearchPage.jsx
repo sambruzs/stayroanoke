@@ -26,7 +26,7 @@ export default function SearchPage() {
 
         if (checkIn && checkOut) {
           const listingIds = results.map(l => l._id || l.id).filter(Boolean)
-          const { availableIds } = await checkListingsAvailability({ listingIds, checkIn, checkOut })
+          const { availableIds } = await checkListingsAvailability({ listingIds, checkIn, checkOut, guests })
           const availableSet = new Set(availableIds)
           setListings(results.filter(l => availableSet.has(l._id || l.id)))
         } else {
