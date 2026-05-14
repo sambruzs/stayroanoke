@@ -450,39 +450,52 @@ function guestyHeaders(token) {
 }
 
 async function checkBatchAvailability(token, listingIds, checkIn, checkOut, guests = 2) {
-  const results = await Promise.allSettled(
-    listingIds.map(async (id) => {
-      const controller = new AbortController()
-      const timeout = setTimeout(() => controller.abort(), 8_000)
-      try {
-        const res = await fetch(`${GUESTY_API_BASE}/reservations/quotes`, {
-          method: 'POST',
-          headers: guestyHeaders(token),
-          body: JSON.stringify({
-            listingId: id,
-            checkInDateLocalized:  checkIn,
-            checkOutDateLocalized: checkOut,
-            guestsCount: parseInt(guests) || 2,
-          }),
-          signal: controller.signal,
-        })
-        clearTimeout(timeout)
-        if (res.ok) return { id, available: true }
-        const data = await res.json().catch(() => ({}))
-        const code = data?.error?.code || data?.errors?.[0]?.code
-        // Any 4xx = Guesty rejected this booking (unavailable, min-stay, etc.)
-        // 5xx = Guesty server error → fail open
-        const unavailable = res.status >= 400 && res.status < 500
-        if (unavailable) console.log(`Unavailable: ${id} (${code || res.status})`)
-        return { id, available: !unavailable }
-      } catch (err) {
-        clearTimeout(timeout)
-        console.warn(`Quote check failed for ${id}: ${err.message}`)
-        return { id, available: true } // fail open on network errors
-      }
-    })
-  )
-  const available = results
+  const BATCH_SIZE = 10
+  const BATCH_PAUSE_MS = 150
+  const allResults = []
+
+  for (let i = 0; i < listingIds.length; i += BATCH_SIZE) {
+    if (i > 0) await new Promise(r => setTimeout(r, BATCH_PAUSE_MS))
+    const batch = listingIds.slice(i, i + BATCH_SIZE)
+    const batchResults = await Promise.allSettled(
+      batch.map(async (id) => {
+        const controller = new AbortController()
+        const timeout = setTimeout(() => controller.abort(), 8_000)
+        try {
+          const res = await fetch(`${GUESTY_API_BASE}/reservations/quotes`, {
+            method: 'POST',
+            headers: guestyHeaders(token),
+            body: JSON.stringify({
+              listingId: id,
+              checkInDateLocalized:  checkIn,
+              checkOutDateLocalized: checkOut,
+              guestsCount: parseInt(guests) || 2,
+            }),
+            signal: controller.signal,
+          })
+          clearTimeout(timeout)
+          if (res.ok) return { id, available: true }
+          const data = await res.json().catch(() => ({}))
+          const code = data?.error?.code || data?.errors?.[0]?.code
+          // Only filter on explicit availability rejection — fail open for rate limits,
+          // server errors, or any other unexpected response
+          if (code === 'LISTING_IS_NOT_AVAILABLE') {
+            console.log(`Unavailable: ${id} (${code})`)
+            return { id, available: false }
+          }
+          if (code) console.log(`Non-availability error for ${id}: ${code} — keeping in results`)
+          return { id, available: true }
+        } catch (err) {
+          clearTimeout(timeout)
+          console.warn(`Quote check failed for ${id}: ${err.message}`)
+          return { id, available: true }
+        }
+      })
+    )
+    allResults.push(...batchResults)
+  }
+
+  const available = allResults
     .filter(r => r.status === 'fulfilled' && r.value.available)
     .map(r => r.value.id)
   console.log(`Availability: ${available.length}/${listingIds.length} available for ${checkIn}–${checkOut}`)
