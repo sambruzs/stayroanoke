@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import styles from './SearchBar.module.css'
 
 export default function SearchBar({ initialValues = {}, compact = false }) {
   const navigate = useNavigate()
-  const [checkIn, setCheckIn] = useState(initialValues.checkIn ? new Date(initialValues.checkIn) : null)
-  const [checkOut, setCheckOut] = useState(initialValues.checkOut ? new Date(initialValues.checkOut) : null)
+  const [checkIn, setCheckIn] = useState(initialValues.checkIn ? parseISO(initialValues.checkIn) : null)
+  const [checkOut, setCheckOut] = useState(initialValues.checkOut ? parseISO(initialValues.checkOut) : null)
   const [guests, setGuests] = useState(initialValues.guests || 2)
 
   function handleSearch(e) {
