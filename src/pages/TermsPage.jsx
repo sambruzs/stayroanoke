@@ -71,7 +71,7 @@ export default function TermsPage() {
           {/* ── 1. Acceptance ───────────────────────────────────────── */}
           <section id="acceptance" className={styles.section}>
             <h2>1. Acceptance of These Terms</h2>
-            <p>These Terms of Service (the "Agreement") form a binding contract between you ("Guest," "you," or "your") and StayRoanoke LLC d/b/a Stay Roanoke ("Operator," "we," "us," or "our"). By making a reservation, completing the online check-in form, electronically signing the Guest Acknowledgement, paying any deposit, or accessing the Property, you confirm that you (a) are at least 21 years old, (b) have read this Agreement in full, (c) have the legal capacity to enter into a binding contract, and (d) agree to it on your own behalf.</p>
+            <p>These Terms of Service (the "Agreement") form a binding contract between you ("Guest," "you," or "your") and Rentinroanoke LLC d/b/a StayRoanoke ("Operator," "we," "us," or "our"). By making a reservation, completing the online check-in form, electronically signing the Guest Acknowledgement, paying any deposit, or accessing the Property, you confirm that you (a) are at least 21 years old, (b) have read this Agreement in full, (c) have the legal capacity to enter into a binding contract, and (d) agree to it on your own behalf.</p>
             <p>This Agreement incorporates our Privacy Policy, House Rules, and any property-specific information provided at booking. For conflicts between this Agreement and third-party platform terms (e.g., Airbnb, VRBO), the platform terms govern payment and cancellation; for all other conflicts, this Agreement governs. Where this Agreement conflicts with posted House Rules, this Agreement governs.</p>
           </section>
 
@@ -139,7 +139,7 @@ export default function TermsPage() {
             <p>By completing a Reservation you expressly authorize Operator to charge the credit card on file for: (a) the Total Price; (b) any security deposit or damage pre-authorization hold; (c) optional incidentals requested by Guest; (d) Damage charges as described in Section 11; (e) liquidated damages as described in Section 13; (f) excessive cleaning charges as described in Section 11.5; (g) lost rental income as described in Section 11.3; (h) chargeback recovery amounts as described in Section 19; and (i) any other amounts expressly disclosed in this Agreement.</p>
 
             <h3>5.3 Statement Descriptors</h3>
-            <p>Charges may appear on your statement under any of: "Stay Roanoke," "StayRoanoke LLC," "Stay Roanoke Reservations," or "Stay Roanoke Damages."</p>
+            <p>Charges may appear on your statement under any of: "StayRoanoke," "Rentinroanoke LLC," "Stay Roanoke Reservations," or "Stay Roanoke Damages."</p>
 
             <h3>5.4 Notice Before Damage and Liquidated-Damage Charges</h3>
             <p>Before charging you for Damages or liquidated damages under Section 13, we will (a) send an itemized invoice with photo or video evidence to the email address on file, and (b) allow seventy-two (72) hours for you to respond, except as otherwise noted in Section 13.</p>
@@ -513,7 +513,7 @@ export default function TermsPage() {
           {/* ── 21. Indemnification ─────────────────────────────────── */}
           <section id="indemnification" className={styles.section}>
             <h2>21. Indemnification</h2>
-            <p>You agree to defend, indemnify, and hold harmless StayRoanoke LLC, Stay Roanoke, and our owners, members, officers, employees, contractors, agents, and successors, from and against any third-party claim, demand, suit, judgment, settlement, fine, damage, loss, cost, or expense (including reasonable attorneys' fees) arising out of: (a) your acts or omissions, or those of any member of your party or invitee; (b) your breach of this Agreement; (c) your violation of any law; (d) your alleged misrepresentation in connection with the Reservation, check-in, or Stay; or (e) any damage you cause to the Property or to a third party.</p>
+            <p>You agree to defend, indemnify, and hold harmless Rentinroanoke LLC d/b/a StayRoanoke, and our owners, members, officers, employees, contractors, agents, and successors, from and against any third-party claim, demand, suit, judgment, settlement, fine, damage, loss, cost, or expense (including reasonable attorneys' fees) arising out of: (a) your acts or omissions, or those of any member of your party or invitee; (b) your breach of this Agreement; (c) your violation of any law; (d) your alleged misrepresentation in connection with the Reservation, check-in, or Stay; or (e) any damage you cause to the Property or to a third party.</p>
           </section>
 
           {/* ── 22. Chargebacks ─────────────────────────────────────── */}
@@ -611,7 +611,7 @@ export default function TermsPage() {
             <div className={styles.sidebarContact}>
               <a href="mailto:info@stayroanoke.com">info@stayroanoke.com</a>
               <a href="tel:+15407327151">(540) 732-7151</a>
-              <p style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: 'var(--text-light)' }}>StayRoanoke LLC d/b/a Stay Roanoke — Roanoke, Virginia</p>
+              <p style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: 'var(--text-light)' }}>Rentinroanoke LLC d/b/a StayRoanoke — Roanoke, Virginia</p>
             </div>
           </section>
 
