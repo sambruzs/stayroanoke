@@ -438,6 +438,7 @@ async function sendConfirmationEmail({ reservation, emailContext, guest }) {
 // ─── Batch availability check ─────────────────────────────────────────────────
 
 async function checkBatchAvailability(token, listingIds, checkIn, checkOut) {
+  let sampledResponse = false
   const results = await Promise.allSettled(
     listingIds.map(async (id) => {
       const url = `${GUESTY_API_BASE}/listings/${id}/calendar?from=${checkIn}&to=${checkOut}`
@@ -448,9 +449,20 @@ async function checkBatchAvailability(token, listingIds, checkIn, checkOut) {
           'accept':        'application/json; charset=utf-8',
         }
       })
-      if (!res.ok) return { id, available: true } // fail open on error
+      if (!res.ok) {
+        console.warn(`Calendar ${res.status} for listing ${id}`)
+        return { id, available: true }
+      }
       const calData = await res.json()
-      const days = Array.isArray(calData) ? calData : calData?.days || calData?.data || []
+
+      // Log one raw response so we can see the actual shape
+      if (!sampledResponse) {
+        sampledResponse = true
+        console.log('CALENDAR SAMPLE:', JSON.stringify(calData).slice(0, 800))
+      }
+
+      const days = Array.isArray(calData) ? calData
+        : calData?.days || calData?.data || calData?.results || []
       const checkInMs  = new Date(checkIn).getTime()
       const checkOutMs = new Date(checkOut).getTime()
       const hasBlocked = days.some(day => {
@@ -459,6 +471,7 @@ async function checkBatchAvailability(token, listingIds, checkIn, checkOut) {
         const b = day.blocks || {}
         return b.b || b.r || b.o || b.m
       })
+      if (hasBlocked) console.log(`Listing ${id} is UNAVAILABLE for ${checkIn}–${checkOut}`)
       return { id, available: !hasBlocked }
     })
   )
