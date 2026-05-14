@@ -34,6 +34,7 @@ export default function ListingPage() {
   const [blockedDates, setBlockedDates] = useState([])
   const [ctaDates, setCtaDates] = useState([])   // closed to arrival (no check-in)
   const [ctdDates, setCtdDates] = useState([])   // closed to departure (no check-out)
+  const [calendarLoaded, setCalendarLoaded] = useState(false)
   const [reviews, setReviews] = useState([])
   const [reviewsLoading, setReviewsLoading] = useState(false)
 
@@ -117,6 +118,8 @@ export default function ListingPage() {
     } catch (e) {
       console.log('Calendar not available:', e.message)
       setBlockedDates([])
+    } finally {
+      setCalendarLoaded(true)
     }
   }
 
@@ -190,8 +193,8 @@ export default function ListingPage() {
   }
 
   useEffect(() => {
-    if (checkIn && checkOut && listing) fetchQuote()
-  }, [checkIn, checkOut, listing, pets])
+    if (checkIn && checkOut && listing && calendarLoaded) fetchQuote()
+  }, [checkIn, checkOut, listing, pets, calendarLoaded])
 
   const photos = listing?.pictures?.length
     ? listing.pictures
