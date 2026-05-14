@@ -47,6 +47,14 @@ export async function getListingCalendar(listingId, from, to) {
   return guestyFetch(`/listings/${listingId}/calendar?from=${from}&to=${to}`)
 }
 
+// Batch availability check — returns { availableIds: [...] }
+export async function checkListingsAvailability({ listingIds, checkIn, checkOut }) {
+  return guestyFetch('/availability', {
+    method: 'POST',
+    body: JSON.stringify({ listingIds, checkIn, checkOut })
+  })
+}
+
 // Get reservation quote
 export async function getReservationQuote({ listingId, checkIn, checkOut, guests, pets = 0 }) {
   const body = {

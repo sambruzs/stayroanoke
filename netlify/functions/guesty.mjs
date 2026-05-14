@@ -435,6 +435,38 @@ async function sendConfirmationEmail({ reservation, emailContext, guest }) {
   console.log(`✓ Confirmation email sent to ${email} (${confirmationCode})`)
 }
 
+// ─── Batch availability check ─────────────────────────────────────────────────
+
+async function checkBatchAvailability(token, listingIds, checkIn, checkOut) {
+  const results = await Promise.allSettled(
+    listingIds.map(async (id) => {
+      const url = `${GUESTY_API_BASE}/listings/${id}/calendar?from=${checkIn}&to=${checkOut}`
+      const res = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type':  'application/json',
+          'accept':        'application/json; charset=utf-8',
+        }
+      })
+      if (!res.ok) return { id, available: true } // fail open on error
+      const calData = await res.json()
+      const days = Array.isArray(calData) ? calData : calData?.days || calData?.data || []
+      const checkInMs  = new Date(checkIn).getTime()
+      const checkOutMs = new Date(checkOut).getTime()
+      const hasBlocked = days.some(day => {
+        const d = new Date(day.date).getTime()
+        if (d < checkInMs || d >= checkOutMs) return false
+        const b = day.blocks || {}
+        return b.b || b.r || b.o || b.m
+      })
+      return { id, available: !hasBlocked }
+    })
+  )
+  return results
+    .filter(r => r.status === 'fulfilled' && r.value.available)
+    .map(r => r.value.id)
+}
+
 // ─── Main handler ─────────────────────────────────────────────────────────────
 
 // Allowlist of path prefixes the public booking site is permitted to call.
@@ -444,6 +476,7 @@ const ALLOWED_PATH_PREFIXES = [
   '/reservations/quotes',
   '/reservations/inquiry',
   '/reviews',
+  '/availability',
 ]
 
 // Only these methods are permitted — no DELETE, no PATCH, no PUT on arbitrary endpoints
@@ -470,6 +503,25 @@ export const handler = async (event) => {
   } catch (authErr) {
     console.error('Auth error:', authErr.message)
     return emptyResult('auth_error')
+  }
+
+  // ── Batch availability check (our endpoint, not proxied to Guesty) ───────────
+  if (guestyPath === '/availability' && event.httpMethod === 'POST') {
+    try {
+      const { listingIds, checkIn, checkOut } = JSON.parse(event.body || '{}')
+      if (!listingIds?.length || !checkIn || !checkOut) {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: 'Missing listingIds, checkIn, or checkOut' }) }
+      }
+      console.log(`Checking availability for ${listingIds.length} listings (${checkIn} → ${checkOut})`)
+      const availableIds = await checkBatchAvailability(token, listingIds, checkIn, checkOut)
+      console.log(`Available: ${availableIds.length}/${listingIds.length}`)
+      return { statusCode: 200, headers, body: JSON.stringify({ availableIds }) }
+    } catch (err) {
+      console.error('Availability check error:', err.message)
+      // Fail open — return all IDs so the user still sees listings
+      const { listingIds = [] } = JSON.parse(event.body || '{}')
+      return { statusCode: 200, headers, body: JSON.stringify({ availableIds: listingIds }) }
+    }
   }
 
   const isInstant = guestyPath.includes('/instant')

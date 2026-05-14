@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import SearchBar from '../components/SearchBar'
 import ListingCard from '../components/ListingCard'
-import { getListings } from '../utils/guestyApi'
+import { getListings, checkListingsAvailability } from '../utils/guestyApi'
 import styles from './SearchPage.module.css'
 
 export default function SearchPage() {
@@ -22,7 +22,16 @@ export default function SearchPage() {
       try {
         const data = await getListings({ guests })
         const results = data?.results || data?.data || (Array.isArray(data) ? data : [])
-        setListings(results.length ? results : [])
+        if (!results.length) { setListings([]); return }
+
+        if (checkIn && checkOut) {
+          const listingIds = results.map(l => l._id || l.id).filter(Boolean)
+          const { availableIds } = await checkListingsAvailability({ listingIds, checkIn, checkOut })
+          const availableSet = new Set(availableIds)
+          setListings(results.filter(l => availableSet.has(l._id || l.id)))
+        } else {
+          setListings(results)
+        }
       } catch {
         setListings([])
       } finally {
@@ -30,7 +39,7 @@ export default function SearchPage() {
       }
     }
     load()
-  }, [guests])
+  }, [guests, checkIn, checkOut])
 
   // Client-side filters
   let filtered = [...listings]
@@ -75,7 +84,9 @@ export default function SearchPage() {
         <div className={styles.results}>
           <div className={styles.resultsHeader}>
             <h2 className={styles.resultsTitle}>
-              {loading ? 'Searching...' : `${filtered.length} properties in Roanoke & Salem`}
+              {loading
+                ? (checkIn && checkOut ? 'Checking availability...' : 'Searching...')
+                : `${filtered.length} ${checkIn && checkOut ? 'available' : ''} properties in Roanoke & Salem`}
               {checkIn && checkOut && !loading && (
                 <span className={styles.dateRange}> · {checkIn} – {checkOut}</span>
               )}
