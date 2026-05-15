@@ -15,6 +15,7 @@ export default function SearchPage() {
   const checkIn = searchParams.get('checkIn')
   const checkOut = searchParams.get('checkOut')
   const guests = searchParams.get('guests') || 1
+  const pets = parseInt(searchParams.get('pets') || '0')
 
   useEffect(() => {
     async function load() {
@@ -24,13 +25,17 @@ export default function SearchPage() {
         const results = data?.results || data?.data || (Array.isArray(data) ? data : [])
         if (!results.length) { setListings([]); return }
 
+        const petFriendly = pets > 0
+          ? results.filter(l => l.amenities?.some(a => a.toLowerCase() === 'pets allowed'))
+          : results
+
         if (checkIn && checkOut) {
-          const listingIds = results.map(l => l._id || l.id).filter(Boolean)
+          const listingIds = petFriendly.map(l => l._id || l.id).filter(Boolean)
           const { availableIds } = await checkListingsAvailability({ listingIds, checkIn, checkOut, guests })
           const availableSet = new Set(availableIds)
-          setListings(results.filter(l => availableSet.has(l._id || l.id)))
+          setListings(petFriendly.filter(l => availableSet.has(l._id || l.id)))
         } else {
-          setListings(results)
+          setListings(petFriendly)
         }
       } catch {
         setListings([])
@@ -39,7 +44,7 @@ export default function SearchPage() {
       }
     }
     load()
-  }, [guests, checkIn, checkOut])
+  }, [guests, checkIn, checkOut, pets])
 
   // Client-side filters
   let filtered = [...listings]
@@ -57,7 +62,7 @@ export default function SearchPage() {
         <div className={styles.searchBarWrap}>
           <SearchBar
             compact
-            initialValues={{ checkIn, checkOut, guests: parseInt(guests) }}
+            initialValues={{ checkIn, checkOut, guests: parseInt(guests), pets }}
           />
         </div>
       </div>

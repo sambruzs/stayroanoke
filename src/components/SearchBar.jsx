@@ -10,6 +10,7 @@ export default function SearchBar({ initialValues = {}, compact = false }) {
   const [checkIn, setCheckIn] = useState(initialValues.checkIn ? parseISO(initialValues.checkIn) : null)
   const [checkOut, setCheckOut] = useState(initialValues.checkOut ? parseISO(initialValues.checkOut) : null)
   const [guests, setGuests] = useState(initialValues.guests || 2)
+  const [pets, setPets] = useState(initialValues.pets || 0)
 
   function handleSearch(e) {
     e.preventDefault()
@@ -17,6 +18,7 @@ export default function SearchBar({ initialValues = {}, compact = false }) {
     if (checkIn) params.set('checkIn', format(checkIn, 'yyyy-MM-dd'))
     if (checkOut) params.set('checkOut', format(checkOut, 'yyyy-MM-dd'))
     params.set('guests', guests)
+    if (pets > 0) params.set('pets', pets)
     navigate(`/search?${params.toString()}`)
   }
 
@@ -56,6 +58,15 @@ export default function SearchBar({ initialValues = {}, compact = false }) {
           <button type="button" onClick={() => setGuests(g => Math.max(1, g - 1))}>−</button>
           <span>{guests} {guests === 1 ? 'Guest' : 'Guests'}</span>
           <button type="button" onClick={() => setGuests(g => Math.min(16, g + 1))}>+</button>
+        </div>
+      </div>
+      <div className={styles.divider} />
+      <div className={styles.field}>
+        <label>Pets 🐾</label>
+        <div className={styles.guestControl}>
+          <button type="button" onClick={() => setPets(p => Math.max(0, p - 1))}>−</button>
+          <span>{pets} {pets === 1 ? 'Pet' : 'Pets'}</span>
+          <button type="button" onClick={() => setPets(p => Math.min(2, p + 1))}>+</button>
         </div>
       </div>
       <button type="submit" className={styles.searchBtn}>
