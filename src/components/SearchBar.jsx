@@ -69,9 +69,13 @@ export default function SearchBar({ initialValues = {}, compact = false }) {
           <button type="button" onClick={() => setPets(p => Math.min(2, p + 1))}>+</button>
         </div>
       </div>
-      <button type="submit" className={styles.searchBtn}>
-        {compact ? 'Search' : 'Find Your Stay'}
-      </button>
+      {compact ? (
+        <button type="submit" className={styles.searchBtn}>Search</button>
+      ) : (
+        <div className={styles.btnRow}>
+          <button type="submit" className={styles.searchBtn}>Find Your Stay</button>
+        </div>
+      )}
     </form>
   )
 }
