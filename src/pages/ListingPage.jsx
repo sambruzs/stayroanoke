@@ -158,7 +158,7 @@ export default function ListingPage() {
         : (listing?.prices?.basePrice || listing?.price?.basePrice || 0)
 
       if (money) {
-        const petFee = pets > 0 ? 100 : 0
+        const petFee = pets > 0 ? 99 : 0
         setQuote({
           _id: data._id,
           ratePlanId: ratePlan?._id,
@@ -357,14 +357,16 @@ export default function ListingPage() {
                 </div>
               </div>
 
-              <div className={styles.guestField}>
-                <label>Pets 🐾</label>
-                <div className={styles.guestControl}>
-                  <button onClick={() => setPets(p => Math.max(0, p - 1))}>−</button>
-                  <span>{pets} {pets === 1 ? 'Pet' : 'Pets'}</span>
-                  <button onClick={() => setPets(p => Math.min(2, p + 1))}>+</button>
+              {listing?.amenities?.some(a => a.toLowerCase() === 'pets allowed') && (
+                <div className={styles.guestField}>
+                  <label>Pets 🐾</label>
+                  <div className={styles.guestControl}>
+                    <button onClick={() => setPets(p => Math.max(0, p - 1))}>−</button>
+                    <span>{pets} {pets === 1 ? 'Pet' : 'Pets'}</span>
+                    <button onClick={() => setPets(p => Math.min(2, p + 1))}>+</button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {quoteLoading && <div className={styles.quoteLoading}>Calculating price...</div>}
               {quoteError && !quoteLoading && (

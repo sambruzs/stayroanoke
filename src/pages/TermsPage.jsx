@@ -332,10 +332,10 @@ export default function TermsPage() {
             <p>Emotional support animals are not service animals under the ADA and are subject to pet fees and restrictions in the same manner as any other pet. For Reservations made through Airbnb or another Booking Channel whose terms require acceptance of ESAs, we comply with that channel's policy.</p>
 
             <h3>12.3 Pets</h3>
-            <p>Pets are permitted with prior written approval and a <strong>$100 non-refundable pet fee per Stay</strong>. All pets must be added to your Reservation via the booking platform or guest portal prior to check-in. Approved pets must be: (a) house-trained; (b) attended at all times when not crated; (c) non-aggressive; and (d) consistent with any applicable HOA pet rules. For Stays over 30 days, a signed pet agreement is required before check-in.</p>
+            <p>Pets are permitted with prior written approval and a <strong>$99 non-refundable pet fee per Stay</strong>. All pets must be added to your Reservation via the booking platform or guest portal prior to check-in. Approved pets must be: (a) house-trained; (b) attended at all times when not crated; (c) non-aggressive; and (d) consistent with any applicable HOA pet rules. For Stays over 30 days, a signed pet agreement is required before check-in.</p>
 
             <h3>12.4 Unauthorized Pets</h3>
-            <p>An unauthorized pet triggers the <strong>$250 liquidated damages charge</strong> under Section 13.3, plus the standard $100 pet fee, plus any documented additional Damage.</p>
+            <p>An unauthorized pet triggers the <strong>$250 liquidated damages charge</strong> under Section 13.3, plus the standard $99 pet fee, plus any documented additional Damage.</p>
 
             <h3>12.5 Animal Liability</h3>
             <p>You are fully responsible for all damage, injury, or claims caused by your animal. You agree to indemnify Operator for any third-party claim arising from your animal.</p>
@@ -418,7 +418,7 @@ export default function TermsPage() {
             <p>$1,000 for any unauthorized event, gathering exceeding the Reservation's maximum occupancy, or breach of quiet hours after written warning. Subject to the 72-hour notice in Section 5.4.</p>
 
             <h3>15.3 Unauthorized-Pet Liquidated Amount</h3>
-            <p>$250, plus the standard $100 pet fee, plus any documented additional Damage. Subject to the 72-hour notice in Section 5.4.</p>
+            <p>$250, plus the standard $99 pet fee, plus any documented additional Damage. Subject to the 72-hour notice in Section 5.4.</p>
 
             <h3>15.4 Exclusivity</h3>
             <p>Each amount listed above is the exclusive liquidated remedy for the specified breach, except where actual damages are shown to exceed the liquidated amount, in which case Operator may recover actual damages.</p>
