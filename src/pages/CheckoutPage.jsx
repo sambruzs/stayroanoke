@@ -247,12 +247,12 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests, pets }) {
               <span>${cleaning}</span>
             </div>
           )}
-          {quote?.invoiceItems?.filter(i => i.type === 'PET_FEE' && i.amount > 0).map((item, idx) => (
-            <div key={`pet-${idx}`} className={styles.summaryRow}>
-              <span>{item.title || 'Pet fee'}</span>
-              <span>${item.amount.toFixed(2)}</span>
+          {quote?.petFee > 0 && (
+            <div className={styles.summaryRow}>
+              <span>Pet fee</span>
+              <span>${quote.petFee.toFixed(2)}</span>
             </div>
-          ))}
+          )}
           {taxes > 0 && (
             <div className={styles.summaryRow}>
               <span>Taxes</span>

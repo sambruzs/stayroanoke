@@ -158,6 +158,7 @@ export default function ListingPage() {
         : (listing?.prices?.basePrice || listing?.price?.basePrice || 0)
 
       if (money) {
+        const petFee = pets > 0 ? 100 : 0
         setQuote({
           _id: data._id,
           ratePlanId: ratePlan?._id,
@@ -167,8 +168,9 @@ export default function ListingPage() {
           cleaning: money.fareCleaning,
           taxes: money.totalTaxes,
           totalFees: money.totalFees,
+          petFee,
           invoiceItems: money.invoiceItems || [],
-          total: parseFloat((money.subTotalPrice + (money.totalTaxes || 0)).toFixed(2)),
+          total: parseFloat((money.subTotalPrice + (money.totalTaxes || 0) + petFee).toFixed(2)),
           hostPayout: money.hostPayout,
         })
       } else {
@@ -381,12 +383,12 @@ export default function ListingPage() {
                       <span>${quote.cleaning}</span>
                     </div>
                   )}
-                  {quote.invoiceItems?.filter(i => i.type === 'PET_FEE' && i.amount > 0).map((item, idx) => (
-                    <div key={`pet-${idx}`} className={styles.priceRow}>
-                      <span>{item.title || 'Pet fee'}</span>
-                      <span>${item.amount.toFixed(2)}</span>
+                  {quote.petFee > 0 && (
+                    <div className={styles.priceRow}>
+                      <span>Pet fee</span>
+                      <span>${quote.petFee.toFixed(2)}</span>
                     </div>
-                  ))}
+                  )}
                   {/* Show taxes from invoice items (normalType TAX), or fall back to totalTaxes */}
                   {quote.invoiceItems?.filter(i => i.type === 'TAX' && i.amount > 0).length > 0
                     ? quote.invoiceItems.filter(i => i.type === 'TAX' && i.amount > 0).map((item, idx) => (
