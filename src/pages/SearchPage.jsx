@@ -16,6 +16,13 @@ export default function SearchPage() {
   const checkOut = searchParams.get('checkOut')
   const guests = searchParams.get('guests') || 1
   const pets = parseInt(searchParams.get('pets') || '0')
+  const tag = searchParams.get('tag') || ''
+
+  // Map category chips to Guesty amenity strings for reliable matching
+  const TAG_AMENITY = {
+    'Hot Tubs': 'hot tub',
+    'Pet Friendly': 'pets allowed',
+  }
 
   useEffect(() => {
     async function load() {
@@ -48,6 +55,19 @@ export default function SearchPage() {
 
   // Client-side filters
   let filtered = [...listings]
+  if (tag) {
+    const amenity = TAG_AMENITY[tag]
+    if (amenity) {
+      filtered = filtered.filter(l => l.amenities?.some(a => a.toLowerCase().includes(amenity)))
+    } else {
+      const kw = tag.toLowerCase()
+      filtered = filtered.filter(l =>
+        l.title?.toLowerCase().includes(kw) ||
+        l.nickname?.toLowerCase().includes(kw) ||
+        l.tags?.some(t => t.toLowerCase().includes(kw))
+      )
+    }
+  }
   if (bedroomFilter !== 'any') {
     const n = parseInt(bedroomFilter)
     filtered = filtered.filter(l => bedroomFilter === '4+' ? l.bedrooms >= 4 : l.bedrooms === n)
@@ -91,7 +111,7 @@ export default function SearchPage() {
             <h2 className={styles.resultsTitle}>
               {loading
                 ? (checkIn && checkOut ? 'Checking availability...' : 'Searching...')
-                : `${filtered.length} ${checkIn && checkOut ? 'available' : ''} properties in Roanoke & Salem`}
+                : `${filtered.length} ${checkIn && checkOut ? 'available' : ''} ${tag ? tag + ' ' : ''}properties in Roanoke & Salem`}
               {checkIn && checkOut && !loading && (
                 <span className={styles.dateRange}> · {checkIn} – {checkOut}</span>
               )}

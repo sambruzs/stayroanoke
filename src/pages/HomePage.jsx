@@ -6,12 +6,12 @@ import { getListings } from '../utils/guestyApi'
 import styles from './HomePage.module.css'
 
 const FEATURES = [
-  { icon: '🏔️', label: 'Blue Ridge Views' },
-  { icon: '🥾', label: 'Trail Access' },
-  { icon: '🍷', label: 'Wine Country' },
-  { icon: '🛁', label: 'Hot Tubs' },
-  { icon: '🐾', label: 'Pet Friendly' },
-  { icon: '👨‍👩‍👧‍👦', label: 'Family Stays' },
+  { icon: '🏔️', label: 'Blue Ridge Views', url: '/search?tag=Blue+Ridge+Views' },
+  { icon: '🥾', label: 'Trail Access',      url: '/search?tag=Trail+Access' },
+  { icon: '🍷', label: 'Wine Country',      url: '/search?tag=Wine+Country' },
+  { icon: '🛁', label: 'Hot Tubs',          url: '/search?tag=Hot+Tubs' },
+  { icon: '🐾', label: 'Pet Friendly',      url: '/search?pets=1' },
+  { icon: '👨‍👩‍👧‍👦', label: 'Family Stays',  url: '/search?tag=Family+Stays' },
 ]
 
 export default function HomePage() {
@@ -59,7 +59,7 @@ export default function HomePage() {
       {/* Feature chips */}
       <section className={styles.features}>
         {FEATURES.map(f => (
-          <Link key={f.label} to={`/search?tag=${f.label}`} className={styles.featureChip}>
+          <Link key={f.label} to={f.url} className={styles.featureChip}>
             <span className={styles.featureIcon}>{f.icon}</span>
             <span>{f.label}</span>
           </Link>
