@@ -43,7 +43,7 @@ export default function HomePage() {
             <em>Mountain Getaway</em>
           </h1>
           <p className={styles.heroSub}>
-            45 handpicked vacation rentals nestled in the heart of Virginia's Blue Ridge Mountains
+            50+ unique vacation rentals nestled in the heart of Virginia's Blue Ridge Mountains
           </p>
           <div className={styles.searchWrap}>
             <SearchBar />
@@ -70,7 +70,7 @@ export default function HomePage() {
       <section className={styles.listings}>
         <div className={styles.sectionHead}>
           <h2 className={styles.sectionTitle}>Featured Properties</h2>
-          <Link to="/search" className={styles.seeAll}>View all 45 →</Link>
+          <Link to="/search" className={styles.seeAll}>View all 50+ →</Link>
         </div>
         <div className={styles.grid}>
           {featured.map(listing => (
@@ -95,7 +95,7 @@ export default function HomePage() {
           </div>
           <div className={styles.aboutStats}>
             <div className={styles.stat}>
-              <span className={styles.statNum}>45</span>
+              <span className={styles.statNum}>50+</span>
               <span className={styles.statLabel}>Unique Properties</span>
             </div>
             <div className={styles.stat}>
