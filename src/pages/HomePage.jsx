@@ -22,9 +22,9 @@ const TRUST_PILLARS = [
     body: 'Every listing is personally inspected. No surprises at check-in — just clean, stocked, ready homes.',
   },
   {
-    icon: '💬',
-    title: 'Real Human Support',
-    body: 'Text, call, or email us and a real person responds. No bots, no hold music, no ticket queues.',
+    icon: '⚡',
+    title: 'Book in Minutes, Not Hours',
+    body: 'No waiting on callbacks or approvals. Smart tools guide you from search to confirmation in just a few clicks.',
   },
 ]
 

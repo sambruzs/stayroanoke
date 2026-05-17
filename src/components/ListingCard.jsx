@@ -3,12 +3,6 @@ import { Link } from 'react-router-dom'
 import styles from './ListingCard.module.css'
 import { getCardImage } from '../utils/imageUtils'
 
-function StarRating({ rating }) {
-  return (
-    <span className={styles.stars}>★ {rating?.toFixed(1)}</span>
-  )
-}
-
 export default function ListingCard({ listing, searchParams }) {
   const rawPhoto = listing.pictures?.[0]?.original ||
     listing.pictures?.[0]?.thumbnail ||
@@ -23,8 +17,9 @@ export default function ListingCard({ listing, searchParams }) {
     listing.prices?.nightlyRate ||
     0
 
-  const rating = listing.reviewsStats?.avgRating
-  const reviewCount = listing.reviewsStats?.numberOfReviews
+  const reviewsStats = listing.reviewsStats || listing.reviewStats || listing.reviews?.stats || {}
+  const rating = reviewsStats?.avgRating || reviewsStats?.averageRating
+  const reviewCount = reviewsStats?.numberOfReviews || reviewsStats?.count || reviewsStats?.total
   const badge = listing.propertyType || listing.type || null
   const query = searchParams ? `?${searchParams}` : ''
 
@@ -41,7 +36,7 @@ export default function ListingCard({ listing, searchParams }) {
           <span className={styles.location}>
             {listing.address?.city || 'Roanoke'}, {listing.address?.state || 'VA'}
           </span>
-          {rating && <StarRating rating={rating} />}
+          {rating > 0 && <span className={styles.stars}>★ {rating.toFixed(1)}</span>}
         </div>
         <h3 className={styles.title}>{listing.title}</h3>
         <p className={styles.meta}>
@@ -55,8 +50,10 @@ export default function ListingCard({ listing, searchParams }) {
           ) : (
             <span className={styles.price}>Contact for pricing</span>
           )}
-          {reviewCount > 0 && (
-            <span className={styles.reviews}>{reviewCount} reviews</span>
+          {rating > 0 && (
+            <span className={styles.reviews}>
+              ★ {rating.toFixed(1)}{reviewCount > 0 ? ` · ${reviewCount}` : ''}
+            </span>
           )}
         </div>
       </div>
