@@ -4,7 +4,7 @@ export function StayRoanokeMark({ style }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Stay Roanoke mark" style={{ display: 'block', ...style }}>
       <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" strokeWidth="1.25" opacity="0.6" />
-      <polygon points="32,15 34.65,23.16 43.23,23.16 36.29,28.18 38.94,36.34 32,31.32 25.06,36.34 27.71,28.18 20.77,23.16 29.35,23.16" fill="currentColor" />
+      <polygon points="32,15 36.41,26.93 49.12,27.44 39.13,35.32 42.58,47.56 32,40.50 21.42,47.56 24.87,35.32 14.88,27.44 27.59,26.93" fill="currentColor" />
       <line x1="6" y1="50" x2="58" y2="50" stroke="currentColor" strokeWidth="1" opacity="0.5" />
       <circle cx="32" cy="33" r="3" fill="#ffb84d" />
     </svg>
