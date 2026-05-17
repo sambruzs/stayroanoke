@@ -509,6 +509,7 @@ async function checkBatchAvailability(token, listingIds, checkIn, checkOut, gues
 const ALLOWED_PATH_PREFIXES = [
   '/listings',
   '/reservations/quotes',
+  '/reservations/upsell',
   '/reservations/inquiry',
   '/reviews',
   '/availability',

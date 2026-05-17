@@ -57,17 +57,26 @@ export async function checkListingsAvailability({ listingIds, checkIn, checkOut,
 
 // Get reservation quote
 export async function getReservationQuote({ listingId, checkIn, checkOut, guests, pets = 0 }) {
+  const numPets = parseInt(pets) || 0
   const body = {
     listingId,
     checkInDateLocalized: checkIn,
     checkOutDateLocalized: checkOut,
-    guestsCount: parseInt(guests)
+    guestsCount: parseInt(guests),
+    numberOfGuests: {
+      numberOfAdults: parseInt(guests),
+      ...(numPets > 0 && { numberOfPets: numPets }),
+    },
   }
-  if (pets > 0) body.petsCount = parseInt(pets)
   return guestyFetch('/reservations/quotes', {
     method: 'POST',
     body: JSON.stringify(body)
   })
+}
+
+// Get upsell fees (e.g. pet fee) for a quote — requires inquiryId from quote response
+export async function getUpsellFees({ inquiryId, listingId }) {
+  return guestyFetch(`/reservations/upsell/${inquiryId}/${listingId}/fee`)
 }
 
 // Create instant reservation

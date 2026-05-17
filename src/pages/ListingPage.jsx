@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom'
-import { getListing, getReservationQuote, getListingCalendar, getListingReviews } from '../utils/guestyApi'
+import { getListing, getReservationQuote, getUpsellFees, getListingCalendar, getListingReviews } from '../utils/guestyApi'
 import { mockListings } from '../data/mockListings'
 import { format, differenceInCalendarDays, addDays, parseISO, isWithinInterval, startOfDay } from 'date-fns'
 import DatePicker from 'react-datepicker'
@@ -158,7 +158,17 @@ export default function ListingPage() {
         : (listing?.prices?.basePrice || listing?.price?.basePrice || 0)
 
       if (money) {
-        const petFee = pets > 0 ? 99 : 0
+        let petFee = 0
+        const inquiryId = data?.rates?.ratePlans?.[0]?.inquiryId
+        if (pets > 0 && inquiryId) {
+          try {
+            const upsells = await getUpsellFees({ inquiryId, listingId: listing._id || listing.id })
+            const petUpsell = upsells?.find?.(u => u.channelFeeType === 'PET')
+            if (petUpsell) petFee = petUpsell.price ?? petUpsell.value ?? 0
+          } catch (e) {
+            console.warn('Upsell fetch failed, pet fee omitted:', e.message)
+          }
+        }
         setQuote({
           _id: data._id,
           ratePlanId: ratePlan?._id,
