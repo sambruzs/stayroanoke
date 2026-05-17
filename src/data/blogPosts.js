@@ -60,39 +60,51 @@ Roanoke has quietly become one of Virginia's best craft beer destinations. The S
 
 ## Big Lick Brewing Company
 
+![Big Lick Brewing Company beer garden, Downtown Roanoke](https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/76/fa/67/big-lick-brewing-co-by.jpg?w=1200&h=600&s=1)
+
 The crown jewel of Roanoke's craft beer scene. Big Lick anchors the brewery trail from its perch on Salem Avenue, boasting the largest permanent beer garden in the region — over 6,000 square feet of outdoor space that fills up fast on warm weekends. Since opening in 2014, they've crafted more than 190 distinct recipes, covering everything from light lagers to barrel-aged stouts. The rotating tap list keeps regulars guessing, and the food truck lineup is reliably excellent.
 
-**Location:** 409 Salem Ave SW, Downtown Roanoke | **Best for:** Beer garden vibes, variety, groups
+**Location:** [409 Salem Ave SW, Downtown Roanoke](https://www.google.com/maps/search/?api=1&query=Big+Lick+Brewing+Company+409+Salem+Ave+SW+Roanoke+VA) | **Best for:** Beer garden vibes, variety, groups
 
 ## Olde Salem Brewing Company
 
+![Olde Salem Brewing Company interior, Downtown Roanoke](https://dynamic-media-cdn.tripadvisor.com/media/photo-o/28/59/b0/89/interior-view.jpg?w=1200&h=600&s=1)
+
 Olde Salem's downtown Roanoke location — set in the former Deschutes taproom on Market Street — has quickly become a fixture in the city's beer scene. The space is warm and welcoming, the staff knows regulars by name, and the beer is consistently well-made. Their flagship ales are crowd-pleasers, but don't overlook the seasonal releases, which often showcase more adventurous brewing. Perfectly situated for a pre- or post-dinner pint in the heart of downtown.
 
-**Location:** 315 Market St SE, Downtown Roanoke | **Best for:** Downtown location, neighborhood taproom feel, sessionable beers
+**Location:** [315 Market St SE, Downtown Roanoke](https://www.google.com/maps/search/?api=1&query=Olde+Salem+Brewing+Company+315+Market+St+SE+Roanoke+VA) | **Best for:** Downtown location, neighborhood taproom feel, sessionable beers
 
 ## Three Notch'd Brewing (Roanoke Crafthouse)
 
+![Three Notch'd Craft Kitchen and Brewery interior, Roanoke](https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/3a/44/14/interior.jpg?w=1200&h=600&s=1)
+
 The Charlottesville-born brewery found a natural home in Roanoke, and the Crafthouse location has become a go-to for consistent quality across a wide range of styles. The food program is stronger than most brewery kitchens, and the space is comfortable for everything from a solo happy hour to a family dinner. Their IPAs punch above their weight, and the rotating seasonal list is always worth checking.
 
-**Location:** Roanoke | **Best for:** Solid food, reliable rotating taps, all-occasion spot
+**Location:** [24 Campbell Ave SE, Downtown Roanoke](https://www.google.com/maps/search/?api=1&query=Three+Notchd+Craft+Kitchen+Brewery+24+Campbell+Ave+SE+Roanoke+VA) | **Best for:** Solid food, reliable rotating taps, all-occasion spot
 
 ## A Few Old Goats Brewery
 
-Don't let the name fool you — the beer at A Few Old Goats is anything but old-fashioned. This smaller, community-focused brewery brings a genuine passion for the craft and a refreshing lack of pretension. The taproom is intimate, the conversations are good, and the beers reflect a brewer who's clearly having fun. A great stop for those who like discovering under-the-radar spots before everyone else does.
+![A Few Old Goats Brewing taproom, Roanoke](https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/79/8e/25/nice-place-for-a-beer.jpg?w=1200&h=600&s=1)
 
-**Location:** Roanoke area | **Best for:** Off-the-beaten-path find, community atmosphere, curious drinkers
+Don't let the name fool you — the beer at A Few Old Goats is anything but old-fashioned. This smaller, community-focused brewery brings a genuine passion for the craft and a refreshing lack of pretension. The taproom is set inside a converted government building with an artsy, industrial feel and a lovely outdoor biergarden. A great stop for those who like discovering under-the-radar spots before everyone else does.
+
+**Location:** [515 8th St SW, Roanoke](https://www.google.com/maps/search/?api=1&query=A+Few+Old+Goats+Brewing+515+8th+St+SW+Roanoke+VA) | **Best for:** Off-the-beaten-path find, biergarden, community atmosphere
 
 ## Golden Cactus Brewing
 
-Golden Cactus brings a little Southwest flair to the Blue Ridge. Their beers skew toward bold, flavorful profiles — expect well-executed IPAs, creative seasonals, and the occasional collaboration that turns heads. The taproom has good energy and the team is enthusiastic about what they're pouring. Worth a visit any time, but especially during one of their frequent events and tap takeovers.
+![Golden Cactus Brewing taproom interior, Roanoke](https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/ed/ad/1e/cool-inside-also-lots.jpg?w=1200&h=600&s=1)
 
-**Location:** Roanoke | **Best for:** Bold flavors, fun atmosphere, events
+Golden Cactus brings a little Southwest flair to the Blue Ridge. Their beers skew toward bold, flavorful profiles — expect well-executed IPAs, creative seasonals, and the occasional collaboration that turns heads. The taproom has a fantastic industrial format with plenty of indoor and outdoor seating, good energy, and a team that's clearly enthusiastic about what they're pouring. Worth a visit any time, but especially during one of their frequent events.
+
+**Location:** [214 5th St SW, Roanoke](https://www.google.com/maps/search/?api=1&query=Golden+Cactus+Brewing+214+5th+St+SW+Roanoke+VA) | **Best for:** Bold flavors, industrial taproom, events
 
 ## Blindhouse Brewing
 
-One of the newer additions to the Roanoke brewery scene, Blindhouse has hit the ground running. The name is intriguing, the branding is sharp, and the beer backs it up. They've been particularly strong on their hop-forward offerings, and the taproom design reflects a brewery that takes both the craft and the experience seriously. Keep an eye on this one — it's already building a loyal following.
+![Craft beer at Blindhouse Beer Company, Roanoke](https://images.unsplash.com/photo-1608270586620-248524c67de9?w=1200&h=600&q=85)
 
-**Location:** Roanoke | **Best for:** New discovery, hop-forward beers, modern taproom
+One of the newer additions to the Roanoke brewery scene, Blindhouse has hit the ground running. The name is intriguing, the branding is sharp, and the beer backs it up. They've been particularly strong on their hop-forward offerings, and the taproom on Salem Avenue reflects a brewery that takes both the craft and the experience seriously. Keep an eye on this one — it's already building a loyal following.
+
+**Location:** [534 Salem Ave SW, Roanoke](https://www.google.com/maps/search/?api=1&query=Blindhouse+Beer+Company+534+Salem+Ave+SW+Roanoke+VA) | **Best for:** New discovery, hop-forward beers, modern taproom
 
 ## Planning Your Brewery Trail
 
