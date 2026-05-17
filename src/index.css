@@ -13,8 +13,9 @@
   --text-light: #6B5B4E;
   --border: #DDD5C4;
 
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-body: 'Lato', sans-serif;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
   --shadow-sm: 0 1px 3px rgba(44,31,20,0.08);
   --shadow-md: 0 4px 16px rgba(44,31,20,0.12);
