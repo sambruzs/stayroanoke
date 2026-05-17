@@ -1,5 +1,11 @@
-import React from 'react'
-import { Routes, Route } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
+
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
+  return null
+}
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import TextUsWidget from './components/TextUsWidget'
@@ -18,6 +24,7 @@ export default function App() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <a href="#main-content" className="skip-link">Skip to main content</a>
+      <ScrollToTop />
       <Navbar />
       <main id="main-content" style={{ flex: 1 }}>
         <Routes>
