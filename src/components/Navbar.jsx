@@ -20,7 +20,7 @@ export default function Navbar() {
   return (
     <nav aria-label="Main navigation" className={`${styles.nav} ${transparent ? styles.transparent : styles.solid}`}>
       <Link to="/" className={styles.logo} aria-label="Stay Roanoke — home">
-        <StayRoanokeLogo style={{ height: '40px', width: 'auto' }} />
+        <StayRoanokeLogo markSize={38} />
       </Link>
       <div className={styles.links}>
         <Link to="/search" className={styles.link}>Properties</Link>

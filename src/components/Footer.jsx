@@ -15,7 +15,7 @@ export default function Footer() {
       </div>
       <div className={styles.inner}>
         <div className={styles.brand}>
-          <StayRoanokeLogo style={{ height: '48px', width: 'auto', color: 'white' }} />
+          <StayRoanokeLogo markSize={52} style={{ color: 'white' }} />
           <p className={styles.tagline}>Your Blue Ridge Mountain Getaway</p>
         </div>
         <div className={styles.cols}>
