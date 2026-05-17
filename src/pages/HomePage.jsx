@@ -43,7 +43,7 @@ export default function HomePage() {
             <em>Mountain Getaway</em>
           </h1>
           <p className={styles.heroSub}>
-            50+ unique vacation rentals nestled in the heart of Virginia's Blue Ridge Mountains
+            50+ Handpicked Properties. Local Experts. Zero Surprises.
           </p>
           <div className={styles.searchWrap}>
             <SearchBar />
