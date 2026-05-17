@@ -105,7 +105,7 @@ export default function TermsPage() {
             <p>You authorize us to verify your identity using the photo ID you provide, the credit card on file, third-party verification services, and the check-in form. Failure to pass identity verification is grounds for cancellation or refusal of check-in under Section 7.5.</p>
 
             <h3>3.4 Transient Lodging Acknowledgment</h3>
-            <p>You acknowledge that your Stay is transient lodging within the meaning of Va. Code §§ 35.1-1 and 55.1-1201(D); that you do not occupy the Property as a primary residence; and that no Stay shall exceed twenty-eight (28) consecutive nights without prior written approval from Operator.</p>
+            <p>You acknowledge that your Stay is transient lodging within the meaning of Va. Code §§ 35.1-1 and 55.1-1201(D); that you do not occupy the Property as a primary residence; and that no Stay shall exceed eighty-nine (89) consecutive nights without prior written approval from Operator.</p>
 
             <h3>3.5 Each Adult Guest Signs Separately</h3>
             <p>Before access codes are issued, every Authorized Occupant who is 18 or older must individually accept this Agreement by completing and electronically signing the Guest Acknowledgement (capturing name, ID, IP address, and timestamp).</p>
