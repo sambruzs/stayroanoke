@@ -1,5 +1,61 @@
 export const blogPosts = [
   {
+    slug: 'best-breweries-roanoke-virginia',
+    title: 'Best Breweries in Roanoke, Virginia',
+    metaTitle: 'Best Breweries in Roanoke VA | Local Craft Beer Guide 2026',
+    metaDescription: 'Discover the best craft breweries in Roanoke, Virginia — from Big Lick\'s massive beer garden to hidden gems across the Star City. Your local guide to Roanoke\'s thriving brewery scene.',
+    date: 'May 17, 2026',
+    author: 'Stay Roanoke',
+    category: 'Food & Drink',
+    coverImage: 'https://media-cdn.tripadvisor.com/media/photo-f/15/bb/e6/76/aerial-view-of-roanoke.jpg',
+    excerpt: 'Roanoke\'s craft brewery scene has exploded over the past decade. From the iconic beer garden at Big Lick to the cozy taprooms scattered across the Star City, here\'s your guide to the best pints in town.',
+    content: `
+Roanoke has quietly become one of Virginia's best craft beer destinations. The Star City's brewery scene has grown from a handful of pioneers to a full-fledged trail worth planning a trip around. Whether you're a hop head, a sour fanatic, or just looking for a cold pint after a day on the trails, these are the breweries worth your time.
+
+## Big Lick Brewing Company
+
+The crown jewel of Roanoke's craft beer scene. Big Lick anchors the brewery trail from its perch on Salem Avenue, boasting the largest permanent beer garden in the region — over 6,000 square feet of outdoor space that fills up fast on warm weekends. Since opening in 2014, they've crafted more than 190 distinct recipes, covering everything from light lagers to barrel-aged stouts. The rotating tap list keeps regulars guessing, and the food truck lineup is reliably excellent.
+
+**Location:** 409 Salem Ave SW, Downtown Roanoke | **Best for:** Beer garden vibes, variety, groups
+
+## Olde Salem Brewing Company
+
+Tucked into the heart of downtown Salem — just a short drive from Roanoke — Olde Salem is the kind of neighborhood brewery that becomes a ritual. The taproom is warm and welcoming, the staff knows regulars by name, and the beer is consistently well-made. Their flagship ales are crowd-pleasers, but don't overlook the seasonal releases, which often showcase more adventurous brewing. A great spot for a laid-back afternoon.
+
+**Location:** Downtown Salem | **Best for:** Neighborhood taproom feel, sessionable beers, locals
+
+## Three Notch'd Brewing (Roanoke Crafthouse)
+
+The Charlottesville-born brewery found a natural home in Roanoke, and the Crafthouse location has become a go-to for consistent quality across a wide range of styles. The food program is stronger than most brewery kitchens, and the space is comfortable for everything from a solo happy hour to a family dinner. Their IPAs punch above their weight, and the rotating seasonal list is always worth checking.
+
+**Location:** Roanoke | **Best for:** Solid food, reliable rotating taps, all-occasion spot
+
+## A Few Old Goats Brewery
+
+Don't let the name fool you — the beer at A Few Old Goats is anything but old-fashioned. This smaller, community-focused brewery brings a genuine passion for the craft and a refreshing lack of pretension. The taproom is intimate, the conversations are good, and the beers reflect a brewer who's clearly having fun. A great stop for those who like discovering under-the-radar spots before everyone else does.
+
+**Location:** Roanoke area | **Best for:** Off-the-beaten-path find, community atmosphere, curious drinkers
+
+## Golden Cactus Brewing
+
+Golden Cactus brings a little Southwest flair to the Blue Ridge. Their beers skew toward bold, flavorful profiles — expect well-executed IPAs, creative seasonals, and the occasional collaboration that turns heads. The taproom has good energy and the team is enthusiastic about what they're pouring. Worth a visit any time, but especially during one of their frequent events and tap takeovers.
+
+**Location:** Roanoke | **Best for:** Bold flavors, fun atmosphere, events
+
+## Blindhouse Brewing
+
+One of the newer additions to the Roanoke brewery scene, Blindhouse has hit the ground running. The name is intriguing, the branding is sharp, and the beer backs it up. They've been particularly strong on their hop-forward offerings, and the taproom design reflects a brewery that takes both the craft and the experience seriously. Keep an eye on this one — it's already building a loyal following.
+
+**Location:** Roanoke | **Best for:** New discovery, hop-forward beers, modern taproom
+
+## Planning Your Brewery Trail
+
+Most of Roanoke's breweries are within easy driving distance of each other, making a self-guided brewery trail a realistic afternoon plan. Start at Big Lick for the beer garden experience, work your way through one or two others, and end the night with dinner at one of the taprooms that has food service. Rideshare options make it easy to do the trail responsibly.
+
+If you're staying in one of our properties, you're never far from a great pint. Browse our vacation rentals and make Roanoke's brewery scene part of your next stay.
+    `
+  },
+  {
     slug: 'top-restaurants-roanoke-virginia',
     title: 'Top Restaurants in Roanoke, Virginia',
     metaTitle: 'Top Restaurants in Roanoke VA | Best Places to Eat 2026',
