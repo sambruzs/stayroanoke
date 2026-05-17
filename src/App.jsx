@@ -2,6 +2,7 @@ import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import TextUsWidget from './components/TextUsWidget'
 import HomePage from './pages/HomePage'
 import SearchPage from './pages/SearchPage'
 import ListingPage from './pages/ListingPage'
@@ -33,6 +34,7 @@ export default function App() {
         </Routes>
       </main>
       <Footer />
+      <TextUsWidget />
     </div>
   )
 }
