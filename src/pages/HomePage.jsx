@@ -43,7 +43,7 @@ export default function HomePage() {
             <em>A Home Base</em>
           </h1>
           <p className={styles.heroSub}>
-            50+ Handpicked Properties. Local Experts. Zero Surprises.
+            Safe, verified rentals across Roanoke and beyond
           </p>
           <div className={styles.searchWrap}>
             <SearchBar />
