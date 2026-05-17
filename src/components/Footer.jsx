@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styles from './Footer.module.css'
+import { StayRoanokeLogo } from './Logo'
 
 export default function Footer() {
   return (
@@ -14,7 +15,7 @@ export default function Footer() {
       </div>
       <div className={styles.inner}>
         <div className={styles.brand}>
-          <span className={styles.brandName}>STAY ROANOKE</span>
+          <StayRoanokeLogo style={{ height: '48px', width: 'auto', color: 'white' }} />
           <p className={styles.tagline}>Your Blue Ridge Mountain Getaway</p>
         </div>
         <div className={styles.cols}>

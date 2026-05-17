@@ -23,6 +23,11 @@
 .logo {
   display: flex;
   align-items: center;
+  color: var(--blue-dark);
+}
+
+.transparent .logo {
+  color: var(--white);
 }
 
 .links {

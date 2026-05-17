@@ -1,3 +1,5 @@
+/* ── Desktop bar ─────────────────────────────────────────────────────────── */
+
 .bar {
   display: flex;
   align-items: center;
@@ -103,17 +105,148 @@
   padding: 0.4rem 0.8rem;
 }
 
+/* ── Mobile pill (hidden on desktop) ─────────────────────────────────────── */
+
+.pill {
+  display: none;
+}
+
+/* ── Mobile bottom sheet (hidden on desktop) ─────────────────────────────── */
+
+.sheetOverlay {
+  display: none;
+}
+
+/* ── Mobile overrides ────────────────────────────────────────────────────── */
+
 @media (max-width: 768px) {
+  /* Hide the full bar on mobile */
   .bar {
+    display: none;
+  }
+
+  /* Show the pill */
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background: var(--white);
+    border: none;
+    border-radius: 50px;
+    box-shadow: var(--shadow-lg);
+    padding: 14px 20px;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .pillIcon {
+    color: var(--blue-dark);
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .pillLabel {
+    flex: 1;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .pillChevron {
+    color: var(--text-mid);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+
+  /* Show the sheet overlay */
+  .sheetOverlay {
+    display: flex;
+    align-items: flex-end;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 500;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  .sheet {
+    width: 100%;
+    background: var(--white);
+    border-radius: 20px 20px 0 0;
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+    animation: slideUp 0.25s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+
+  .sheetHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sheetTitle {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    letter-spacing: 0.02em;
+  }
+
+  .sheetClose {
+    background: var(--off-white);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 1.3rem;
+    color: var(--text-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .sheetFields {
+    display: flex;
     flex-direction: column;
-    align-items: stretch;
+    padding: 8px 0;
   }
-  .divider {
-    width: 100%;
+
+  .sheetFields .field {
+    min-width: unset;
+    padding: 14px 20px;
+  }
+
+  .sheetFields .divider {
+    width: auto;
     height: 1px;
+    margin: 0 20px;
   }
-  .searchBtn {
+
+  .sheetFooter {
+    padding: 12px 20px 8px;
+  }
+
+  .sheetFooter .searchBtn {
     width: 100%;
-    margin: 0.5rem 0 0.25rem;
+    margin: 0;
+    padding: 1rem;
+    font-size: 1rem;
   }
 }
