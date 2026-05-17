@@ -224,12 +224,12 @@ export default function TermsPage() {
               <div className={styles.timeCard}>
                 <p className={styles.timeLabel}>Check-In</p>
                 <p className={styles.timeValue}>3:00 PM</p>
-                <p className={styles.timeNote}>Early check-in is subject to availability ($25 if available).</p>
+                <p className={styles.timeNote}>Early check-in is subject to availability ($30 if available).</p>
               </div>
               <div className={styles.timeCard}>
                 <p className={styles.timeLabel}>Check-Out</p>
                 <p className={styles.timeValue}>11:00 AM</p>
-                <p className={styles.timeNote}>Late check-out is subject to availability ($25 if available).</p>
+                <p className={styles.timeNote}>Late check-out is subject to availability ($30 if available).</p>
               </div>
             </div>
 
@@ -240,7 +240,7 @@ export default function TermsPage() {
             <p>Access codes are issued via SMS and email at or before 3:00 p.m. Eastern Time on the day of check-in. Codes are personal to your Reservation and may not be shared with anyone not listed as an Authorized Occupant. Sharing access codes with unauthorized persons incurs a $250 security violation fee under Section 13.</p>
 
             <h3>7.3 Check-Out</h3>
-            <p>Standard check-out is 11:00 a.m. Eastern Time. Late check-out is subject to availability ($25 if available). Failure to vacate by 11:00 a.m. without an approved late check-out constitutes a holdover, which will be charged at the published nightly rate plus a $50-per-hour holdover charge, billed in one-hour increments.</p>
+            <p>Standard check-out is 11:00 a.m. Eastern Time. Late check-out is subject to availability ($30 if available). Failure to vacate by 11:00 a.m. without an approved late check-out constitutes a holdover, which will be charged at the published nightly rate plus a $50-per-hour holdover charge, billed in one-hour increments.</p>
 
             <h3>7.4 Checkout Procedures</h3>
             <p>To help our housekeeping team and avoid additional cleaning fees, please complete the following before departing:</p>
