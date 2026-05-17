@@ -53,7 +53,7 @@ The greenway is one of Roanoke's crown jewels — and this route strings togethe
     date: 'May 17, 2026',
     author: 'Stay Roanoke',
     category: 'Food & Drink',
-    coverImage: 'https://media-cdn.tripadvisor.com/media/photo-f/15/bb/e6/76/aerial-view-of-roanoke.jpg',
+    coverImage: 'https://images.unsplash.com/photo-1559526324-593bc073d938?w=1200&q=85',
     excerpt: 'Roanoke\'s craft brewery scene has exploded over the past decade. From the iconic beer garden at Big Lick to the cozy taprooms scattered across the Star City, here\'s your guide to the best pints in town.',
     content: `
 Roanoke has quietly become one of Virginia's best craft beer destinations. The Star City's brewery scene has grown from a handful of pioneers to a full-fledged trail worth planning a trip around. Whether you're a hop head, a sour fanatic, or just looking for a cold pint after a day on the trails, these are the breweries worth your time.
@@ -66,9 +66,9 @@ The crown jewel of Roanoke's craft beer scene. Big Lick anchors the brewery trai
 
 ## Olde Salem Brewing Company
 
-Tucked into the heart of downtown Salem — just a short drive from Roanoke — Olde Salem is the kind of neighborhood brewery that becomes a ritual. The taproom is warm and welcoming, the staff knows regulars by name, and the beer is consistently well-made. Their flagship ales are crowd-pleasers, but don't overlook the seasonal releases, which often showcase more adventurous brewing. A great spot for a laid-back afternoon.
+Olde Salem's downtown Roanoke location — set in the former Deschutes taproom on Market Street — has quickly become a fixture in the city's beer scene. The space is warm and welcoming, the staff knows regulars by name, and the beer is consistently well-made. Their flagship ales are crowd-pleasers, but don't overlook the seasonal releases, which often showcase more adventurous brewing. Perfectly situated for a pre- or post-dinner pint in the heart of downtown.
 
-**Location:** Downtown Salem | **Best for:** Neighborhood taproom feel, sessionable beers, locals
+**Location:** 315 Market St SE, Downtown Roanoke | **Best for:** Downtown location, neighborhood taproom feel, sessionable beers
 
 ## Three Notch'd Brewing (Roanoke Crafthouse)
 
