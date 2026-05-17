@@ -53,7 +53,7 @@ The greenway is one of Roanoke's crown jewels — and this route strings togethe
     date: 'May 17, 2026',
     author: 'Stay Roanoke',
     category: 'Food & Drink',
-    coverImage: 'https://images.unsplash.com/photo-1559526324-593bc073d938?w=1200&q=85',
+    coverImage: '/olde-salem-flight.jpg',
     excerpt: 'Roanoke\'s craft brewery scene has exploded over the past decade. From the iconic beer garden at Big Lick to the cozy taprooms scattered across the Star City, here\'s your guide to the best pints in town.',
     content: `
 Roanoke has quietly become one of Virginia's best craft beer destinations. The Star City's brewery scene has grown from a handful of pioneers to a full-fledged trail worth planning a trip around. Whether you're a hop head, a sour fanatic, or just looking for a cold pint after a day on the trails, these are the breweries worth your time.
