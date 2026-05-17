@@ -22,6 +22,8 @@ export default function Footer() {
           <div className={styles.col}>
             <h4>Explore</h4>
             <Link to="/search">All Properties</Link>
+            <Link to="/partners">Partner Listings</Link>
+            <Link to="/blog">Local Guide</Link>
             <Link to="/search?guests=2">Couples Retreats</Link>
             <Link to="/search?guests=8">Group Stays</Link>
           </div>

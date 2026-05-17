@@ -17,9 +17,11 @@ export default function Navbar() {
 
   const transparent = isHome && !scrolled
 
+  const closeMenu = () => setMenuOpen(false)
+
   return (
     <nav aria-label="Main navigation" className={`${styles.nav} ${transparent ? styles.transparent : styles.solid}`}>
-      <Link to="/" className={styles.logo} aria-label="Stay Roanoke — home">
+      <Link to="/" className={styles.logo} aria-label="Stay Roanoke — home" onClick={closeMenu}>
         <StayRoanokeLogo markSize={38} />
       </Link>
       <div className={styles.links}>
@@ -29,6 +31,23 @@ export default function Navbar() {
         <a href="mailto:info@stayroanoke.com" className={styles.link}>Contact</a>
         <Link to="/search" className={styles.cta}>Book Now</Link>
       </div>
+      <button
+        className={styles.hamburger}
+        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={menuOpen}
+        onClick={() => setMenuOpen(o => !o)}
+      >
+        {menuOpen ? '✕' : '☰'}
+      </button>
+      {menuOpen && (
+        <div className={styles.mobileMenu}>
+          <Link to="/search" className={styles.mobileLink} onClick={closeMenu}>Properties</Link>
+          <Link to="/partners" className={styles.mobileLink} onClick={closeMenu}>Partner Listings</Link>
+          <Link to="/blog" className={styles.mobileLink} onClick={closeMenu}>Guide</Link>
+          <a href="mailto:info@stayroanoke.com" className={styles.mobileLink} onClick={closeMenu}>Contact</a>
+          <Link to="/search" className={styles.mobileCta} onClick={closeMenu}>Book Now</Link>
+        </div>
+      )}
     </nav>
   )
 }
