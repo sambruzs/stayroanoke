@@ -5,6 +5,29 @@ import ListingCard from '../components/ListingCard'
 import { getListings } from '../utils/guestyApi'
 import styles from './HomePage.module.css'
 
+const TRUST_PILLARS = [
+  {
+    icon: '🏷️',
+    title: 'Best Rate Guaranteed',
+    body: 'Book direct and skip the OTA markup. You always get our lowest price — guaranteed.',
+  },
+  {
+    icon: '📍',
+    title: 'Local Roanoke Experts',
+    body: 'Our team lives here. We know every neighborhood, trail, and hidden gem in the Star City.',
+  },
+  {
+    icon: '✅',
+    title: 'Verified Properties',
+    body: 'Every listing is personally inspected. No surprises at check-in — just clean, stocked, ready homes.',
+  },
+  {
+    icon: '💬',
+    title: 'Real Human Support',
+    body: 'Text, call, or email us and a real person responds. No bots, no hold music, no ticket queues.',
+  },
+]
+
 const FEATURES = [
   { icon: '🏔️', label: 'Blue Ridge Views', url: '/search?tag=Blue+Ridge+Views' },
   { icon: '🥾', label: 'Trail Access',      url: '/search?tag=Trail+Access' },
@@ -76,6 +99,23 @@ export default function HomePage() {
           {featured.map(listing => (
             <ListingCard key={listing._id || listing.id} listing={listing} />
           ))}
+        </div>
+      </section>
+
+      {/* Why Book Direct */}
+      <section className={styles.bookDirect}>
+        <div className={styles.bookDirectInner}>
+          <p className={styles.bookDirectEyebrow}>Why Book Direct</p>
+          <h2 className={styles.bookDirectTitle}>Skip the middleman. Keep it local.</h2>
+          <div className={styles.trustGrid}>
+            {TRUST_PILLARS.map(p => (
+              <div key={p.title} className={styles.trustCard}>
+                <span className={styles.trustIcon}>{p.icon}</span>
+                <h3 className={styles.trustTitle}>{p.title}</h3>
+                <p className={styles.trustBody}>{p.body}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

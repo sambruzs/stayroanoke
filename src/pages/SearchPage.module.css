@@ -88,6 +88,86 @@
   font-size: 1rem;
 }
 
+.headerControls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.viewToggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.viewBtn {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.45rem 0.85rem;
+  background: var(--white);
+  color: var(--text-light);
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.04em;
+}
+
+.viewBtn + .viewBtn {
+  border-left: 1px solid var(--border);
+}
+
+.viewBtnActive {
+  background: var(--blue-dark);
+  color: var(--white);
+}
+
+.filterGroup + .filterGroup {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.priceRange {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.priceInput {
+  width: 0;
+  flex: 1;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--text-dark);
+  background: var(--off-white);
+  outline: none;
+}
+
+.priceInput:focus {
+  border-color: var(--blue-mid);
+  background: var(--white);
+}
+
+.priceSep {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  flex-shrink: 0;
+}
+
+.clearFilter {
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--blue-mid);
+  cursor: pointer;
+  letter-spacing: 0.04em;
+}
+
 .sort {
   font-family: var(--font-body);
   font-size: 0.85rem;

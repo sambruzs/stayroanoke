@@ -443,6 +443,13 @@ export default function ListingPage() {
               <p className={styles.panelNote}>
                 {checkIn && checkOut ? "You won't be charged yet" : 'Select dates to see total price'}
               </p>
+              <div className={styles.cancelPolicy}>
+                <span>🛡️</span>
+                <div>
+                  <strong>Free cancellation</strong> — cancel at least 48 hours before check-in for a full refund.{' '}
+                  <Link to="/terms" style={{ color: 'var(--blue-mid)', fontWeight: 700 }}>Full policy</Link>
+                </div>
+              </div>
             </div>
             <PriceComparison quote={quote} />
           </aside>

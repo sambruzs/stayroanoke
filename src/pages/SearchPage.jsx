@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import SearchBar from '../components/SearchBar'
 import ListingCard from '../components/ListingCard'
+import MapView from '../components/MapView'
 import { getListings, checkListingsAvailability } from '../utils/guestyApi'
 import styles from './SearchPage.module.css'
 
@@ -11,6 +12,9 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(true)
   const [bedroomFilter, setBedroomFilter] = useState('any')
   const [sortBy, setSortBy] = useState('default')
+  const [minPrice, setMinPrice] = useState('')
+  const [maxPrice, setMaxPrice] = useState('')
+  const [viewMode, setViewMode] = useState('grid')
 
   const checkIn = searchParams.get('checkIn')
   const checkOut = searchParams.get('checkOut')
@@ -72,6 +76,8 @@ export default function SearchPage() {
     const n = parseInt(bedroomFilter)
     filtered = filtered.filter(l => bedroomFilter === '4+' ? l.bedrooms >= 4 : l.bedrooms === n)
   }
+  if (minPrice !== '') filtered = filtered.filter(l => (l.prices?.basePrice || l.price?.basePrice || 0) >= parseInt(minPrice))
+  if (maxPrice !== '') filtered = filtered.filter(l => (l.prices?.basePrice || l.price?.basePrice || 0) <= parseInt(maxPrice))
   if (sortBy === 'price-asc') filtered.sort((a, b) => (a.prices?.basePrice || a.price?.basePrice || 0) - (b.prices?.basePrice || b.price?.basePrice || 0))
   if (sortBy === 'price-desc') filtered.sort((a, b) => (b.prices?.basePrice || b.price?.basePrice || 0) - (a.prices?.basePrice || a.price?.basePrice || 0))
   if (sortBy === 'rating') filtered.sort((a, b) => (b.reviewsStats?.avgRating || 0) - (a.reviewsStats?.avgRating || 0))
@@ -104,6 +110,33 @@ export default function SearchPage() {
               </label>
             ))}
           </div>
+          <div className={styles.filterGroup}>
+            <h3>Price / Night</h3>
+            <div className={styles.priceRange}>
+              <input
+                type="number"
+                placeholder="Min $"
+                min="0"
+                value={minPrice}
+                onChange={e => setMinPrice(e.target.value)}
+                className={styles.priceInput}
+              />
+              <span className={styles.priceSep}>–</span>
+              <input
+                type="number"
+                placeholder="Max $"
+                min="0"
+                value={maxPrice}
+                onChange={e => setMaxPrice(e.target.value)}
+                className={styles.priceInput}
+              />
+            </div>
+            {(minPrice || maxPrice) && (
+              <button className={styles.clearFilter} onClick={() => { setMinPrice(''); setMaxPrice('') }}>
+                Clear price
+              </button>
+            )}
+          </div>
         </aside>
 
         <div className={styles.results}>
@@ -116,16 +149,30 @@ export default function SearchPage() {
                 <span className={styles.dateRange}> · {checkIn} – {checkOut}</span>
               )}
             </h2>
-            <select
-              className={styles.sort}
-              value={sortBy}
-              onChange={e => setSortBy(e.target.value)}
-            >
-              <option value="default">Sort: Recommended</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-              <option value="rating">Top Rated</option>
-            </select>
+            <div className={styles.headerControls}>
+              <div className={styles.viewToggle}>
+                <button
+                  className={`${styles.viewBtn} ${viewMode === 'grid' ? styles.viewBtnActive : ''}`}
+                  onClick={() => setViewMode('grid')}
+                  aria-label="Grid view"
+                >⊞ List</button>
+                <button
+                  className={`${styles.viewBtn} ${viewMode === 'map' ? styles.viewBtnActive : ''}`}
+                  onClick={() => setViewMode('map')}
+                  aria-label="Map view"
+                >⊙ Map</button>
+              </div>
+              <select
+                className={styles.sort}
+                value={sortBy}
+                onChange={e => setSortBy(e.target.value)}
+              >
+                <option value="default">Sort: Recommended</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="rating">Top Rated</option>
+              </select>
+            </div>
           </div>
 
           {loading ? (
@@ -135,8 +182,10 @@ export default function SearchPage() {
             </div>
           ) : filtered.length === 0 ? (
             <div className={styles.empty}>
-              <p>No properties found. Try adjusting your guest count or browse all properties.</p>
+              <p>No properties found. Try adjusting your filters or browse all properties.</p>
             </div>
+          ) : viewMode === 'map' ? (
+            <MapView listings={filtered} searchParams={searchParams.toString()} />
           ) : (
             <div className={styles.grid}>
               {filtered.map(listing => (

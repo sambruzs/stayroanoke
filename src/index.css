@@ -87,6 +87,38 @@ img {
   max-width: 100%;
 }
 
+/* Leaflet map pin */
+.map-price-pin {
+  background: var(--blue-dark);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.3rem 0.6rem;
+  border-radius: 20px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.map-price-pin:hover {
+  background: var(--blue-mid);
+}
+
+/* Leaflet popup overrides */
+.leaflet-popup-content-wrapper {
+  padding: 0 !important;
+  overflow: hidden;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-md) !important;
+  min-width: 200px;
+}
+.leaflet-popup-content {
+  margin: 0 !important;
+  width: 220px !important;
+}
+.leaflet-popup-tip-container { display: none; }
+
 /* Datepicker overrides */
 .react-datepicker-wrapper {
   width: 100%;
