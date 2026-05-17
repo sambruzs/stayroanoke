@@ -39,8 +39,8 @@ export default function HomePage() {
         <div className={styles.heroContent}>
           <p className={styles.heroEyebrow}>Roanoke & Salem, Virginia</p>
           <h1 className={styles.heroTitle}>
-            More Than a Stay.<br />
-            <em>A Home Base.</em>
+            More Than a Stay<br />
+            <em>A Home Base</em>
           </h1>
           <p className={styles.heroSub}>
             50+ Handpicked Properties. Local Experts. Zero Surprises.
