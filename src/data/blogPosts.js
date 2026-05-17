@@ -1,5 +1,51 @@
 export const blogPosts = [
   {
+    slug: 'bike-roanoke-river-greenway-family',
+    title: 'Bike the Roanoke River Greenway: A Perfect Family Day Out',
+    metaTitle: 'Biking the Roanoke River Greenway with Kids | Family Guide 2026',
+    metaDescription: 'Rent e-bikes from Roanoke Mountain Adventures and cruise the Roanoke River Greenway with the whole family. Finish with handcrafted ice cream at Blue Cow — the perfect Roanoke day.',
+    date: 'May 17, 2026',
+    author: 'Stay Roanoke',
+    category: 'Family',
+    coverImage: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/c5/23/c6/have-one-of-instructors.jpg?w=1200&h=900&s=1',
+    excerpt: 'The Roanoke River Greenway is one of the city\'s best-kept family secrets — a smooth, scenic trail perfect for riders of all ages. Rent e-bikes from Roanoke Mountain Adventures, cruise the river, and finish with a scoop at Blue Cow Ice Cream.',
+    content: `
+If you're looking for the perfect family day in Roanoke, look no further than the Roanoke River Greenway. This paved, car-free trail stretches over 20 miles through the heart of the city, hugging the river and passing through parks, neighborhoods, and natural scenery that makes it hard to believe you're in the middle of a city. Add e-bikes and a stop for handcrafted ice cream, and you've got a day the whole family will be talking about.
+
+## Start at Roanoke Mountain Adventures
+
+Your first stop is [Roanoke Mountain Adventures](https://www.roanokemountainadventures.com/bike-rentals), located at 806 Wasena Ave SW — right on the greenway. RMA is Roanoke's go-to outfitter for outdoor adventures, and their e-bike rental setup is dialed in for families. Helmets are included, the staff will help everyone get properly fitted and comfortable on the bikes, and they'll point you toward the best sections of the trail for your group.
+
+E-bikes are the secret weapon for family rides. The electric assist means younger riders (and tired parents) can keep pace without anyone bonking halfway through. The greenway is flat enough that you won't need it constantly — but it's there when you do, and that makes all the difference.
+
+**Tip:** Book in advance on weekends, especially in the summer. They fill up.
+
+## Hit the Greenway
+
+Once you're rolling, the Roanoke River Greenway opens up in front of you. The trail runs alongside the Roanoke River through a mix of wooded corridors, open meadows, and scenic overlooks. You'll pass under bridges, spot herons along the riverbank, and have plenty of open space to spread out as a family.
+
+The paved surface is smooth and well-maintained, making it ideal for kids on bikes. There are no significant hills to contend with — just a relaxed, winding path that lets everyone ride at their own pace. Keep your eyes open for wildlife: great blue herons, ducks, and the occasional deer are common sightings along the river corridor.
+
+**Distance tip:** A round trip of 6–10 miles is a comfortable target for most families with younger kids. Ambitious groups can push further — the full trail offers plenty more to explore.
+
+## Stop for Ice Cream at Blue Cow
+
+No family bike day is complete without ice cream, and Roanoke delivers one of the best stops you'll find anywhere. [Blue Cow Ice Cream Co.](https://bluecowicecream.com/roanoke/) is located at 1115 Piedmont St SE — accessible right from the greenway — and serves small-batch, handcrafted ice cream made in Virginia with seasonal, quality ingredients.
+
+The flavors rotate regularly and tend toward the creative: think local fruit combinations, unexpected mix-ins, and rotating specials that keep regulars guessing. The shop is relaxed, kid-friendly, and the perfect place to reward everyone for a great ride. Grab a scoop, find a seat, and enjoy the glow of a genuinely good day.
+
+## Practical Info
+
+- **E-Bike Rentals:** [Roanoke Mountain Adventures](https://www.roanokemountainadventures.com/bike-rentals) — 806 Wasena Ave SW
+- **Ice Cream:** [Blue Cow Ice Cream Co.](https://bluecowicecream.com/roanoke/) — 1115 Piedmont St SE
+- **Trail surface:** Paved, flat, family-friendly
+- **Best time:** Spring through fall; weekday mornings for the lightest crowds
+- **Parking:** Available near the RMA shop in the Wasena neighborhood
+
+The greenway is one of Roanoke's crown jewels — and this route strings together two of the city's best experiences into a single, memorable day. Browse our vacation rentals and book your Roanoke stay today.
+    `
+  },
+  {
     slug: 'best-breweries-roanoke-virginia',
     title: 'Best Breweries in Roanoke, Virginia',
     metaTitle: 'Best Breweries in Roanoke VA | Local Craft Beer Guide 2026',
