@@ -17,9 +17,9 @@ export default function ListingCard({ listing, searchParams }) {
     listing.prices?.nightlyRate ||
     0
 
-  const reviewsStats = listing.reviewsStats || listing.reviewStats || listing.reviews?.stats || {}
-  const rating = reviewsStats?.avgRating || reviewsStats?.averageRating
-  const reviewCount = reviewsStats?.numberOfReviews || reviewsStats?.count || reviewsStats?.total
+  const r = listing.reviewsStats || listing.reviewStats || listing.reviews?.stats || listing.reviews?.summary || listing.reviews || {}
+  const rating = r?.avgRating ?? r?.averageRating ?? r?.avg ?? r?.score ?? listing.avgRating ?? listing.rating
+  const reviewCount = r?.numberOfReviews ?? r?.count ?? r?.total ?? r?.numReviews ?? listing.reviewCount
   const badge = listing.propertyType || listing.type || null
   const query = searchParams ? `?${searchParams}` : ''
 

@@ -625,15 +625,11 @@ export const handler = async (event) => {
       console.log(`POST${isInstant ? ' [INSTANT]' : ''} response ${response.status}:`, JSON.stringify(data).slice(0, 3000))
     }
 
-    // Debug: log keys of first listing to identify review stat field paths
-    if (guestyPath.startsWith('/listings') && !guestyPath.includes('/') || guestyPath === '/listings') {
+    // Debug: log reviews field structure from listing list
+    if (guestyPath.startsWith('/listings') && !guestyPath.includes('/calendar') && !guestyPath.match(/\/listings\/[^?]+$/)) {
       const first = data?.results?.[0] || data?.data?.[0]
       if (first) {
-        console.log('[LISTINGS] First listing top-level keys:', Object.keys(first).join(', '))
-        console.log('[LISTINGS] reviewsStats:', JSON.stringify(first.reviewsStats))
-        console.log('[LISTINGS] reviewStats:', JSON.stringify(first.reviewStats))
-        console.log('[LISTINGS] avgRating:', first.avgRating)
-        console.log('[LISTINGS] rating:', first.rating)
+        console.log('[LISTINGS] reviews field:', JSON.stringify(first.reviews))
       }
     }
 
