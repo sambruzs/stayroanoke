@@ -625,13 +625,6 @@ export const handler = async (event) => {
       console.log(`POST${isInstant ? ' [INSTANT]' : ''} response ${response.status}:`, JSON.stringify(data).slice(0, 3000))
     }
 
-    // Debug: log reviews field structure from listing list
-    if (guestyPath.startsWith('/listings') && !guestyPath.includes('/calendar') && !guestyPath.match(/\/listings\/[^?]+$/)) {
-      const first = data?.results?.[0] || data?.data?.[0]
-      if (first) {
-        console.log('[LISTINGS] reviews field:', JSON.stringify(first.reviews))
-      }
-    }
 
     // Send branded confirmation email after successful instant booking
     if (isInstant && data._id) {

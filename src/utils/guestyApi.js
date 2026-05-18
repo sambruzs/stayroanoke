@@ -34,7 +34,6 @@ export async function getListings({ guests } = {}) {
   const params = new URLSearchParams()
   if (guests) params.set('minOccupancy', guests)
   params.set('limit', '50')
-  params.set('fields', '+reviewsStats')
   return guestyFetch(`/listings?${params.toString()}`)
 }
 
