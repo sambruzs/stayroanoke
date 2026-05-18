@@ -4,6 +4,7 @@ import SearchBar from '../components/SearchBar'
 import ListingCard from '../components/ListingCard'
 import MapView from '../components/MapView'
 import { getListings, checkListingsAvailability } from '../utils/guestyApi'
+import { HIDDEN_LISTING_IDS } from '../data/hiddenListings'
 import styles from './SearchPage.module.css'
 
 export default function SearchPage() {
@@ -33,7 +34,8 @@ export default function SearchPage() {
       setLoading(true)
       try {
         const data = await getListings({ guests })
-        const results = data?.results || data?.data || (Array.isArray(data) ? data : [])
+        const raw = data?.results || data?.data || (Array.isArray(data) ? data : [])
+        const results = raw.filter(l => !HIDDEN_LISTING_IDS.has(l._id || l.id))
         if (!results.length) { setListings([]); return }
 
         const petFriendly = pets > 0

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import SearchBar from '../components/SearchBar'
 import ListingCard from '../components/ListingCard'
 import { getListings } from '../utils/guestyApi'
+import { HIDDEN_LISTING_IDS } from '../data/hiddenListings'
 import styles from './HomePage.module.css'
 
 const TRUST_PILLARS = [
@@ -44,7 +45,8 @@ export default function HomePage() {
     async function load() {
       try {
         const data = await getListings()
-        const results = data?.results || data?.data || (Array.isArray(data) ? data : [])
+        const results = (data?.results || data?.data || (Array.isArray(data) ? data : []))
+          .filter(l => !HIDDEN_LISTING_IDS.has(l._id || l.id))
         setFeatured(results.slice(0, 6))
       } catch {
         setFeatured([])
