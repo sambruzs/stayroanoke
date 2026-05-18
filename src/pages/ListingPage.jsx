@@ -281,9 +281,11 @@ export default function ListingPage() {
             <p className={styles.location}>{listing.address?.city || 'Roanoke'}, {listing.address?.state || 'Virginia'}</p>
             <h1 className={styles.title}>{listing.title}</h1>
             <p className={styles.meta}>{listing.bedrooms} bedrooms · {listing.bathrooms} bathrooms · Up to {listing.accommodates} guests</p>
-            {listing.reviewsStats?.avgRating > 0 && (
-              <p className={styles.rating}>★ {listing.reviewsStats.avgRating.toFixed(1)}<span> · {listing.reviewsStats.numberOfReviews} reviews</span></p>
-            )}
+            {listing.reviewsStats?.avgRating > 0 && (() => {
+              const raw = listing.reviewsStats.avgRating
+              const display = raw > 5 ? (raw / 2).toFixed(1) : raw.toFixed(1)
+              return <p className={styles.rating}>★ {display}<span> · {listing.reviewsStats.numberOfReviews} reviews</span></p>
+            })()}
 
             <div className={styles.divider} />
 

@@ -84,7 +84,8 @@ export default function Reviews({ reviews, stats, loading }) {
 
   if (!reviews?.length && !stats) return null
 
-  const avgRating = stats?.avgRating || stats?.averageRating
+  const rawAvg = stats?.avgRating || stats?.averageRating
+  const avgRating = rawAvg > 5 ? rawAvg / 2 : rawAvg
   const totalReviews = stats?.numberOfReviews || stats?.totalReviews || reviews?.length
 
   return (

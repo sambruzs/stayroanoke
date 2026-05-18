@@ -17,7 +17,8 @@ export default function ListingCard({ listing, searchParams }) {
     listing.prices?.nightlyRate ||
     0
 
-  const rating = listing.reviews?.avg || listing.reviewsStats?.avgRating
+  const rawRating = listing.reviews?.avg || listing.reviewsStats?.avgRating
+  const rating = rawRating > 5 ? rawRating / 2 : rawRating
   const reviewCount = listing.reviews?.total || listing.reviewsStats?.numberOfReviews
   const badge = listing.propertyType || listing.type || null
   const query = searchParams ? `?${searchParams}` : ''
