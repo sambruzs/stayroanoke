@@ -6,3 +6,6 @@ dist
 
 # Local Netlify folder
 .netlify
+
+# Cached API tokens — should never be committed
+.guesty-token.json

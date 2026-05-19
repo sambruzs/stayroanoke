@@ -13,10 +13,14 @@ const env = {
   get appId()       { return process.env.GUESTY_APP_ID },
 }
 
+const ALLOWED_ORIGIN = process.env.NODE_ENV === 'development'
+  ? '*'
+  : 'https://stayroanoke.com'
+
 const headers = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
   'Access-Control-Allow-Headers': 'Content-Type',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Content-Type': 'application/json',
 }
 
@@ -236,7 +240,18 @@ async function getToken({ forceRefresh = false } = {}) {
 
 // ─── Confirmation email ───────────────────────────────────────────────────────
 
-function buildEmailHtml({ firstName, listingTitle, listingCity, listingState, photoUrl, checkInFormatted, checkOutFormatted, guests, pets, confirmationCode, paymentMessage, guestPortalUrl, year }) {
+function encodeHTML(str) {
+  if (typeof str !== 'string') return String(str ?? '')
+  return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+}
+
+function buildEmailHtml(raw) {
+  const { photoUrl, checkInFormatted, checkOutFormatted, guests, pets, confirmationCode, paymentMessage, guestPortalUrl, year } = raw
+  // Encode all user-supplied string fields before embedding in HTML
+  const firstName    = encodeHTML(raw.firstName)
+  const listingTitle = encodeHTML(raw.listingTitle)
+  const listingCity  = encodeHTML(raw.listingCity)
+  const listingState = encodeHTML(raw.listingState)
   const petsLine = pets > 0 ? ` &middot; ${pets} pet${pets > 1 ? 's' : ''}` : ''
 
   // Hero: photo with dark gradient overlay and property name on top
@@ -565,7 +580,7 @@ export const handler = async (event) => {
   let emailContext  = null
   let guestForEmail = null
   if (isInstant && event.body) {
-    console.log('INSTANT raw body keys:', Object.keys(JSON.parse(event.body || '{}')))
+    if (process.env.NETLIFY_DEV) console.log('INSTANT raw body keys:', Object.keys(JSON.parse(event.body || '{}')))
     try {
       const parsed = JSON.parse(event.body)
       if (parsed._emailContext) {
@@ -580,7 +595,7 @@ export const handler = async (event) => {
   }
 
   const url = `${GUESTY_API_BASE}${guestyPath}${event.rawQuery ? '?' + event.rawQuery : ''}`
-  console.log(`→ ${event.httpMethod} ${url}`)
+  if (process.env.NETLIFY_DEV) console.log(`→ ${event.httpMethod} ${url}`)
 
   const controller = new AbortController()
   const timeout    = setTimeout(() => controller.abort(), 15_000)
@@ -620,9 +635,9 @@ export const handler = async (event) => {
       return { statusCode: response.status, headers, body: JSON.stringify(data) }
     }
 
-    if (event.httpMethod === 'POST') {
+    if (process.env.NETLIFY_DEV && event.httpMethod === 'POST') {
       console.log(`POST${isInstant ? ' [INSTANT]' : ''} body sent:`, (bodyToForward || '').slice(0, 300))
-      console.log(`POST${isInstant ? ' [INSTANT]' : ''} response ${response.status}:`, JSON.stringify(data).slice(0, 3000))
+      console.log(`POST${isInstant ? ' [INSTANT]' : ''} response ${response.status}:`, JSON.stringify(data).slice(0, 300))
     }
 
 
