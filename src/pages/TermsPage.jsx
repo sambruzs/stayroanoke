@@ -272,7 +272,7 @@ export default function TermsPage() {
             <p>You and every member of your party must comply with all federal, state, and local laws; all applicable HOA rules; all property-specific rules emailed with your Reservation or posted at the Property; and all reasonable directives from on-site management.</p>
 
             <h3>9.2 Quiet Hours</h3>
-            <p>Quiet hours are <strong>10:00 p.m. to 8:00 a.m.</strong> Excessive noise that draws complaints — at any hour — may result in eviction under Section 7.5. Noise levels must be kept to normal conversational levels during the day. Outdoor music is not permitted after 10:00 p.m.</p>
+            <p>Quiet hours are <strong>10:00 p.m. to 7:00 a.m.</strong> Excessive noise that draws complaints — at any hour — may result in eviction under Section 7.5. Noise levels must be kept to normal conversational levels during the day. Outdoor music is not permitted after 10:00 p.m.</p>
 
             <h3>9.3 No Parties or Events</h3>
             <p>The Property is leased for transient lodging only. Parties, gatherings exceeding the Reservation's maximum occupancy, commercial activity (including filming, photography, weddings, receptions, or business meetings exceeding occupancy), and any event that disturbs neighbors are prohibited. Violation results in immediate termination of the Stay without refund and a $1,000 liquidated damages charge under Section 13.</p>
@@ -289,6 +289,14 @@ export default function TermsPage() {
               <li>Illegal activities of any kind are strictly prohibited on the premises and will result in immediate termination of the Reservation without refund.</li>
               <li>Parking is available — contact us for details specific to your unit.</li>
             </ul>
+
+            <h3>9.6 Mail &amp; Packages</h3>
+            <p>Deliveries of mail and packages to Stay Roanoke properties are not permitted. Guests requiring mail delivery during their stay should use one of the following alternatives:</p>
+            <ul className={styles.rulesList}>
+              <li><strong>Mail:</strong> Address to General Delivery at the nearest post office, or rent a P.O. Box, and collect items in person.</li>
+              <li><strong>Packages:</strong> Ship to an Amazon Locker, UPS Store, or FedEx location for self-service pickup.</li>
+            </ul>
+            <p>Stay Roanoke is not responsible for any mail or packages that are lost, misdelivered, stolen, or undeliverable. Our team will not assist with tracking, locating, or recovering mail or packages under any circumstances.</p>
           </section>
 
           {/* ── Hot Tub (Stay Roanoke) ───────────────────────────────── */}

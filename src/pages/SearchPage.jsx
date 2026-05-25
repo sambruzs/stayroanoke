@@ -118,15 +118,17 @@ export default function SearchPage() {
               <input
                 type="number"
                 placeholder="Min $"
+                aria-label="Minimum price per night"
                 min="0"
                 value={minPrice}
                 onChange={e => setMinPrice(e.target.value)}
                 className={styles.priceInput}
               />
-              <span className={styles.priceSep}>–</span>
+              <span className={styles.priceSep} aria-hidden="true">–</span>
               <input
                 type="number"
                 placeholder="Max $"
+                aria-label="Maximum price per night"
                 min="0"
                 value={maxPrice}
                 onChange={e => setMaxPrice(e.target.value)}
@@ -168,6 +170,7 @@ export default function SearchPage() {
                 className={styles.sort}
                 value={sortBy}
                 onChange={e => setSortBy(e.target.value)}
+                aria-label="Sort properties"
               >
                 <option value="default">Sort: Recommended</option>
                 <option value="price-asc">Price: Low to High</option>

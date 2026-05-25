@@ -68,28 +68,20 @@ export default function HomePage() {
             <em>A Home Base</em>
           </h1>
           <p className={styles.heroSub}>
-            Safe, verified rentals across Roanoke and beyond
+            Stay Safe, Stay Secure, Stay Roanoke
           </p>
           <div className={styles.searchWrap}>
             <SearchBar />
           </div>
         </div>
-        <div className={styles.mountainSvg}>
+        <div className={styles.mountainSvg} aria-hidden="true">
           <svg viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0,80 C180,80 220,40 360,36 C500,32 540,60 680,54 C820,48 860,20 1000,24 C1140,28 1200,60 1440,52 L1440,120 L0,120 Z" fill="var(--off-white)"/>
           </svg>
         </div>
       </section>
 
-      {/* Feature chips */}
-      <section className={styles.features}>
-        {FEATURES.map(f => (
-          <Link key={f.label} to={f.url} className={styles.featureChip}>
-            <span className={styles.featureIcon}>{f.icon}</span>
-            <span>{f.label}</span>
-          </Link>
-        ))}
-      </section>
+      {/* Feature chips — hidden for now */}
 
       {/* Featured listings */}
       <section className={styles.listings}>
@@ -112,8 +104,10 @@ export default function HomePage() {
           <div className={styles.trustGrid}>
             {TRUST_PILLARS.map(p => (
               <div key={p.title} className={styles.trustCard}>
-                <span className={styles.trustIcon}>{p.icon}</span>
-                <h3 className={styles.trustTitle}>{p.title}</h3>
+                <div className={styles.trustHeader}>
+                  <span className={styles.trustIcon} aria-hidden="true">{p.icon}</span>
+                  <h3 className={styles.trustTitle}>{p.title}</h3>
+                </div>
                 <p className={styles.trustBody}>{p.body}</p>
               </div>
             ))}

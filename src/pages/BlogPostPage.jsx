@@ -13,8 +13,6 @@ function escapeHtml(str) {
 }
 
 function renderInline(text) {
-  // Escape first, then apply safe markdown transforms so injected HTML in
-  // source text can never reach the DOM as executable markup.
   const escaped = escapeHtml(text)
   return escaped
     .replace(/\*\*([^*]+)\*\*/g, (_, t) => `<strong>${t}</strong>`)
@@ -63,6 +61,18 @@ function renderContent(content) {
   return elements
 }
 
+function setMeta(property, content) {
+  let el = document.querySelector(`meta[property="${property}"]`)
+  if (!el) { el = document.createElement('meta'); el.setAttribute('property', property); document.head.appendChild(el) }
+  el.setAttribute('content', content)
+}
+
+function setCanonical(url) {
+  let el = document.querySelector('link[rel="canonical"]')
+  if (!el) { el = document.createElement('link'); el.setAttribute('rel', 'canonical'); document.head.appendChild(el) }
+  el.setAttribute('href', url)
+}
+
 export default function BlogPostPage() {
   const { slug } = useParams()
   const navigate = useNavigate()
@@ -70,14 +80,51 @@ export default function BlogPostPage() {
 
   useEffect(() => {
     if (!post) { navigate('/blog'); return }
+
+    const url = `https://stayroanoke.com/blog/${post.slug}`
+    const image = post.coverImage.startsWith('http') ? post.coverImage : `https://stayroanoke.com${post.coverImage}`
+
     document.title = post.metaTitle
-    const desc = document.querySelector('meta[name="description"]')
-    if (desc) desc.setAttribute('content', post.metaDescription)
+    document.querySelector('meta[name="description"]')?.setAttribute('content', post.metaDescription)
+
+    setCanonical(url)
+    setMeta('og:title', post.metaTitle)
+    setMeta('og:description', post.metaDescription)
+    setMeta('og:image', image)
+    setMeta('og:type', 'article')
+    setMeta('og:url', url)
   }, [post])
 
   if (!post) return null
 
   const otherPosts = blogPosts.filter(p => p.slug !== slug).slice(0, 2)
+
+  const canonicalUrl = `https://stayroanoke.com/blog/${post.slug}`
+  const imageUrl = post.coverImage.startsWith('http') ? post.coverImage : `https://stayroanoke.com${post.coverImage}`
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BlogPosting',
+        headline: post.title,
+        description: post.metaDescription,
+        image: imageUrl,
+        datePublished: post.date,
+        url: canonicalUrl,
+        author: { '@type': 'Organization', name: 'Stay Roanoke', url: 'https://stayroanoke.com' },
+        publisher: { '@type': 'Organization', name: 'Stay Roanoke', url: 'https://stayroanoke.com' },
+      },
+      ...(post.faqs?.length ? [{
+        '@type': 'FAQPage',
+        mainEntity: post.faqs.map(({ q, a }) => ({
+          '@type': 'Question',
+          name: q,
+          acceptedAnswer: { '@type': 'Answer', text: a },
+        })),
+      }] : []),
+    ],
+  }
 
   return (
     <div className={styles.page}>
@@ -99,6 +146,21 @@ export default function BlogPostPage() {
           <div className={styles.content}>
             {renderContent(post.content)}
           </div>
+
+          {/* FAQ section */}
+          {post.faqs?.length > 0 && (
+            <div className={styles.faqSection}>
+              <h2 className={styles.faqHeading}>Frequently Asked Questions</h2>
+              <div className={styles.faqList}>
+                {post.faqs.map(({ q, a }) => (
+                  <div key={q} className={styles.faqItem}>
+                    <h3 className={styles.faqQ}>{q}</h3>
+                    <p className={styles.faqA}>{a}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </article>
 
         {/* Sidebar */}
@@ -126,21 +188,8 @@ export default function BlogPostPage() {
         </aside>
       </div>
 
-      {/* Schema.org Article structured data */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": post.title,
-        "description": post.metaDescription,
-        "image": post.coverImage,
-        "datePublished": post.date,
-        "author": { "@type": "Organization", "name": "Stay Roanoke" },
-        "publisher": {
-          "@type": "Organization",
-          "name": "Stay Roanoke",
-          "url": "https://stayroanoke.com"
-        }
-      })}} />
+      {/* Structured data */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
     </div>
   )
 }

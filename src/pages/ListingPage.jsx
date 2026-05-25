@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom'
 import { getListing, getReservationQuote, getUpsellFees, getListingCalendar, getListingReviews } from '../utils/guestyApi'
 import { mockListings } from '../data/mockListings'
@@ -28,6 +28,9 @@ export default function ListingPage() {
   const [loading, setLoading] = useState(true)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
+  const lightboxRef = useRef(null)
+  const lightboxTriggerRef = useRef(null)
+  const touchStartX = useRef(null)
   const [quote, setQuote] = useState(null)
   const [quoteLoading, setQuoteLoading] = useState(false)
   const [quoteError, setQuoteError] = useState(null)
@@ -213,17 +216,46 @@ export default function ListingPage() {
     : [{ thumbnail: 'https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1200&q=80' }]
 
   useEffect(() => {
+    if (!lightboxOpen || photos.length < 2) return
+    const indices = [
+      (lightboxIndex + 1) % photos.length,
+      (lightboxIndex + 2) % photos.length,
+      (lightboxIndex - 1 + photos.length) % photos.length,
+    ]
+    indices.forEach(i => {
+      const src = getGalleryImage(photos[i]?.original || photos[i]?.thumbnail)
+      if (src) { const img = new Image(); img.src = src }
+    })
+  }, [lightboxOpen, lightboxIndex, photos])
+
+  useEffect(() => {
     if (!lightboxOpen) return
+    const el = lightboxRef.current
+    const focusable = el ? el.querySelectorAll(
+      'button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    ) : []
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    first?.focus()
+
     function onKey(e) {
-      if (e.key === 'Escape') setLightboxOpen(false)
+      if (e.key === 'Escape') { setLightboxOpen(false); return }
       if (e.key === 'ArrowRight') setLightboxIndex(i => (i + 1) % photos.length)
       if (e.key === 'ArrowLeft') setLightboxIndex(i => (i - 1 + photos.length) % photos.length)
+      if (e.key === 'Tab') {
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last?.focus() }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first?.focus() }
+        }
+      }
     }
     document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', onKey)
     return () => {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', onKey)
+      lightboxTriggerRef.current?.focus()
     }
   }, [lightboxOpen, photos.length])
 
@@ -254,7 +286,7 @@ export default function ListingPage() {
         {/* Gallery */}
         <div className={styles.galleryWrap}>
           <div className={styles.galleryGrid} data-single={photos.length === 1 || undefined}>
-            <button className={styles.galleryMain} onClick={() => { setLightboxIndex(0); setLightboxOpen(true) }} aria-label="View photos">
+            <button ref={lightboxTriggerRef} className={styles.galleryMain} onClick={() => { setLightboxIndex(0); setLightboxOpen(true) }} aria-label="View all photos">
               <img src={getGalleryImage(photos[0]?.original || photos[0]?.thumbnail)} alt={listing.title} />
             </button>
             {photos.length >= 2 && (
@@ -361,21 +393,21 @@ export default function ListingPage() {
               </div>
 
               <div className={styles.guestField}>
-                <label>Guests</label>
-                <div className={styles.guestControl}>
-                  <button onClick={() => setGuests(g => Math.max(1, g - 1))}>−</button>
-                  <span>{guests} {guests === 1 ? 'Guest' : 'Guests'}</span>
-                  <button onClick={() => setGuests(g => Math.min(listing.accommodates || 16, g + 1))}>+</button>
+                <span id="panel-guests-label" className={styles.guestLabel}>Guests</span>
+                <div className={styles.guestControl} role="group" aria-labelledby="panel-guests-label">
+                  <button type="button" aria-label="Decrease guests" onClick={() => setGuests(g => Math.max(1, g - 1))}>−</button>
+                  <span aria-live="polite" aria-atomic="true">{guests} {guests === 1 ? 'Guest' : 'Guests'}</span>
+                  <button type="button" aria-label="Increase guests" onClick={() => setGuests(g => Math.min(listing.accommodates || 16, g + 1))}>+</button>
                 </div>
               </div>
 
               {listing?.amenities?.some(a => a.toLowerCase() === 'pets allowed') && (
                 <div className={styles.guestField}>
-                  <label>Pets 🐾</label>
-                  <div className={styles.guestControl}>
-                    <button onClick={() => setPets(p => Math.max(0, p - 1))}>−</button>
-                    <span>{pets} {pets === 1 ? 'Pet' : 'Pets'}</span>
-                    <button onClick={() => setPets(p => Math.min(2, p + 1))}>+</button>
+                  <span id="panel-pets-label" className={styles.guestLabel}>Pets <span aria-hidden="true">🐾</span></span>
+                  <div className={styles.guestControl} role="group" aria-labelledby="panel-pets-label">
+                    <button type="button" aria-label="Decrease pets" onClick={() => setPets(p => Math.max(0, p - 1))}>−</button>
+                    <span aria-live="polite" aria-atomic="true">{pets} {pets === 1 ? 'Pet' : 'Pets'}</span>
+                    <button type="button" aria-label="Increase pets" onClick={() => setPets(p => Math.min(2, p + 1))}>+</button>
                   </div>
                 </div>
               )}
@@ -448,7 +480,7 @@ export default function ListingPage() {
               <div className={styles.cancelPolicy}>
                 <span>🛡️</span>
                 <div>
-                  <strong>Free cancellation</strong> — cancel at least 48 hours before check-in for a full refund.{' '}
+                  <strong>Free cancellation</strong> — cancel at least 7 days before check-in for a full refund.{' '}
                   <Link to="/terms" style={{ color: 'var(--blue-mid)', fontWeight: 700 }}>Full policy</Link>
                 </div>
               </div>
@@ -459,7 +491,26 @@ export default function ListingPage() {
       </div>
 
       {lightboxOpen && (
-        <div className={styles.lightbox} onClick={() => setLightboxOpen(false)}>
+        <div
+          ref={lightboxRef}
+          className={styles.lightbox}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Photo ${lightboxIndex + 1} of ${photos.length}`}
+          onClick={() => setLightboxOpen(false)}
+          onTouchStart={e => { touchStartX.current = e.touches[0].clientX }}
+          onTouchEnd={e => {
+            if (touchStartX.current === null) return
+            const dx = e.changedTouches[0].clientX - touchStartX.current
+            touchStartX.current = null
+            if (Math.abs(dx) < 30) return
+            e.stopPropagation()
+            setLightboxIndex(i => dx < 0
+              ? (i + 1) % photos.length
+              : (i - 1 + photos.length) % photos.length
+            )
+          }}
+        >
           <button className={styles.lbClose} onClick={() => setLightboxOpen(false)} aria-label="Close">✕</button>
           {photos.length > 1 && (
             <button
