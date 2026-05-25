@@ -21,7 +21,7 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests, pets }) {
   })
 
   const phoneE164 = form.phone
-    ? `${form.countryCode}${form.phone.replace(/\D/g, '')}`
+    ? `+${(form.countryCode || '+1').replace(/\D/g, '')}${form.phone.replace(/\D/g, '')}`
     : ''
 
   const nights = checkIn && checkOut
@@ -168,36 +168,70 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests, pets }) {
           <div className={styles.field}>
             <label htmlFor="phone">Phone Number</label>
             <div className={styles.phoneRow}>
-              <select
+              <input
                 id="countryCode"
                 name="countryCode"
+                type="text"
+                list="countryCodeList"
                 value={form.countryCode}
                 onChange={handleChange}
                 aria-label="Country code"
                 className={styles.countrySelect}
-              >
-                <option value="+1">🇺🇸🇨🇦 +1</option>
-                <option value="+44">🇬🇧 +44</option>
-                <option value="+52">🇲🇽 +52</option>
-                <option value="+61">🇦🇺 +61</option>
-                <option value="+49">🇩🇪 +49</option>
-                <option value="+33">🇫🇷 +33</option>
-                <option value="+34">🇪🇸 +34</option>
-                <option value="+39">🇮🇹 +39</option>
-                <option value="+91">🇮🇳 +91</option>
-                <option value="+86">🇨🇳 +86</option>
-                <option value="+81">🇯🇵 +81</option>
-                <option value="+82">🇰🇷 +82</option>
-                <option value="+55">🇧🇷 +55</option>
-                <option value="+27">🇿🇦 +27</option>
-                <option value="+31">🇳🇱 +31</option>
-                <option value="+46">🇸🇪 +46</option>
-                <option value="+47">🇳🇴 +47</option>
-                <option value="+45">🇩🇰 +45</option>
-                <option value="+41">🇨🇭 +41</option>
-                <option value="+353">🇮🇪 +353</option>
-                <option value="+64">🇳🇿 +64</option>
-              </select>
+                placeholder="+1"
+              />
+              <datalist id="countryCodeList">
+                <option value="+1">🇺🇸🇨🇦 United States / Canada</option>
+                <option value="+44">🇬🇧 United Kingdom</option>
+                <option value="+52">🇲🇽 Mexico</option>
+                <option value="+61">🇦🇺 Australia</option>
+                <option value="+64">🇳🇿 New Zealand</option>
+                <option value="+49">🇩🇪 Germany</option>
+                <option value="+33">🇫🇷 France</option>
+                <option value="+34">🇪🇸 Spain</option>
+                <option value="+39">🇮🇹 Italy</option>
+                <option value="+31">🇳🇱 Netherlands</option>
+                <option value="+32">🇧🇪 Belgium</option>
+                <option value="+41">🇨🇭 Switzerland</option>
+                <option value="+43">🇦🇹 Austria</option>
+                <option value="+46">🇸🇪 Sweden</option>
+                <option value="+47">🇳🇴 Norway</option>
+                <option value="+45">🇩🇰 Denmark</option>
+                <option value="+358">🇫🇮 Finland</option>
+                <option value="+351">🇵🇹 Portugal</option>
+                <option value="+353">🇮🇪 Ireland</option>
+                <option value="+30">🇬🇷 Greece</option>
+                <option value="+48">🇵🇱 Poland</option>
+                <option value="+420">🇨🇿 Czech Republic</option>
+                <option value="+36">🇭🇺 Hungary</option>
+                <option value="+91">🇮🇳 India</option>
+                <option value="+86">🇨🇳 China</option>
+                <option value="+852">🇭🇰 Hong Kong</option>
+                <option value="+886">🇹🇼 Taiwan</option>
+                <option value="+81">🇯🇵 Japan</option>
+                <option value="+82">🇰🇷 South Korea</option>
+                <option value="+65">🇸🇬 Singapore</option>
+                <option value="+60">🇲🇾 Malaysia</option>
+                <option value="+66">🇹🇭 Thailand</option>
+                <option value="+84">🇻🇳 Vietnam</option>
+                <option value="+63">🇵🇭 Philippines</option>
+                <option value="+62">🇮🇩 Indonesia</option>
+                <option value="+55">🇧🇷 Brazil</option>
+                <option value="+54">🇦🇷 Argentina</option>
+                <option value="+56">🇨🇱 Chile</option>
+                <option value="+57">🇨🇴 Colombia</option>
+                <option value="+51">🇵🇪 Peru</option>
+                <option value="+58">🇻🇪 Venezuela</option>
+                <option value="+27">🇿🇦 South Africa</option>
+                <option value="+20">🇪🇬 Egypt</option>
+                <option value="+254">🇰🇪 Kenya</option>
+                <option value="+234">🇳🇬 Nigeria</option>
+                <option value="+971">🇦🇪 United Arab Emirates</option>
+                <option value="+966">🇸🇦 Saudi Arabia</option>
+                <option value="+972">🇮🇱 Israel</option>
+                <option value="+90">🇹🇷 Turkey</option>
+                <option value="+7">🇷🇺 Russia</option>
+                <option value="+380">🇺🇦 Ukraine</option>
+              </datalist>
               <input
                 id="phone"
                 type="tel"
