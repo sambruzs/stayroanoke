@@ -13,6 +13,9 @@
 [functions."refresh-guesty-token"]
   timeout = 30
 
+[functions."guesty-webhook"]
+  timeout = 15
+
 [build.environment]
   NODE_VERSION = "18"
 
