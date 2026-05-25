@@ -176,7 +176,7 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests, pets }) {
                 aria-label="Country code"
                 className={styles.countrySelect}
               >
-                <option value="+1">🇺🇸🇨🇦 +1 (US/Canada)</option>
+                <option value="+1">🇺🇸🇨🇦 +1</option>
                 <option value="+44">🇬🇧 +44</option>
                 <option value="+52">🇲🇽 +52</option>
                 <option value="+61">🇦🇺 +61</option>
