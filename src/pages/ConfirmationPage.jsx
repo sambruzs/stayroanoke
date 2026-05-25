@@ -5,7 +5,7 @@ import styles from './ConfirmationPage.module.css'
 
 export default function ConfirmationPage() {
   const { state } = useLocation()
-  const { listing, checkIn, checkOut, guests, guest } = state || {}
+  const { listing, checkIn, checkOut, guests, guest, pending } = state || {}
 
   const daysUntilCheckIn = checkIn
     ? differenceInCalendarDays(new Date(checkIn), new Date())
@@ -18,10 +18,20 @@ export default function ConfirmationPage() {
   return (
     <div className={styles.page}>
       <div className={styles.card}>
-        <div className={styles.icon}>✓</div>
-        <h1 className={styles.title}>Booking Confirmed!</h1>
+        <div className={styles.icon}>{pending ? '⏳' : '✓'}</div>
+        <h1 className={styles.title}>
+          {pending ? 'Booking Processing' : 'Booking Confirmed!'}
+        </h1>
         <p className={styles.subtitle}>
-          Thank you, {guest?.firstName}! Your reservation is confirmed and a summary has been sent to <strong>{guest?.email}</strong>.
+          {pending ? (
+            <>
+              Thank you, {guest?.firstName}! Your booking is being processed.
+              Watch <strong>{guest?.email}</strong> for a confirmation email within the next 5–10 minutes.
+              If you don't see one, please contact us at <a href="mailto:info@stayroanoke.com">info@stayroanoke.com</a> or <a href="tel:+15407327151">(540) 732-7151</a> before re-booking.
+            </>
+          ) : (
+            <>Thank you, {guest?.firstName}! Your reservation is confirmed and a summary has been sent to <strong>{guest?.email}</strong>.</>
+          )}
         </p>
 
         {listing && (

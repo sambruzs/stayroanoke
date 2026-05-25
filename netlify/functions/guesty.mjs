@@ -597,7 +597,9 @@ export const handler = async (event) => {
   if (process.env.NETLIFY_DEV) console.log(`→ ${event.httpMethod} ${url}`)
 
   const controller = new AbortController()
-  const timeout    = setTimeout(() => controller.abort(), 15_000)
+  // Netlify allows up to 26s; we give ourselves headroom under that.
+  // Instant bookings can be slow because Guesty runs payment auth server-side.
+  const timeout    = setTimeout(() => controller.abort(), 24_000)
 
   const doRequest = (tok) => {
     const reqHeaders = {
@@ -657,6 +659,19 @@ export const handler = async (event) => {
   } catch (err) {
     clearTimeout(timeout)
     console.error('Request error:', err.message)
+
+    // For instant bookings, an abort/timeout means Guesty may have processed
+    // the booking but we lost the response. Signal "pending" so the UI doesn't
+    // tell the guest the booking failed.
+    if (isInstant) {
+      const reason = err.name === 'AbortError' ? 'timeout' : 'request_failed'
+      return {
+        statusCode: 504,
+        headers,
+        body: JSON.stringify({ _pending: true, _reason: reason, message: err.message })
+      }
+    }
+
     return emptyResult('request_failed: ' + err.message)
   }
 }

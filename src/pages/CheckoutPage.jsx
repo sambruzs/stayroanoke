@@ -121,6 +121,19 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests, pets }) {
         state: { listing, checkIn, checkOut, guests, pets, guest: form, reservationId: reservation._id }
       })
     } catch (err) {
+      if (err.pending) {
+        // Booking may have processed on Guesty's side even though we lost the response.
+        // Send the guest to the confirmation page with a "processing" notice so we don't
+        // tell them it failed when it likely succeeded.
+        navigate('/confirmation', {
+          state: {
+            listing, checkIn, checkOut, guests, pets, guest: form,
+            reservationId: null,
+            pending: true,
+          }
+        })
+        return
+      }
       setError(err.message || 'Something went wrong. Please try again.')
       setSubmitting(false)
     }

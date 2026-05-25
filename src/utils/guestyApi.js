@@ -21,6 +21,10 @@ async function guestyFetch(path, options = {}) {
     const msg = body?.error?.message || body?.message || `API error: ${res.status}`
     const error = new Error(msg)
     if (code) error.code = code
+    if (body?._pending) {
+      error.pending = true
+      error.reason = body._reason
+    }
     throw error
   }
 
