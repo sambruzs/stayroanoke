@@ -47,7 +47,10 @@ export default function HomePage() {
         const data = await getListings()
         const results = (data?.results || data?.data || (Array.isArray(data) ? data : []))
           .filter(l => !HIDDEN_LISTING_IDS.has(l._id || l.id))
-        setFeatured(results.slice(0, 6))
+        const tagged = results.filter(l =>
+          (l.tags || []).some(t => String(t).toLowerCase() === 'featured')
+        )
+        setFeatured(tagged.length ? tagged : results.slice(0, 6))
       } catch {
         setFeatured([])
       }
