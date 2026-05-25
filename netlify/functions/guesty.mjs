@@ -415,7 +415,7 @@ async function sendConfirmationEmail({ reservation, emailContext, guest }) {
     ? `Your card has been charged $${Number(total).toFixed(2)} in full — your arrival is within 10 days.`
     : `Your card will be charged $${Number(total).toFixed(2)} in full 10 days before your arrival on ${checkInFormatted}.`
 
-  const portalToken = Buffer.from('{{guest_app::Stay_Roanoke_All}}').toString('base64')
+  const portalToken = Buffer.from('{{guest_app::stay_roanoke_all}}').toString('base64')
   const guestPortalUrl = `https://guest-app.guesty.com/r/${reservation._id}/${portalToken}`
 
   const html = buildEmailHtml({
