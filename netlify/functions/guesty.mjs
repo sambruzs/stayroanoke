@@ -415,10 +415,28 @@ async function sendConfirmationEmail({ reservation, emailContext, guest }) {
     ? `Your card has been charged $${Number(total).toFixed(2)} in full — your arrival is within 10 days.`
     : `Your card will be charged $${Number(total).toFixed(2)} in full 10 days before your arrival on ${checkInFormatted}.`
 
-  const stayNights = Math.round((new Date(checkOut + 'T12:00:00') - new Date(checkIn + 'T12:00:00')) / 86400000)
-  const portalTemplate = stayNights >= 30 ? '{{guest_app::direct_over_30}}' : '{{guest_app::direct_under_30}}'
-  const portalToken = Buffer.from(portalTemplate).toString('base64')
-  const guestPortalUrl = `https://guest-app.guesty.com/r/${reservation._id}/${portalToken}`
+  // Prefer a portal URL provided by Guesty on the reservation (if any field exposes one),
+  // otherwise fall back to the known-working template token.
+  const reservationPortalUrl =
+    reservation.guestPortalUrl ||
+    reservation.guestAppUrl ||
+    reservation.guestApp?.url ||
+    reservation.guestPortal?.url ||
+    reservation._links?.guestApp?.href ||
+    reservation._links?.guestPortal?.href ||
+    null
+
+  let guestPortalUrl
+  if (reservationPortalUrl) {
+    guestPortalUrl = reservationPortalUrl
+  } else {
+    const portalToken = Buffer.from('{{guest_app::garland_non_airbnb}}').toString('base64')
+    guestPortalUrl = `https://guest-app.guesty.com/r/${reservation._id}/${portalToken}`
+  }
+
+  console.log('[portal] reservation keys:', Object.keys(reservation || {}).join(','))
+  console.log('[portal] reservationPortalUrl found:', !!reservationPortalUrl)
+  console.log('[portal] final guestPortalUrl:', guestPortalUrl)
 
   const html = buildEmailHtml({
     firstName, listingTitle, listingCity, listingState, photoUrl,
@@ -644,6 +662,8 @@ export const handler = async (event) => {
 
     // Send branded confirmation email after successful instant booking
     if (isInstant && data._id) {
+      // Log full reservation response (truncated) so we can locate any portal-URL field
+      console.log('[portal] full reservation response (first 4000 chars):', JSON.stringify(data).slice(0, 4000))
       if (emailContext && guestForEmail) {
         try {
           await sendConfirmationEmail({ reservation: data, emailContext, guest: guestForEmail })
