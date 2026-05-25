@@ -110,6 +110,33 @@
   border-color: var(--blue-mid);
 }
 
+.phoneRow {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0.5rem;
+}
+
+.countrySelect {
+  padding: 0.65rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  background: var(--white);
+  outline: none;
+  transition: border-color 0.15s;
+  cursor: pointer;
+}
+
+.countrySelect:focus {
+  border-color: var(--blue-mid);
+}
+
+.phoneInput {
+  width: 100%;
+}
+
 .cardElementWrap {
   padding: 0.65rem 0.85rem;
   border: 1px solid var(--border);

@@ -17,8 +17,12 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests, pets }) {
   const [error, setError] = useState('')
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [form, setForm] = useState({
-    firstName: '', lastName: '', email: '', phone: '', notes: ''
+    firstName: '', lastName: '', email: '', countryCode: '+1', phone: '', notes: ''
   })
+
+  const phoneE164 = form.phone
+    ? `${form.countryCode}${form.phone.replace(/\D/g, '')}`
+    : ''
 
   const nights = checkIn && checkOut
     ? differenceInCalendarDays(new Date(checkOut), new Date(checkIn))
@@ -70,7 +74,7 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests, pets }) {
         billing_details: {
           name: `${form.firstName} ${form.lastName}`,
           email: form.email,
-          phone: form.phone || undefined,
+          phone: phoneE164 || undefined,
         },
       })
 
@@ -84,7 +88,7 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests, pets }) {
         firstName: form.firstName,
         lastName: form.lastName,
         email: form.email,
-        phone: form.phone,
+        phone: phoneE164,
       }
 
       const reservation = await createReservation({
@@ -163,7 +167,47 @@ function CheckoutForm({ listing, quote, checkIn, checkOut, guests, pets }) {
           </div>
           <div className={styles.field}>
             <label htmlFor="phone">Phone Number</label>
-            <input id="phone" type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="(540) 555-0100" />
+            <div className={styles.phoneRow}>
+              <select
+                id="countryCode"
+                name="countryCode"
+                value={form.countryCode}
+                onChange={handleChange}
+                aria-label="Country code"
+                className={styles.countrySelect}
+              >
+                <option value="+1">🇺🇸🇨🇦 +1 (US/Canada)</option>
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+52">🇲🇽 +52</option>
+                <option value="+61">🇦🇺 +61</option>
+                <option value="+49">🇩🇪 +49</option>
+                <option value="+33">🇫🇷 +33</option>
+                <option value="+34">🇪🇸 +34</option>
+                <option value="+39">🇮🇹 +39</option>
+                <option value="+91">🇮🇳 +91</option>
+                <option value="+86">🇨🇳 +86</option>
+                <option value="+81">🇯🇵 +81</option>
+                <option value="+82">🇰🇷 +82</option>
+                <option value="+55">🇧🇷 +55</option>
+                <option value="+27">🇿🇦 +27</option>
+                <option value="+31">🇳🇱 +31</option>
+                <option value="+46">🇸🇪 +46</option>
+                <option value="+47">🇳🇴 +47</option>
+                <option value="+45">🇩🇰 +45</option>
+                <option value="+41">🇨🇭 +41</option>
+                <option value="+353">🇮🇪 +353</option>
+                <option value="+64">🇳🇿 +64</option>
+              </select>
+              <input
+                id="phone"
+                type="tel"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                placeholder="(540) 555-0100"
+                className={styles.phoneInput}
+              />
+            </div>
           </div>
           <div className={styles.field}>
             <label htmlFor="notes">Special Requests or Notes</label>
