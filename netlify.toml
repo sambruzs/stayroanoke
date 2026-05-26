@@ -48,6 +48,12 @@
   status = 200
 
 [[redirects]]
+  from = "/reviews"
+  to = "https://go.hifivestar.com/stay-roanoke"
+  status = 302
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
