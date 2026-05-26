@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Stay Roanoke — Logo Export</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&family=Space+Grotesk:wght@700&display=swap" />
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+  :root {
+    --brown: #4A3728;
+    --orange: #ffb84d;
+    --beige: #F2EAD9;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 48px 24px 96px;
+    background: var(--beige);
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    color: var(--brown);
+    min-height: 100vh;
+  }
+  h1 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .sub {
+    margin: 0 0 32px;
+    font-size: 14px;
+    opacity: 0.7;
+  }
+  .controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .controls label { font-size: 13px; font-weight: 600; }
+  .controls select, .controls button {
+    padding: 10px 16px;
+    border: 1px solid var(--brown);
+    background: white;
+    color: var(--brown);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .controls button {
+    background: var(--brown);
+    color: white;
+    border: none;
+  }
+  .controls button:hover { opacity: 0.9; }
+  .preview-wrap {
+    background: repeating-conic-gradient(#e8e1cf 0 25%, #f5f0e1 0 50%) 0 0 / 24px 24px;
+    padding: 32px;
+    border-radius: 12px;
+    display: inline-block;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  /* Logo target — what gets exported */
+  #logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 28px;
+    background: transparent;
+    color: var(--brown);
+    padding: 16px;
+    line-height: 1;
+  }
+  #logo .mark {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    display: block;
+  }
+  #logo .text { display: flex; flex-direction: column; gap: 12px; }
+  #logo .eyebrow {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    opacity: 0.65;
+    text-transform: uppercase;
+  }
+  #logo .wordmark {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-size: 56px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .footnote {
+    margin-top: 32px;
+    font-size: 12px;
+    opacity: 0.6;
+    max-width: 640px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+  <h1>Stay Roanoke — Logo Export</h1>
+  <p class="sub">Choose a size and click Download. PNG saves with a transparent background.</p>
+
+  <div class="controls">
+    <label for="size">Width:</label>
+    <select id="size">
+      <option value="1200">1200 px (web)</option>
+      <option value="2400" selected>2400 px (high-res / social)</option>
+      <option value="4800">4800 px (print)</option>
+    </select>
+    <button id="download">Download PNG</button>
+    <button id="downloadSvg" type="button">Download SVG (mark only)</button>
+  </div>
+
+  <div class="preview-wrap">
+    <div id="logo">
+      <svg class="mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" stroke-width="1.25" opacity="0.6"/>
+        <polygon points="32,15 36.41,26.93 49.12,27.44 39.13,35.32 42.58,47.56 32,40.50 21.42,47.56 24.87,35.32 14.88,27.44 27.59,26.93" fill="currentColor"/>
+        <line x1="6" y1="50" x2="58" y2="50" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+        <circle cx="32" cy="33" r="3" fill="#ffb84d"/>
+      </svg>
+      <div class="text">
+        <span class="eyebrow">EST 2021 · STAR CITY · VA</span>
+        <span class="wordmark">STAY ROANOKE</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="footnote">
+    Tip: the preview shows the logo on a checkered background to make the transparent edges visible —
+    the exported PNG is fully transparent (no background). Fonts (Space Grotesk + JetBrains Mono) are
+    loaded from Google Fonts; wait a second after page load for them to render before downloading.
+  </p>
+
+<script>
+  document.getElementById('download').addEventListener('click', async () => {
+    const size = parseInt(document.getElementById('size').value, 10);
+    const logo = document.getElementById('logo');
+
+    // Wait for fonts to actually be loaded
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+
+    // Measure rendered logo and compute scale to reach target width
+    const rect = logo.getBoundingClientRect();
+    const scale = size / rect.width;
+
+    const canvas = await html2canvas(logo, {
+      backgroundColor: null,
+      scale,
+      useCORS: true,
+      logging: false,
+    });
+
+    const link = document.createElement('a');
+    link.download = `stay-roanoke-logo-${size}px.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+
+  document.getElementById('downloadSvg').addEventListener('click', () => {
+    const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512">
+  <g style="color:#4A3728">
+    <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" stroke-width="1.25" opacity="0.6"/>
+    <polygon points="32,15 36.41,26.93 49.12,27.44 39.13,35.32 42.58,47.56 32,40.50 21.42,47.56 24.87,35.32 14.88,27.44 27.59,26.93" fill="currentColor"/>
+    <line x1="6" y1="50" x2="58" y2="50" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+    <circle cx="32" cy="33" r="3" fill="#ffb84d"/>
+  </g>
+</svg>`;
+    const blob = new Blob([svg], { type: 'image/svg+xml' });
+    const link = document.createElement('a');
+    link.download = 'stay-roanoke-mark.svg';
+    link.href = URL.createObjectURL(blob);
+    link.click();
+  });
+</script>
+</body>
+</html>
