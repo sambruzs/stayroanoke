@@ -9,3 +9,6 @@ dist
 
 # Cached API tokens — should never be committed
 .guesty-token.json
+
+# Sub-account credentials for webhook registration script — never commit
+.guesty-subaccounts.json

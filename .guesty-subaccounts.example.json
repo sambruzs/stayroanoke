@@ -1,0 +1,26 @@
+{
+  "webhookUrl": "https://stayroanoke.com/.netlify/functions/guesty-webhook",
+  "events": ["reservation.updated"],
+  "subaccounts": [
+    {
+      "label": "Sub-account 1 (rename to whatever you call this property group)",
+      "clientId": "REPLACE_ME",
+      "clientSecret": "REPLACE_ME"
+    },
+    {
+      "label": "Sub-account 2",
+      "clientId": "REPLACE_ME",
+      "clientSecret": "REPLACE_ME"
+    },
+    {
+      "label": "Sub-account 3",
+      "clientId": "REPLACE_ME",
+      "clientSecret": "REPLACE_ME"
+    },
+    {
+      "label": "Sub-account 4",
+      "clientId": "REPLACE_ME",
+      "clientSecret": "REPLACE_ME"
+    }
+  ]
+}
