@@ -64,7 +64,7 @@ async function getOpenApiToken({ clientId, clientSecret }) {
 }
 
 async function createWebhook(token, secret) {
-  const res = await fetch('https://open-api.guesty.com/v1/webhooks-v2', {
+  const res = await fetch('https://open-api.guesty.com/v1/webhooks', {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ url: webhookUrl, events, secret, isActive: true }),
@@ -74,14 +74,14 @@ async function createWebhook(token, secret) {
 }
 
 async function listWebhooks(token) {
-  const res = await fetch('https://open-api.guesty.com/v1/webhooks-v2', {
+  const res = await fetch('https://open-api.guesty.com/v1/webhooks', {
     headers: { 'Authorization': `Bearer ${token}` },
   })
   return { ok: res.ok, status: res.status, body: await res.text() }
 }
 
 async function deleteWebhook(token, id) {
-  const res = await fetch(`https://open-api.guesty.com/v1/webhooks-v2/${id}`, {
+  const res = await fetch(`https://open-api.guesty.com/v1/webhooks/${id}`, {
     method: 'DELETE',
     headers: { 'Authorization': `Bearer ${token}` },
   })
