@@ -21,6 +21,13 @@
 //   node scripts/register-cancellation-webhook.mjs            (register)
 //   node scripts/register-cancellation-webhook.mjs --list     (list existing)
 //   node scripts/register-cancellation-webhook.mjs --delete <webhookId>  (one)
+//   node scripts/register-cancellation-webhook.mjs --rotate   (delete our
+//                                                              existing
+//                                                              webhooks + re-
+//                                                              register with
+//                                                              a fresh
+//                                                              Svix-format
+//                                                              secret)
 import { readFileSync } from 'node:fs'
 import { randomBytes } from 'node:crypto'
 
@@ -89,8 +96,14 @@ async function deleteWebhook(token, id) {
 }
 
 // ── Modes ─────────────────────────────────────────────────────────────────
+// Svix-compatible secret: prefix `whsec_` + base64-encoded 32 random bytes.
+// This is the format Svix's client SDKs expect when verifying signatures.
+function generateSvixSecret() {
+  return `whsec_${randomBytes(32).toString('base64')}`
+}
+
 async function modeRegister() {
-  const secret = process.env.WEBHOOK_SECRET || randomBytes(24).toString('hex')
+  const secret = process.env.WEBHOOK_SECRET || generateSvixSecret()
   console.log(`Webhook URL:    ${webhookUrl}`)
   console.log(`Events:         ${events.join(', ')}`)
   console.log(`Shared secret:  ${secret}`)
@@ -149,6 +162,52 @@ async function modeList() {
   }
 }
 
+// Delete all stayroanoke webhooks across all sub-accounts, then re-register
+// with a fresh Svix-format secret. Use when changing the signing key or after
+// a botched initial registration.
+async function modeRotate() {
+  const newSecret = process.env.WEBHOOK_SECRET || generateSvixSecret()
+  console.log(`New shared secret: ${newSecret}\n`)
+
+  for (const sub of subaccounts) {
+    console.log(`→ ${sub.label}`)
+    try {
+      const token = await getOpenApiToken(sub)
+
+      // 1. Find and delete existing webhooks pointing at our URL
+      const list = await listWebhooks(token)
+      if (list.ok) {
+        const items = JSON.parse(list.body)
+        const ours = (Array.isArray(items) ? items : items.results || items.data || [])
+          .filter(w => w.url === webhookUrl)
+        for (const w of ours) {
+          const d = await deleteWebhook(token, w._id || w.id)
+          console.log(`  ${d.ok ? '✓' : '✗'} deleted ${w._id || w.id} (${d.status})`)
+        }
+      } else {
+        console.log(`  ✗ list failed ${list.status}: ${list.body.slice(0, 160)}`)
+      }
+
+      // 2. Register fresh
+      const r = await createWebhook(token, newSecret)
+      if (r.ok) {
+        const parsed = JSON.parse(r.body)
+        console.log(`  ✓ recreated (id: ${parsed._id || parsed.id || '?'})`)
+      } else {
+        console.log(`  ✗ recreate ${r.status}: ${r.body.slice(0, 160)}`)
+      }
+    } catch (e) {
+      console.log(`  ✗ ${e.message}`)
+    }
+  }
+
+  console.log()
+  console.log('Next steps:')
+  console.log(`  1. Update Netlify env var: GUESTY_WEBHOOK_SECRET=${newSecret}`)
+  console.log(`  2. Redeploy site (Trigger deploy) so the new secret takes effect.`)
+  console.log(`  3. Trigger a test reservation update; check function logs.`)
+}
+
 async function modeDelete(id) {
   if (!id) {
     console.error('Usage: node scripts/register-cancellation-webhook.mjs --delete <webhookId>')
@@ -174,6 +233,8 @@ async function modeDelete(id) {
 // ── Main ─────────────────────────────────────────────────────────────────
 if (mode === '--list') {
   await modeList()
+} else if (mode === '--rotate') {
+  await modeRotate()
 } else if (mode === '--delete') {
   await modeDelete(process.argv[3])
 } else {
