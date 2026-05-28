@@ -82,6 +82,48 @@ function tryHmac(rawBody, secret, sig, encoding) {
   return false
 }
 
+// Svix verification: Guesty delivers via Svix, which signs as
+//   v1,<base64(HMAC-SHA256(secret, `${svix-id}.${svix-timestamp}.${body}`))>
+// in the svix-signature header. Multiple signatures may be space-separated.
+function verifySvixSignature(rawBody, headers, secret) {
+  const lower = {}
+  for (const [k, v] of Object.entries(headers || {})) lower[k.toLowerCase()] = v
+
+  const svixId        = lower['svix-id']
+  const svixTimestamp = lower['svix-timestamp']
+  const svixSignature = lower['svix-signature']
+  if (!svixId || !svixTimestamp || !svixSignature) return false
+
+  // Optional: 5-minute timestamp tolerance prevents replay attacks
+  const ts = parseInt(svixTimestamp, 10)
+  if (!Number.isFinite(ts) || Math.abs(Date.now() / 1000 - ts) > 300) {
+    console.warn(`Svix timestamp outside 5-min window: ${svixTimestamp}`)
+    return false
+  }
+
+  const signedContent = `${svixId}.${svixTimestamp}.${rawBody}`
+
+  // Secrets without the whsec_ prefix are used as raw UTF-8 bytes;
+  // with the prefix, the part after "whsec_" is base64-decoded.
+  const secretBytes = secret.startsWith('whsec_')
+    ? Buffer.from(secret.slice(6), 'base64')
+    : Buffer.from(secret, 'utf8')
+
+  const expected = createHmac('sha256', secretBytes).update(signedContent).digest('base64')
+
+  // svix-signature can contain multiple signatures, space-separated.
+  for (const part of String(svixSignature).split(' ')) {
+    const [version, sig] = part.split(',')
+    if (version !== 'v1' || !sig) continue
+    try {
+      const a = Buffer.from(sig, 'base64')
+      const b = Buffer.from(expected, 'base64')
+      if (a.length === b.length && timingSafeEqual(a, b)) return true
+    } catch {}
+  }
+  return false
+}
+
 function verifySignature(rawBody, headers, body) {
   const secret = process.env.GUESTY_WEBHOOK_SECRET
   if (!secret) {
@@ -89,43 +131,30 @@ function verifySignature(rawBody, headers, body) {
     return true
   }
 
+  if (verifySvixSignature(rawBody, headers, secret)) return true
+
+  // Fallback header patterns (kept in case Guesty migrates off Svix or adds
+  // additional headers). Won't fire in normal Svix delivery.
   const lower = {}
   for (const [k, v] of Object.entries(headers || {})) lower[k.toLowerCase()] = v
 
-  // Try every header name we've seen used by webhook systems
   const candidateHeaders = [
-    'x-guesty-signature',
-    'guesty-signature',
-    'x-signature',
-    'signature',
-    'x-hub-signature-256',
-    'x-webhook-signature',
-    'x-guesty-token',
+    'x-guesty-signature', 'guesty-signature', 'x-signature',
+    'signature', 'x-hub-signature-256', 'x-webhook-signature',
   ]
-
   for (const name of candidateHeaders) {
     const raw = lower[name]
     if (!raw) continue
-    // Some senders prefix with "sha256="
     const sig = String(raw).replace(/^sha256=/i, '')
-    if (sig === secret) {
-      console.log(`✓ Signature verified via plain-secret header ${name}`)
-      return true
-    }
-    if (tryHmac(rawBody, secret, sig, 'hex'))    { console.log(`✓ HMAC-SHA256 (hex) verified via ${name}`);    return true }
-    if (tryHmac(rawBody, secret, sig, 'base64')) { console.log(`✓ HMAC-SHA256 (base64) verified via ${name}`); return true }
+    if (sig === secret) return true
+    if (tryHmac(rawBody, secret, sig, 'hex'))    return true
+    if (tryHmac(rawBody, secret, sig, 'base64')) return true
+  }
+  if (body && typeof body === 'object' && (body.secret === secret || body.token === secret)) {
+    return true
   }
 
-  // Some webhook systems put the secret in the body
-  if (body && typeof body === 'object') {
-    if (body.secret === secret || body.token === secret) {
-      console.log('✓ Signature verified via secret-in-body field')
-      return true
-    }
-  }
-
-  // Nothing matched — log full header list so we can see what to wire up
-  console.warn('Signature verification failed. Incoming headers:', JSON.stringify(redactedHeaders(headers)))
+  console.warn('Signature verification failed. Headers:', JSON.stringify(redactedHeaders(headers)))
   return false
 }
 
@@ -576,13 +605,8 @@ export const handler = async (event) => {
   try { payload = JSON.parse(rawBody) }
   catch { return { statusCode: 400, headers: baseHeaders, body: JSON.stringify({ error: 'Invalid JSON' }) } }
 
-  // TEMPORARY: while we figure out Guesty's actual signature format, we log
-  // verification status but continue processing on failure. Tighten this back
-  // to a 401 reject once verifySignature is confirmed to recognise Guesty's
-  // signing scheme.
-  const sigOk = verifySignature(rawBody, event.headers || {}, payload)
-  if (!sigOk) {
-    console.warn('Webhook signature verification failed — processing anyway (diagnostic mode)')
+  if (!verifySignature(rawBody, event.headers || {}, payload)) {
+    return { statusCode: 401, headers: baseHeaders, body: JSON.stringify({ error: 'Invalid signature' }) }
   }
 
   let reservation = payload.reservation || payload.data?.reservation || null
