@@ -195,12 +195,16 @@ async function fetchReservation(reservationId) {
 
 // ─── Field extraction (defensive against payload variations) ─────────────────
 function extractCore(reservation) {
+  const m = reservation.money || {}
   return {
     checkIn:  reservation.checkInDateLocalized  || reservation.checkIn  || '',
     checkOut: reservation.checkOutDateLocalized || reservation.checkOut || '',
     guests:   reservation.guestsCount ?? reservation.guests ?? null,
     pets:     reservation.petsCount ?? reservation.pets ?? 0,
-    total:    reservation.money?.totalFare ?? reservation.money?.netAmount ?? reservation.totalPrice ?? null,
+    // Guesty exposes the guest-facing total under several names depending on
+    // API version; try each in order until we get a number.
+    total:    m.guestTotal ?? m.hostPayout ?? m.totalPaid ?? m.totalFare
+              ?? m.fareAccommodation ?? m.netAmount ?? reservation.totalPrice ?? null,
     status:   reservation.status || '',
   }
 }
@@ -324,7 +328,7 @@ function contactBlock(headline = 'Questions? We actually pick up the phone.') {
 
 // ─── Cancellation email ──────────────────────────────────────────────────────
 function buildCancellationHtml(raw) {
-  const { photoUrl, checkInFormatted, checkOutFormatted, guestsCount, confirmationCode, refundAmount, policyTier, year } = raw
+  const { photoUrl, checkInFormatted, checkOutFormatted, guestsCount, confirmationCode, originalTotal, refundAmount, policyTier, year } = raw
   const firstName    = encodeHTML(raw.firstName)
   const listingTitle = encodeHTML(raw.listingTitle)
   const listingCity  = encodeHTML(raw.listingCity)
@@ -374,6 +378,13 @@ function buildCancellationHtml(raw) {
               <div style="font-size:15px;font-weight:700;color:#1B4F72;">${encodeHTML(confirmationCode || '—')}</div>
             </td>
           </tr>
+          ${typeof originalTotal === 'number' ? `
+          <tr>
+            <td colspan="2" style="padding:16px 20px;border-top:1px solid #e8e0d8;vertical-align:top;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">Original Total</div>
+              <div style="font-size:18px;font-weight:700;color:#2c1810;">${formatMoney(originalTotal)}</div>
+            </td>
+          </tr>` : ''}
         </table>
 
         ${policyTier ? `
@@ -476,6 +487,13 @@ function buildModificationHtml(raw) {
               <div style="font-size:15px;font-weight:700;color:#1B4F72;">${encodeHTML(confirmationCode || '—')}</div>
             </td>
           </tr>
+          ${typeof current.total === 'number' ? `
+          <tr>
+            <td colspan="2" style="padding:16px 20px;border-top:1px solid #e8e0d8;vertical-align:top;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;color:#9ca3af;text-transform:uppercase;margin-bottom:6px;">Total</div>
+              <div style="font-size:18px;font-weight:700;color:#1B4F72;">${formatMoney(current.total)}</div>
+            </td>
+          </tr>` : ''}
         </table>
 
         ${guestPortalUrl ? `
@@ -542,11 +560,14 @@ async function sendCancellationEmail(reservation) {
   const checkOut = reservation.checkOutDateLocalized || reservation.checkOut
   const refundAmount = reservation.money?.refundAmount ?? reservation.refundAmount
 
+  const core = extractCore(reservation)
+
   const html = buildCancellationHtml({
     ...ctx,
     checkInFormatted: formatDate(checkIn),
     checkOutFormatted: formatDate(checkOut),
     guestsCount: reservation.guestsCount || reservation.guests,
+    originalTotal: typeof core.total === 'number' ? core.total : null,
     refundAmount: typeof refundAmount === 'number' ? refundAmount : null,
     policyTier: cancellationPolicyTier(checkIn),
   })
