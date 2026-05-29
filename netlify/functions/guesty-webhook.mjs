@@ -671,6 +671,15 @@ export const handler = async (event) => {
     return { statusCode: 200, headers: baseHeaders, body: JSON.stringify({ ok: true, skipped: 'reservation_not_found' }) }
   }
 
+  // Only send branded emails for direct/website/manual bookings. OTA guests
+  // (Airbnb=airbnb2, VRBO=homeaway, Booking.com=bookingcom, etc.) get their
+  // emails from the OTA itself; a Stay Roanoke email would confuse them.
+  const platform = reservation.integration?.platform
+  if (platform !== 'manual') {
+    console.log(`Skipping ${reservationId} — platform="${platform}" (not direct/manual)`)
+    return { statusCode: 200, headers: baseHeaders, body: JSON.stringify({ ok: true, skipped: 'non_direct_channel', platform }) }
+  }
+
   const prevState = await loadState(reservationId)
   const currState = extractCore(reservation)
 
