@@ -390,6 +390,11 @@
   color: var(--text-dark);
 }
 
+.discountRow {
+  color: #15803d;
+  font-weight: 600;
+}
+
 .bookBtn {
   width: 100%;
   background: var(--blue-dark);

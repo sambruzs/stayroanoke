@@ -172,12 +172,35 @@ export default function ListingPage() {
             console.warn('Upsell fetch failed, pet fee omitted:', e.message)
           }
         }
+
+        // Surface weekly/monthly discount when configured on the listing. Guesty applies the factor
+        // inside fareAccommodation; we reverse it for display so guests see "$X × N − discount = subtotal".
+        const weeklyFactor = listing?.prices?.weeklyPriceFactor
+        const monthlyFactor = listing?.prices?.monthlyPriceFactor
+        let discountTier = null, discountPct = 0, factor = 1
+        if (nights >= 28 && monthlyFactor > 0 && monthlyFactor < 1) {
+          discountTier = 'Monthly'
+          factor = monthlyFactor
+        } else if (nights >= 7 && weeklyFactor > 0 && weeklyFactor < 1) {
+          discountTier = 'Weekly'
+          factor = weeklyFactor
+        }
+        discountPct = Math.round((1 - factor) * 100)
+        const originalSubtotal = discountTier
+          ? parseFloat((money.fareAccommodation / factor).toFixed(2))
+          : money.fareAccommodation
+        const discountAmount = parseFloat((originalSubtotal - money.fareAccommodation).toFixed(2))
+        const displayNightly = discountTier ? Math.round(originalSubtotal / nights) : nightly
+
         setQuote({
           _id: data._id,
           ratePlanId: ratePlan?._id,
           nights,
-          nightly,
-          subtotal: money.fareAccommodation,
+          nightly: displayNightly,
+          subtotal: originalSubtotal,
+          discountTier,
+          discountPct,
+          discountAmount,
           cleaning: money.fareCleaning,
           taxes: money.totalTaxes,
           totalFees: money.totalFees,
@@ -421,8 +444,14 @@ export default function ListingPage() {
                 <div className={styles.priceBreakdown}>
                   <div className={styles.priceRow}>
                     <span>${quote.nightly || price} × {quote.nights} nights</span>
-                    <span>${quote.subtotal}</span>
+                    <span>${Number(quote.subtotal).toFixed(2)}</span>
                   </div>
+                  {quote.discountTier && quote.discountAmount > 0 && (
+                    <div className={`${styles.priceRow} ${styles.discountRow}`}>
+                      <span>{quote.discountTier} discount ({quote.discountPct}% off)</span>
+                      <span>−${quote.discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
                   {quote.cleaning > 0 && (
                     <div className={styles.priceRow}>
                       <span>Cleaning fee</span>
