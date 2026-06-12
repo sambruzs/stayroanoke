@@ -1,5 +1,316 @@
 export const blogPosts = [
   {
+    slug: 'insurance-displacement-housing-roanoke-fire-flood-remodel',
+    title: 'Insurance Displacement Housing in Roanoke: Where to Stay After a Fire, Flood, or Remodel',
+    metaTitle: 'Insurance Displacement Housing Roanoke VA | Fire, Flood & Remodel Stays',
+    metaDescription: 'Furnished homes for displaced families and homeowners in Roanoke, VA. Built for insurance ALE claims, remodels, and unexpected moves — pet-friendly, flexible stays, full receipts.',
+    date: 'June 12, 2026',
+    author: 'Stay Roanoke',
+    category: 'Extended Stay',
+    coverImage: '/insurance-displacement-flood.jpg',
+    excerpt: 'When a fire, flood, or major remodel pushes you out of your home, the last thing you want is to live out of a hotel for weeks. Here\'s how furnished rentals work for insurance displacement stays in Roanoke — and what to ask your adjuster before you book.',
+    content: `
+A fire in the kitchen. A burst pipe on the second floor. A roof failure after a storm. A whole-house renovation that pushed past its three-week estimate. The reasons families end up temporarily displaced from their homes vary widely — but the housing problem they create is remarkably similar.
+
+You need somewhere to live that doesn't feel like living out of a suitcase. Somewhere your family — including your pets — can actually settle in. Somewhere flexible enough to extend when the contractor calls with bad news, and close enough to keep kids in their school and your routine somewhat intact.
+
+That's exactly what furnished rentals are built for. And it's why insurance adjusters across the Roanoke Valley increasingly place displaced policyholders into Stay Roanoke properties instead of hotels.
+
+[Browse furnished rentals →](/furnished-rentals-roanoke-va)
+
+## Why Hotels Fall Short for Displacement Stays
+
+For a few nights, a hotel works fine. For three weeks, three months, or "we'll let you know" — hotels start to break down fast.
+
+The math becomes obvious by week two. A family of four in two adjoining hotel rooms is spending a small fortune on takeout because there's no kitchen, sleeping on top of each other, juggling laundry runs, and trying to do homework on the corner of a bed. Pets are often not allowed at all, which forces a separate boarding bill onto an already chaotic situation.
+
+Furnished rentals solve all of that at once:
+
+- **Real kitchens** for normal grocery runs and home-cooked meals — a huge cost saver during long claims
+- **Separate bedrooms and living spaces** so the family isn't living on top of each other
+- **In-unit laundry** — critical when you're rebuilding a wardrobe from a moving box
+- **Pet-friendly options** so the dog doesn't end up boarded for two months
+- **Driveway parking** for contractor trucks, car seats, and the moving runs you'll inevitably make back to the damaged house
+
+For most displacement stays of more than a week, the experience is simply more livable.
+
+## What Insurance Typically Covers (and What to Ask)
+
+Most homeowner and renter policies include some form of **Additional Living Expenses (ALE)** coverage. ALE is designed to pay the *difference* between your normal cost of living and your temporary cost of living while your home is uninhabitable.
+
+That usually includes:
+
+- Temporary housing (hotel, furnished rental, or extended-stay setup)
+- Meals beyond your normal grocery budget
+- Pet boarding or pet-friendly housing fees
+- Laundry, storage, and mileage above your usual commute
+- Furniture rental in unfurnished short-term leases
+
+**Important:** every policy is different, and ALE coverage limits and timelines vary widely. Before you book anything, ask your adjuster three questions:
+
+1. **What is my ALE daily or monthly limit?**
+2. **What documentation do you need from the rental — itemized invoices, weekly receipts, lease agreement?**
+3. **Will you bill the rental directly, or do I pay and submit for reimbursement?**
+
+Those three answers shape what kind of stay actually fits your claim.
+
+## What to Look For in a Displacement Rental
+
+Once you know what your adjuster needs, the rental search becomes much more practical. A few things make a real difference during a displacement stay:
+
+- **Flexible length.** Restoration timelines slip. You want a property where you can extend the stay without rebooking — Stay Roanoke supports stays from 2 to 89 consecutive nights.
+- **Clean itemized invoicing.** Adjusters need clear documentation: nightly rate, cleaning fee, taxes, totals. Stay Roanoke provides itemized booking confirmations and receipts that work for most claim submissions.
+- **Utilities included.** Wi-Fi, electricity, water, and trash are all included in the nightly or monthly rate. No utility transfers, no separate bills to chase down for reimbursement.
+- **Proximity to your home.** If kids are still attending school and you're meeting contractors regularly, staying within 10–20 minutes of your house matters more than scenery.
+- **Pet-friendly properties.** Many of our homes welcome pets — important because boarding a family pet for two months is both expensive and stressful for everyone involved.
+
+[See pet-friendly rentals →](/pet-friendly-rentals-roanoke-va)
+
+## For Renovations and Whole-House Remodels
+
+Insurance claims aren't the only reason homeowners end up needing temporary housing. Whole-house remodels, additions, kitchen overhauls, and major HVAC or plumbing projects often make a home effectively unlivable for weeks at a time.
+
+For planned moves like these, the math is different — there's no adjuster involved, and you're paying out of pocket. That makes the discounted monthly rate especially valuable: stays of 30 nights or more automatically qualify for our lowest pricing, which keeps a long remodel from quietly draining the renovation budget.
+
+The setup is also closer to "real life" than a hotel. Homeowners can cook, host the contractor for a walk-through, store materials in a garage or driveway, and keep the family routine roughly intact while the work happens.
+
+## How Stay Roanoke Works With Adjusters and Contractors
+
+We've worked with displaced families, insurance adjusters, and remodeling contractors throughout the Roanoke Valley. The process is intentionally simple:
+
+1. **Reach out** with your dates (or a date window if your timeline is uncertain), your group size, and any pets.
+2. **We'll suggest properties** that fit your stay length, neighborhood preference, and policy parameters.
+3. **You book directly through this site** — itemized confirmation and receipts are generated automatically.
+4. **Need to extend?** Most stays can be extended with a single message, as long as the property is available.
+
+For claims requiring direct billing or specific invoice formats, contact us before booking and we'll work out the paperwork ahead of time.
+
+## A Better Stay While You Rebuild
+
+Being displaced from your home is stressful enough without spending it in a hotel room. Furnished rentals turn temporary housing back into something close to normal life — a real kitchen, a living room, a bedroom for each kid, a yard for the dog.
+
+Whether you're dealing with a fire, a flood, a burst pipe, a storm-damaged roof, or a remodel that's running long, Stay Roanoke can help you find a place to land while you put your home back together.
+
+[Browse furnished rentals →](/furnished-rentals-roanoke-va)
+    \`,
+    faqs: [
+      {
+        q: 'Does Stay Roanoke work with insurance adjusters for ALE claims?',
+        a: 'Yes — we regularly host displaced families and homeowners on Additional Living Expense (ALE) claims. We provide itemized invoices and booking confirmations that work for most claim submissions. If your adjuster requires direct billing or a specific invoice format, contact us before booking and we\'ll coordinate the paperwork.',
+      },
+      {
+        q: 'How long can I stay during an insurance displacement?',
+        a: 'Stays of 2 to 89 consecutive nights are available. For stays of 30 nights or more, discounted monthly rates apply automatically — useful for longer restoration or remodeling projects. Most stays can be extended with a single message if your timeline shifts.',
+      },
+      {
+        q: 'Are pets allowed during a displacement stay?',
+        a: 'Yes, many Stay Roanoke properties are pet-friendly. We recommend mentioning your pets when you reach out so we can match you with a property that welcomes them — boarding a family pet for weeks during a claim is both expensive and stressful, and most ALE policies cover pet-friendly housing instead.',
+      },
+      {
+        q: 'What documentation will I get for my insurance claim?',
+        a: 'Every booking generates an itemized confirmation showing nightly rate, cleaning fee, taxes, and total — sufficient for most claim submissions. We can also provide additional documentation on request, including stay verification letters and weekly itemized receipts if your adjuster requires them.',
+      },
+    ],
+  },
+  {
+    slug: 'extended-stay-roanoke-traveling-professionals',
+    title: 'The Traveling Professional\'s Guide to Staying in Roanoke',
+    metaTitle: 'Extended Stay Roanoke VA | Furnished Rentals for Traveling Professionals',
+    metaDescription: 'Furnished rentals built for the realities of traveling work life — travel nurses, medical students, contractors, and mobile crews. Monthly rates, full kitchens, fast WiFi.',
+    date: 'June 12, 2026',
+    author: 'Stay Roanoke',
+    category: 'Extended Stay',
+    coverImage: '/roanoke-traveling-professional.jpg',
+    excerpt: 'Roanoke has quietly become a regional hub for traveling nurses, medical students, contractors, and mobile work crews. Here\'s why furnished rentals beat hotels for extended stays — and how Stay Roanoke is built for the way traveling professionals actually live.',
+    content: `
+Roanoke, Virginia has quietly become one of the Blue Ridge region's more important hubs for healthcare, education, infrastructure, and traveling professional work. While many visitors know the city for its mountain scenery and outdoor recreation, there's another side to Roanoke that continues growing year after year: a steady influx of traveling nurses, medical students, construction crews, utility contractors, and other mobile professionals who temporarily call the city home.
+
+As that workforce has expanded, so has the need for housing that feels more practical, comfortable, flexible, and homelike than a standard hotel room. Many professionals arriving in Roanoke aren't simply visiting for a weekend. They're staying for weeks or even months at a time while working long shifts, rotating through medical programs, or completing regional projects.
+
+That growing demand is exactly where Stay Roanoke has found its place — offering furnished accommodations designed around the realities of modern traveling work life.
+
+[Browse extended-stay rentals →](/monthly-rentals-roanoke-va)
+
+## A Strong Healthcare & Medical Community
+
+Roanoke's healthcare industry is one of the primary drivers bringing temporary professionals into the region. With major hospitals, specialty medical centers, and educational partnerships throughout the area, the city regularly hosts traveling nurses, healthcare contractors, medical residents, and students completing clinical rotations.
+
+For these guests, the experience of temporary housing matters more than many people realize. After long hospital shifts or demanding study schedules, comfort and routine become essential. Travelers need:
+
+- Reliable Wi-Fi for charting, study, and staying in touch with family back home
+- Quiet environments to rest between shifts
+- Kitchens for meal preparation when 2am cafeteria food stops being an option
+- In-unit laundry so daily life doesn't revolve around a laundromat
+
+While traditional hotels may work for very short stays, they can quickly begin to feel limiting during longer assignments. Furnished rentals provide something closer to an actual living experience rather than simply a place to sleep between shifts.
+
+Stay Roanoke properties are especially well suited for this kind of extended stay — flexible accommodations that feel residential, comfortable, and practical for everyday life.
+
+## Flexible Housing for Mobile Work Crews
+
+Roanoke's location along major transportation and infrastructure routes also brings a steady stream of contractors and mobile work crews into the region. Construction teams, utility crews, fiber installation groups, engineering contractors, and traveling project managers frequently need temporary housing while completing assignments throughout western Virginia.
+
+One of the biggest challenges for these groups is balancing logistics with comfort. Hotels often require teams to split into separate rooms across multiple floors — or even multiple properties — while long-term apartment leases typically lack flexibility for changing schedules.
+
+Stay Roanoke offers an alternative that works for both large and small groups:
+
+- **Larger homes** let entire crews stay together in a single shared space with common living areas, kitchens, parking, and multiple bedrooms — simplifying coordination and creating a more relaxed environment after long workdays.
+- **Smaller apartments and compact furnished spaces** suit solo professionals and project supervisors who want privacy and convenience without paying for unnecessary extra room.
+
+The flexibility to accommodate both large work groups and individual travelers is one of the things that makes the model work so well.
+
+## More Comfortable Than a Standard Hotel Stay
+
+One of the biggest differences guests notice with Stay Roanoke is the ability to actually settle into the city rather than simply passing through it.
+
+Instead of spending weeks confined to a hotel room, guests have access to fully furnished homes and apartments with living rooms, kitchens, separate bedrooms, and everyday conveniences that make longer stays feel far more manageable. For many traveling professionals, those small details end up making a major difference:
+
+- Traveling nurses finishing twelve-hour shifts appreciate having a quiet living room to decompress in rather than the edge of a hotel bed.
+- Medical students benefit from comfortable environments where they can study, cook meals, and maintain routines during demanding rotations.
+- Work crews value shared gathering spaces where teams can relax together after a day on-site.
+
+The overall experience becomes less transactional and more livable — especially important for guests spending extended periods away from home.
+
+## Why So Many Traveling Workers End Up Loving Roanoke
+
+One thing many professionals don't expect is how quickly they become attached to Roanoke itself.
+
+Compared to larger metropolitan areas, Roanoke offers a slower, more manageable pace while still providing strong dining, healthcare, and entertainment options. Traffic is lighter, the mountains are always nearby, and outdoor recreation is woven directly into daily life.
+
+On days off, traveling workers can hike nearby sections of the Appalachian Trail, drive the Blue Ridge Parkway, kayak at Carvins Cove, explore downtown breweries and restaurants, or simply enjoy the scenery that surrounds the city from nearly every direction.
+
+For people spending weeks or months away from home, that balance between work and quality of life becomes incredibly valuable. Many guests arrive expecting a temporary assignment and leave having genuinely enjoyed their time in the Blue Ridge region.
+
+## Housing That Adapts to Different Needs
+
+No two traveling professionals need exactly the same type of stay, which is why flexibility matters. Some stays last only a couple of days or weeks; others extend for months depending on the project or assignment.
+
+By offering a variety of furnished properties throughout the Roanoke area, Stay Roanoke is able to accommodate a wide range of working lifestyles without forcing guests into rigid lease agreements or impersonal hotel setups. Stays of 30 nights or more automatically qualify for discounted monthly rates — no negotiating, no separate contracts.
+
+## A Better Way to Stay in Roanoke
+
+As Roanoke continues growing as a regional hub for so many different disciplines, the need for flexible furnished housing will continue growing alongside it.
+
+Whether you're a traveling nurse beginning a new assignment, a medical student arriving for rotations, or a mobile crew working a project in the Blue Ridge region, Stay Roanoke offers a more comfortable and practical way to experience both the city and the work that brings you here.
+
+[Browse extended-stay rentals →](/monthly-rentals-roanoke-va)
+    \`,
+    faqs: [
+      {
+        q: 'Does Stay Roanoke offer monthly or extended-stay rates?',
+        a: 'Yes. Stays of 30 nights or more automatically qualify for discounted monthly rates. The discount is applied during booking — no separate contract or negotiation required. Maximum stay is 89 consecutive nights.',
+      },
+      {
+        q: 'Are utilities and Wi-Fi included for extended stays?',
+        a: 'Yes. Wi-Fi, electricity, water, and all utilities are included in the nightly or monthly rate. There are no separate bills to set up or transfer, which makes the move-in and move-out experience seamless for traveling professionals.',
+      },
+      {
+        q: 'Can I book a whole house for my traveling work crew?',
+        a: 'Absolutely. Stay Roanoke offers larger homes that can accommodate full work crews in a single shared space — common living areas, full kitchens, multiple bedrooms, and on-site parking. This simplifies coordination and keeps your team together rather than split across multiple hotel rooms.',
+      },
+      {
+        q: 'What kind of travelers stay at Stay Roanoke for extended periods?',
+        a: 'Common extended-stay guests include traveling nurses and healthcare contractors, medical students on clinical rotations, construction and utility crews, engineering contractors, fiber and infrastructure installation teams, and traveling project managers. Furnished rentals also work well for relocation periods and longer family visits.',
+      },
+    ],
+  },
+  {
+    slug: 'kayaking-carvins-cove-roanoke-outdoor-playground',
+    title: 'Kayaking Carvins Cove: Roanoke\'s Hidden Outdoor Playground',
+    metaTitle: 'Kayaking Carvins Cove | Roanoke VA Outdoor Guide',
+    metaDescription: 'Kayak, paddleboard, and hike at Carvins Cove — 12,000 acres of protected mountain reservoir just minutes from downtown Roanoke. Launch info, permits, and insider tips.',
+    date: 'June 12, 2026',
+    author: 'Stay Roanoke',
+    category: 'Adventure',
+    coverImage: '/carvins-cove-kayak-sunset.jpg',
+    excerpt: 'Just minutes from downtown Roanoke, Carvins Cove feels like a different world entirely. One of the largest municipal parks in the country, it\'s a quiet, forested reservoir where the pace slows down the moment you hit the water.',
+    content: `
+Just minutes from downtown Roanoke, Carvins Cove feels like a different world entirely. Tucked into the Blue Ridge Mountains, it's one of the largest municipal parks in the country and a quiet, forested reservoir where the pace slows down the moment you hit the water.
+
+For kayaking, paddleboarding, or simply floating under the mountain ridgelines, Carvins Cove is one of the best outdoor escapes in the Roanoke Valley — and still feels surprisingly under the radar for how good it is.
+
+[Browse stays near Carvins Cove →](/search)
+
+## Why Carvins Cove is Special
+
+Carvins Cove spans more than **12,000 acres** of protected land, with a large reservoir at its center surrounded by forested mountains, rolling hills, and miles of undeveloped shoreline. It's a place where you can paddle for hours and still feel like you've barely scratched the surface.
+
+Unlike more developed lakes, there are no crowded waterfront neighborhoods or heavy boat traffic dominating the water. Instead, you get wide open space, quiet coves, and long stretches of shoreline that feel untouched.
+
+It's this combination — proximity to the city paired with a truly wild feeling — that makes it one of Roanoke's most unique outdoor experiences.
+
+## Kayaking on the Reservoir
+
+Kayaking is one of the best ways to experience Carvins Cove. The water is typically calm, making it ideal for beginners, casual paddlers, or anyone looking for a relaxed day outside.
+
+Once you launch, you'll find:
+
+- Long, open stretches of water perfect for cruising
+- Plenty of narrow inlets and quiet coves to explore
+- Forested mountain views in nearly every direction
+- Occasional wildlife sightings — herons, turtles, deer along the shoreline
+
+Because the reservoir is so large, it's easy to find your own space on the water, even on busier weekends.
+
+**Insider tip:** Early mornings are the most peaceful time to paddle. The water is often glassy, and the mist hanging over the mountains gives the whole cove a quiet, almost cinematic feel.
+
+## Where to Launch & What to Know
+
+Carvins Cove has designated access points managed by the City of Roanoke. Most visitors launch from the main recreational area, where you'll also find parking and trail access.
+
+A few helpful things to know before you go:
+
+- Bring your own kayak or rent locally — availability can vary seasonally
+- Check water levels and access hours before heading out
+- Life jackets are required for all paddlers
+- Motorized boats are limited, keeping the water calm and quiet
+- No swimming in most areas — the reservoir is a protected water source
+- An access permit is required: **$2/day or $20 for an annual pass**
+
+The overall setup is simple and intentionally low-impact, which helps preserve the natural feel of the area.
+
+## Beyond the Water: Trails & Views
+
+Carvins Cove isn't just for kayaking. It's also one of the largest trail systems in the region, with **over 60 miles of hiking and biking trails** weaving through the surrounding mountains.
+
+If you're combining kayaking with a longer outdoor day, it's worth exploring:
+
+- Ridge trails with sweeping views of the reservoir
+- Forested singletrack popular with mountain bikers
+- Quiet hiking routes that feel far removed from the city
+
+Many visitors pair a morning paddle with an afternoon hike — or vice versa — turning Carvins Cove into a full-day outdoor escape.
+
+## The Vibe: Slow, Quiet, and Local
+
+What stands out most about Carvins Cove isn't just the scenery — it's the atmosphere. Even though it's close to Roanoke, it rarely feels crowded or commercial.
+
+People come here to unplug for a few hours, get on the water without chaos, and experience the Blue Ridge in a simple, low-key way.
+
+It's not a high-adrenaline destination. It's a reset button.
+
+[Browse stays near Carvins Cove →](/search)
+    \`,
+    faqs: [
+      {
+        q: 'Where is Carvins Cove and how far is it from downtown Roanoke?',
+        a: 'Carvins Cove Natural Reserve is located in the Blue Ridge Mountains just north of Roanoke, Virginia. It\'s roughly a 15–20 minute drive from downtown Roanoke, making it one of the most accessible large-scale outdoor destinations in the region.',
+      },
+      {
+        q: 'Do I need a permit to kayak at Carvins Cove?',
+        a: 'Yes. The City of Roanoke requires a daily or annual access permit to use Carvins Cove. Daily permits are $2 and annual passes are $20. Life jackets are required for all paddlers, and motorized boats are restricted to keep the reservoir calm.',
+      },
+      {
+        q: 'Can I rent a kayak at Carvins Cove?',
+        a: 'Kayak rentals are sometimes available at the cove and through local outfitters in Roanoke, but availability can vary seasonally. If you want to guarantee a boat, the easiest option is to bring your own or reserve a rental from a Roanoke outdoor shop in advance.',
+      },
+      {
+        q: 'What else can I do at Carvins Cove besides kayaking?',
+        a: 'Carvins Cove has over 60 miles of hiking and mountain biking trails winding through the surrounding mountains. Many visitors pair a morning paddle with an afternoon hike or ride. Wildlife viewing, picnicking, and fishing (with a Virginia license) are also popular.',
+      },
+    ],
+  },
+  {
     slug: 'hike-mcafee-knob-catawba-cabin-homeplace-dinner',
     title: 'The Insider\'s Guide to McAfee Knob: Hike, Cabin, and a Southern Dinner',
     metaTitle: 'McAfee Knob Hike + Catawba Cabin Stay | Insider Guide to Roanoke VA',
