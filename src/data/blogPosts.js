@@ -92,7 +92,7 @@ Being displaced from your home is stressful enough without spending it in a hote
 Whether you're dealing with a fire, a flood, a burst pipe, a storm-damaged roof, or a remodel that's running long, Stay Roanoke can help you find a place to land while you put your home back together.
 
 [Browse furnished rentals →](/furnished-rentals-roanoke-va)
-    \`,
+    `,
     faqs: [
       {
         q: 'Does Stay Roanoke work with insurance adjusters for ALE claims?',
@@ -194,7 +194,7 @@ As Roanoke continues growing as a regional hub for so many different disciplines
 Whether you're a traveling nurse beginning a new assignment, a medical student arriving for rotations, or a mobile crew working a project in the Blue Ridge region, Stay Roanoke offers a more comfortable and practical way to experience both the city and the work that brings you here.
 
 [Browse extended-stay rentals →](/monthly-rentals-roanoke-va)
-    \`,
+    `,
     faqs: [
       {
         q: 'Does Stay Roanoke offer monthly or extended-stay rates?',
@@ -290,7 +290,7 @@ People come here to unplug for a few hours, get on the water without chaos, and 
 It's not a high-adrenaline destination. It's a reset button.
 
 [Browse stays near Carvins Cove →](/search)
-    \`,
+    `,
     faqs: [
       {
         q: 'Where is Carvins Cove and how far is it from downtown Roanoke?',
